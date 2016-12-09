@@ -128,7 +128,8 @@ namespace GameServer.Network.Handlers
         {
             uint CarId = packet.Reader.ReadUInt32();
             long Pay = packet.Reader.ReadInt64();
-            float fuel = (float)packet.Reader.ReadDouble();
+            float fuel = (float)packet.Reader.ReadSingle();
+            packet.Reader.ReadUInt32(); // Unknown
 
             /*
               unsigned int CarId;

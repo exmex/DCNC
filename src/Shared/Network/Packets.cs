@@ -53,6 +53,7 @@ namespace Shared.Network
         public const ushort CmdClientAuth = 44;
         public const ushort CmdLobbyChat = 45;
         public const ushort CmdLobbyTime = 46;
+        public const ushort CmdDeleteChar = 50;
         public const ushort CmdUserInfo = 60;
         public const ushort CmdGetImage = 64;
         public const ushort CmdPushImageData = 67;
@@ -63,7 +64,7 @@ namespace Shared.Network
         public const ushort CmdStickerSearch = 77;
         public const ushort CmdCheckCharName = 80;
         public const ushort CmdCreateChar = 82;
-        public const ushort CmdDeleteChar = 84;
+        //public const ushort CmdDeleteChar = 84;
         public const ushort CmdBuyCar = 85;
         public const ushort CmdSellCar = 87;
         public const ushort CmdSelectCar = 89;

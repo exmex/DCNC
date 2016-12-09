@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using Shared.Database;
+using Shared.Network;
 using Shared.Objects;
 using Shared.Util;
 
@@ -147,6 +148,42 @@ namespace Shared.Models
                 cmd.Set("channelId", channelId);
                 cmd.Set("posState", posState);
                 cmd.Execute();
+            }
+        }
+
+        // Maybe rename this to OwnsCharacter?
+        public static bool HasCharacter(MySqlConnection dbconn, ulong cid, ulong uid)
+        {
+            MySqlCommand command = new MySqlCommand(
+                "SELECT * FROM Characters WHERE CID = @cid AND UID = @uid", dbconn);
+
+            command.Parameters.AddWithValue("@cid", cid);
+            command.Parameters.AddWithValue("@uid", uid);
+
+            using (DbDataReader reader = command.ExecuteReader())
+            {
+                return reader.HasRows;
+            }
+        }
+
+        public static void DeleteCharacter(MySqlConnection dbconn, ulong cid, ulong uid)
+        {
+            MySqlCommand command = new MySqlCommand("DELETE FROM Characters WHERE CID = @cid AND UID = @uid", dbconn);
+            command.Parameters.AddWithValue("@cid", cid);
+            command.Parameters.AddWithValue("@uid", uid);
+            command.ExecuteNonQuery();
+        }
+
+        public static bool Exists(MySqlConnection dbconn, string characterName)
+        {
+            MySqlCommand command = new MySqlCommand(
+                "SELECT * FROM Characters WHERE Name = @charName", dbconn);
+
+            command.Parameters.AddWithValue("@charName", characterName);
+
+            using (DbDataReader reader = command.ExecuteReader())
+            {
+                return reader.HasRows;
             }
         }
     }

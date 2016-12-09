@@ -124,18 +124,42 @@ namespace LobbyServer.Network.Handlers
 
             var ack = new Packet(Packets.CheckCharNameAck);
             ack.Writer.WriteUnicodeStatic(characterName, 21);
-            ack.Writer.Write(true); // Availability. true = Available, false = Unavailable.
+            ack.Writer.Write(CharacterModel.Exists(LobbyServer.Instance.Database.Connection, characterName)); // Availability. true = Available, false = Unavailable.
             packet.Sender.Send(ack);
         }
 
+        /*
+        000000: 41 00 64 00 6D 00 69 00 6E 00 00 00 00 01 00 00  A · d · m · i · n · · · · · · ·
+        000016: 00 40 00 00 00 00 00 00 01 00 00 00 00 00 00 00  · @ · · · · · · · · · · · · · ·
+        000032: 00 00 00 00 00 00 00 00 00 00 02 00 00 00 00 00  · · · · · · · · · · · · · · · ·
+        000048: 00 00 52 00 00 00 03 00 00 00  · · R · · · · · · ·
+
+        000000: 41 00 64 00 6D 00 69 00 6E 00 69 00 73 00 74 00  A · d · m · i · n · i · s · t ·
+        000016: 72 00 61 00 74 00 6F 00 72 00 00 00 00 00 00 00  r · a · t · o · r · · · · · · ·
+        000032: 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00  · · · · · · · · · · · · · · · ·
+        000048: 00 00 52 00 00 00 03 00 00 00  · · R · · · · · · ·
+        */
         [Packet(Packets.CmdDeleteChar)]
         public static void DeleteCharacter(Packet packet)
         {
-            string charname = packet.Reader.ReadUnicode();
+            //string charname = packet.Reader.ReadUnicode();
+            string charname = packet.Reader.ReadUnicodeStatic(21);
 
-            var ack = new Packet(Packets.DeleteCharAck);
-            ack.Writer.WriteUnicodeStatic(charname, 21);
-            packet.Sender.Send(ack);
+            ulong charId = packet.Reader.ReadUInt64(); // Char ID?
+            packet.Reader.ReadInt32(); // 82?
+            packet.Reader.ReadInt32(); // 3?
+
+            if (CharacterModel.HasCharacter(LobbyServer.Instance.Database.Connection, charId, packet.Sender.User.UID))
+            {
+                CharacterModel.DeleteCharacter(LobbyServer.Instance.Database.Connection, charId, packet.Sender.User.UID);
+                var ack = new Packet(Packets.DeleteCharAck);
+                ack.Writer.WriteUnicodeStatic(charname, 21);
+                packet.Sender.Send(ack);
+
+                return;
+            }
+
+            packet.Sender.Error("This character doesn't belong to you!");
         }
     }
 }
