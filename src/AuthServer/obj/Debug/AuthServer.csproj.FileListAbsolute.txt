@@ -1,0 +1,10 @@
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\AuthServer\obj\Debug\AuthServer.csprojResolveAssemblyReference.cache
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\bin\Debug\AuthServer.exe.config
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\bin\Debug\AuthServer.exe
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\bin\Debug\AuthServer.pdb
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\AuthServer\obj\Debug\AuthServer.exe
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\AuthServer\obj\Debug\AuthServer.pdb
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\bin\Debug\AuthServer.exe.config
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\AuthServer\obj\Debug\AuthServer.exe
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\AuthServer\obj\Debug\AuthServer.pdb
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\AuthServer\obj\Debug\AuthServer.csprojResolveAssemblyReference.cache

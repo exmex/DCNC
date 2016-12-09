@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<ArrayOfArrayOfArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ArrayOfArrayOfString>
+    <ArrayOfString>
+      <string>C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\GameServer\Network\Handlers\Game.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\AuthServer\Network\Handlers\Auth.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\AreaServer\Network\Handlers\Area.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\LobbyServer\Network\Handlers\Lobby.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\Shared\Objects\Character.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\Shared\Models\CharacterModel.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\Shared\Objects\User.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\Shared\Models\VehicleModel.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\Shared\Objects\Vehicle.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\Shared\Network\Packet.cs</string>
+    </ArrayOfString>
+    <ArrayOfString>
+      <string>C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\Shared\Network\Packets.cs</string>
+    </ArrayOfString>
+  </ArrayOfArrayOfString>
+</ArrayOfArrayOfArrayOfString>

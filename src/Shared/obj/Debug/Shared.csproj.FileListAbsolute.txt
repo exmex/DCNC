@@ -1,0 +1,11 @@
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\Shared\bin\Debug\Shared.dll
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\Shared\bin\Debug\Shared.pdb
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\Shared\obj\Debug\Shared.csprojResolveAssemblyReference.cache
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\Shared\obj\Debug\Shared.dll
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\Shared\obj\Debug\Shared.pdb
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\bin\Debug\Shared.dll
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\bin\Debug\Shared.pdb
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\Shared\obj\Debug\Shared.dll
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\Shared\obj\Debug\Shared.pdb
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\Shared\obj\Debug\Shared.csprojResolveAssemblyReference.cache
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\bin\Debug\Shared.dll.config

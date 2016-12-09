@@ -1,0 +1,12 @@
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\LobbyServer\bin\Debug\LobbyServer.exe.config
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\LobbyServer\bin\Debug\LobbyServer.exe
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\LobbyServer\bin\Debug\LobbyServer.pdb
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\LobbyServer\bin\Debug\MySql.Data.dll
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\LobbyServer\bin\Debug\Shared.dll
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\LobbyServer\bin\Debug\Shared.pdb
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\LobbyServer\obj\Debug\LobbyServer.csprojResolveAssemblyReference.cache
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\LobbyServer\obj\Debug\LobbyServer.exe
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\LobbyServer\obj\Debug\LobbyServer.pdb
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\bin\Debug\LobbyServer.exe.config
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\bin\Debug\LobbyServer.exe
+C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\bin\Debug\LobbyServer.pdb
