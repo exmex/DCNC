@@ -15,12 +15,17 @@ namespace GameServer.Network.Handlers
         /*
         000000: 2F ED 00 00  / · · · 
         000000: 56 B3 00 00  V · · ·
+
+        Wrong Packet Size. CMD(3918) CmdLen: : 6, AnalysisSize: 4
         */
-        [Packet(3917)]
+        [Packet(Packets.CmdUnknownSync)]
         public static void UnknownSync(Packet packet) // TODO: Figure out what this packet does...
         {
             packet.Reader.ReadInt32(); // always the same in session
             // hide sync packets for now
+
+            var ack = new Packet(Packets.CmdUnknownSync+1);
+            ack.Writer.Write((short)0);
         }
 
         [Packet(Packets.CmdMyCityPosition)] // TODO: Actual position and not just dummies
@@ -128,8 +133,7 @@ namespace GameServer.Network.Handlers
         {
             uint CarId = packet.Reader.ReadUInt32();
             long Pay = packet.Reader.ReadInt64();
-            float fuel = (float)packet.Reader.ReadSingle();
-            packet.Reader.ReadUInt32(); // Unknown
+            float fuel = packet.Reader.ReadSingle();
 
             /*
               unsigned int CarId;
@@ -150,12 +154,12 @@ namespace GameServer.Network.Handlers
             ack.Writer.Write(fuel);
             ack.Writer.Write(packet.Sender.User.ActiveCharacter.MitoMoney);
             ack.Writer.Write(packet.Sender.User.ActiveCar.Mitron+fuel);
-            ack.Writer.Write(0);
-            ack.Writer.Write(0);
+            ack.Writer.Write(20.0f); // Mito Price per liter
+            ack.Writer.Write(15.0f); // Discounted Price per liter (Normal channel, major channel is free?)
             ack.Writer.Write(packet.Sender.User.ActiveCar.MitronCapacity);
             ack.Writer.Write(packet.Sender.User.ActiveCar.MitronEfficiency);
 
-            ack.Writer.Write(0);
+            ack.Writer.Write(0); // 1 = Item Discount 50%
             packet.Sender.Send(ack);
             /*
             SaleFlag = 0;
@@ -180,7 +184,7 @@ namespace GameServer.Network.Handlers
 
             Log.Debug($"({type}) <{sender}> {message}");
 
-            var ack = new Packet(147);
+            var ack = new Packet(Packets.ChatMsgAck);
             ack.Writer.WriteUnicodeStatic(type, 10);
             ack.Writer.WriteUnicodeStatic(sender, 18);
             ack.Writer.WriteUnicode(message);

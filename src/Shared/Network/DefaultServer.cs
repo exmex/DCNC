@@ -141,10 +141,10 @@ namespace Shared.Network
             System.IO.Directory.CreateDirectory("packetcaptures\\");
 
             if (_debugNameDatabase.ContainsKey(packet.Id))
-                if (File.Exists("packetcaptures\\" + _debugNameDatabase[packet.Id] + ".txt"))
+                if (!File.Exists("packetcaptures\\" + _debugNameDatabase[packet.Id] + ".txt"))
                     System.IO.File.WriteAllText("packetcaptures\\" + _debugNameDatabase[packet.Id] + ".txt", hexDump);
             else
-                if (File.Exists("packetcaptures\\" + packet.Id + ".txt"))
+                if (!File.Exists("packetcaptures\\" + packet.Id + ".txt"))
                     System.IO.File.WriteAllText("packetcaptures\\" + packet.Id + ".txt", hexDump);
 
             if (packet.Id != 3917 && packet.Id != 7)

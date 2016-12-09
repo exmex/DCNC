@@ -17,6 +17,7 @@ namespace Shared.Util.Commands
             Add("help", "Displays this help", HandleHelp);
             Add("exit", "Closes application/server", HandleExit);
             Add("status", "Displays application status", HandleStatus);
+            Add("sendpkt", "Sends an empty packet with the specified packet id", HandleSendPkt);
         }
 
         /// <summary>
@@ -86,6 +87,11 @@ namespace Shared.Util.Commands
                     Log.Info("Usage: {0} {1}", command.Name, command.Usage);
                 }
             }
+        }
+
+        protected virtual CommandResult HandleSendPkt(string command, IList<string> args)
+        {
+            return CommandResult.Fail;
         }
 
         protected virtual CommandResult HandleHelp(string command, IList<string> args)

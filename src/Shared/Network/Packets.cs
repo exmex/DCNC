@@ -19,6 +19,7 @@ namespace Shared.Network
         public const ushort CheckInGameAck = 121;
         public const ushort LoadCharThreadAck = 124;
         public const ushort JoinChannelAck = 126;
+        public const ushort ChatMsgAck = 147;
         public const ushort MyQuestListAck = 273;
 
         public const ushort JoinAreaAck = 301;
@@ -347,6 +348,7 @@ namespace Shared.Network
         public const ushort CmdUcBossPatrolStart = 3010;
         public const ushort CmdUcBossPatrolGiveUp = 3012;
         public const ushort CmdUcBossPatrolGoalPlace = 3014;
+        public const ushort CmdUnknownSync = 3917;
 
         public static string GetName(ushort packetId)
         {
