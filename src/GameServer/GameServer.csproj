@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Database\GameDatabase.cs" />
     <Compile Include="GameServer.cs" />
+    <Compile Include="Network\Handlers\Friends.cs" />
     <Compile Include="Network\Handlers\Game.cs" />
     <Compile Include="Network\Handlers\Joining.cs" />
     <Compile Include="Program.cs" />

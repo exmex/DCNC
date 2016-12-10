@@ -236,7 +236,7 @@ namespace GameServer.Network.Handlers
         }
 
         [Packet(Packets.CmdGameCharInfo)]
-        public static void GameCharInfo(Packet packet)
+        public static void GameCharInfo(Packet packet) // TODO: Send data correspoding to the charname, not user
         {
             /*
             [Debug] - GameCharInfo: 000000: 41 00 64 00 6D 00 69 00 6E 00 69 00 73 00 74 00  A · d · m · i · n · i · s · t ·
@@ -244,9 +244,12 @@ namespace GameServer.Network.Handlers
             000032: 0D 25 33 65 63 65 69 76 65 64 00 00 00 00  · % 3 e c e i v e d · · · ·
 
             [Info] - Received GameCharInfo (id 660, 0x294) on 11021.
+
+            Wrong Packet Size. CMD(661) CmdLen: : 1177, AnalysisSize: 831
+            // We're missing 346 bytes of data.
             */
             var charName = packet.Reader.ReadUnicodeStatic(21);
-            var ack = new Packet(Packets.CmdGameCharInfo+1);
+            var ack = new Packet(Packets.GameCharInfoAck);
             packet.Sender.User.ActiveCharacter.Serialize(ack.Writer);
             packet.Sender.User.ActiveCar.Serialize(ack.Writer);
             var sinfo = new StatInfo();

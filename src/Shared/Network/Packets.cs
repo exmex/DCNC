@@ -20,6 +20,7 @@ namespace Shared.Network
         public const ushort LoadCharThreadAck = 124;
         public const ushort JoinChannelAck = 126;
         public const ushort ChatMsgAck = 147;
+        public const ushort FriendListAck = 231;
         public const ushort MyQuestListAck = 273;
 
         public const ushort JoinAreaAck = 301;
@@ -32,6 +33,7 @@ namespace Shared.Network
         public const ushort EnterAreaAck = 563;
 
         public const ushort WeatherAck = 640;
+        public const ushort GameCharInfoAck = 661;
         public const ushort AreaStatusAck = 683;
         public const ushort FuelChargeReqAck = 724;
         public const ushort FirstPositionAck = 783;
