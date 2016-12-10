@@ -235,6 +235,32 @@ namespace GameServer.Network.Handlers
             */
         }
 
+        [Packet(Packets.CmdGameCharInfo)]
+        public static void GameCharInfo(Packet packet)
+        {
+            /*
+            [Debug] - GameCharInfo: 000000: 41 00 64 00 6D 00 69 00 6E 00 69 00 73 00 74 00  A · d · m · i · n · i · s · t ·
+            000016: 72 00 61 00 74 00 6F 00 72 00 00 00 0A 00 06 00  r · a · t · o · r · · · · · · ·
+            000032: 0D 25 33 65 63 65 69 76 65 64 00 00 00 00  · % 3 e c e i v e d · · · ·
+
+            [Info] - Received GameCharInfo (id 660, 0x294) on 11021.
+            */
+            var charName = packet.Reader.ReadUnicodeStatic(21);
+            var ack = new Packet(Packets.CmdGameCharInfo+1);
+            packet.Sender.User.ActiveCharacter.Serialize(ack.Writer);
+            packet.Sender.User.ActiveCar.Serialize(ack.Writer);
+            var sinfo = new StatInfo();
+            sinfo.Serialize(ack.Writer);
+            packet.Sender.User.ActiveTeam.Serialize(ack.Writer);
+
+            ack.Writer.Write((uint)0); // Serial
+            ack.Writer.Write('A'); // LocType
+            ack.Writer.Write('A'); // ChId
+            ack.Writer.Write((ushort)1); // LocId
+
+            packet.Sender.Send(ack);
+        }
+
         /*
         [Packet(3200)]
         public static void ChangeArea(Packet packet)

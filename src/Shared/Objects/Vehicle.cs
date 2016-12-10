@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Shared.Network;
 
 namespace Shared.Objects
 {
-    public class Vehicle
+    public class Vehicle : ISerializable
     {
         public uint CarID;
         public uint CarType;
@@ -24,5 +25,22 @@ namespace Shared.Objects
         public uint Color2;
         public bool AuctionOn;
         public bool SBBOn;
+
+
+        public void Serialize(PacketWriter writer)
+        {
+            writer.Write(CarID);
+            writer.Write(CarType);
+            writer.Write(BaseColor);
+            writer.Write(Grade);
+            writer.Write(SlotType);
+            writer.Write(AuctionCnt);
+            writer.Write(Mitron);
+            writer.Write(Kmh);
+            writer.Write(Color);
+            writer.Write(MitronCapacity);
+            writer.Write(MitronEfficiency);
+            writer.Write(AuctionOn);
+        }
     }
 }

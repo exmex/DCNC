@@ -58,6 +58,7 @@
     <Compile Include="Objects\Character.cs" />
     <Compile Include="Objects\Item.cs" />
     <Compile Include="Models\TeamModel.cs" />
+    <Compile Include="Objects\StatInfo.cs" />
     <Compile Include="Objects\Team.cs" />
     <Compile Include="Objects\Vehicle.cs" />
     <Compile Include="ServerMain.cs" />
