@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Shared.Models;
 using Shared.Network;
+using Shared.Objects;
 
 namespace GameServer.Network.Handlers
 {
@@ -84,14 +85,38 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdAreaList)] // TODO: Actual areas and not just dummies
         public static void AreaList(Packet packet)
         {
-            var ack = new Packet(Packets.AreaListAck);
-            ack.Writer.Write(10);
+            //if ( *(_BYTE *)&BS_Global::ContentsFlag.Main.0 >> 8 )
+            /*var ack = new Packet(789); // GateList
+            ack.Writer.Write(1); // Gate Count
+            ack.Writer.Write(0); // Current
+            ack.Writer.Write(3000); // Max
+            ack.Writer.Write((short)0); // ???????
+            packet.Sender.Send(ack);
+            
+            // Missing: BS_PktChannelOwnershipListAck
+            */
+
+            var ack = new Packet(Packets.CmdAreaList+1);
+            ack.Writer.Write((uint)10);
             for (var k = 0; k < 10; ++k)
             {
                 ack.Writer.Write(k); // AreaId
                 ack.Writer.Write(0); // Current?
+                ack.Writer.Write(100); // Max?
                 ack.Writer.Write(1); // ChannelState
-                ack.Writer.Write((double)0);
+                ack.Writer.Write((float)0); // Tax?
+
+                ack.Writer.Write((long)0); // teamID?
+                ack.Writer.Write((long)0); // teamMarkID
+                ack.Writer.WriteUnicodeStatic("Staff", 13); // TeamName
+                ack.Writer.Write((uint)0); // Ranking
+                ack.Writer.Write((uint)0); // Point
+                ack.Writer.Write((uint)0); // WinCnt
+                ack.Writer.Write(20); // Membercnt
+                ack.Writer.Write((long)1); // OwnerId
+                ack.Writer.WriteUnicodeStatic("Administrator", 21); // OwnerName
+                ack.Writer.Write((long)0); // TotalExp
+                ack.Writer.Write((long)0); // ????????
             }
             /*
                 lpAck->AreaNum = 10;
@@ -126,12 +151,19 @@ namespace GameServer.Network.Handlers
             uint serial = packet.Reader.ReadUInt32();
 
             var character = CharacterModel.Retrieve(GameServer.Instance.Database.Connection, characterName);
+            var team = TeamModel.Retrieve(GameServer.Instance.Database.Connection, character.Tid);
+            character.TeamId = team.TeamId;
+            character.TeamName = team.TeamName;
+            character.TeamMarkId = team.TeamMarkId;
+            character.TeamCloseDate = (int)team.CloseDate;
+            character.TeamRank = 1;
             var user = AccountModel.Retrieve(GameServer.Instance.Database.Connection, character.Uid);
 
             packet.Sender.User = user;
             packet.Sender.User.ActiveCharacterId = character.Uid;
             packet.Sender.User.ActiveCharacter = CharacterModel.RetrieveOne(GameServer.Instance.Database.Connection, character.Uid);
             packet.Sender.User.ActiveCarId = character.CurrentCarId;
+            packet.Sender.User.ActiveTeam = team;
             packet.Sender.User.Characters = CharacterModel.Retrieve(GameServer.Instance.Database.Connection, user.UID);
 
             var vehicles = VehicleModel.Retrieve(GameServer.Instance.Database.Connection, character.Cid);

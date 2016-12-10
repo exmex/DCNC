@@ -212,5 +212,27 @@ namespace GameServer.Network.Handlers
                     break;
             }
         }
+
+        [Packet(Packets.CmdMyTeamInfo)]
+        public static void MyTeamInfo(Packet packet)
+        {
+            uint m_Act = packet.Reader.ReadUInt32(); // nAct?
+
+            var ack = new Packet(Packets.MyTeamInfoAck);
+
+            ack.Writer.Write(m_Act); // Act!?
+            ack.Writer.Write(packet.Sender.User.ActiveCharacterId); // Char ID
+            ack.Writer.Write(1); // Rank
+            packet.Sender.User.ActiveTeam.Serialize(ack.Writer);
+            ack.Writer.Write((ushort)0); // Age?
+            packet.Sender.Send(ack);
+            /*
+              unsigned int m_Act;
+              __int64 m_Cid;
+              int m_TeamRank;
+              XiStrTeamInfo m_TeamInfo;
+              unsigned __int16 m_Age;
+            */
+        }
     }
 }

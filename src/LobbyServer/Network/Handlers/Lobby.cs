@@ -67,6 +67,13 @@ namespace LobbyServer.Network.Handlers
             foreach (var character in packet.Sender.User.Characters)
             {
                 Vehicle v = VehicleModel.Retrieve(LobbyServer.Instance.Database.Connection, character.CurrentCarId);
+                var team = TeamModel.Retrieve(LobbyServer.Instance.Database.Connection, character.Tid);
+                character.TeamId = team.TeamId;
+                character.TeamName = team.TeamName;
+                character.TeamMarkId = team.TeamMarkId;
+                character.TeamCloseDate = (int)team.CloseDate;
+                character.TeamRank = 1;
+
                 ack.Writer.WriteUnicodeStatic(character.Name, 21); // Name
                 ack.Writer.Write(character.Cid); // ID
                 ack.Writer.Write((int)character.Avatar); // Avatar
@@ -76,7 +83,7 @@ namespace LobbyServer.Network.Handlers
                 ack.Writer.Write(v.BaseColor); // CarColor
                 ack.Writer.Write(character.CreationDate); // Creation Date
                 ack.Writer.Write(character.Tid); // Crew ID
-                ack.Writer.Write(0L); // Crew Image
+                ack.Writer.Write(character.TeamMarkId); // Crew Image
                 ack.Writer.WriteUnicodeStatic("Staff", 13); // Crew Name
                 ack.Writer.Write((short) 1); // Guild
                 ack.Writer.Write((short) -1);

@@ -23,6 +23,7 @@ namespace Shared.Objects
         public ulong ActiveCharacterId;
         public Vehicle ActiveCar;
         public int ActiveCarId;
+        public Team ActiveTeam;
 
         public List<Character> Characters;
 
