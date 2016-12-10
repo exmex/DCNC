@@ -1,9 +1,0 @@
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\AreaServer\bin\Debug\AreaServer.exe.config
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\AreaServer\bin\Debug\AreaServer.exe
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\AreaServer\bin\Debug\AreaServer.pdb
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\AreaServer\bin\Debug\ServerCommon.dll
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\AreaServer\bin\Debug\ServerCommon.pdb
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\AreaServer\obj\Debug\AreaServer.csprojResolveAssemblyReference.cache
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\AreaServer\obj\Debug\AreaServer.exe
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\AreaServer\obj\Debug\AreaServer.pdb
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\bin\Debug\AreaServer.exe.config

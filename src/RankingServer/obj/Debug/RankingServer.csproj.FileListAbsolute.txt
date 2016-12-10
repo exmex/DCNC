@@ -1,9 +1,0 @@
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\RankingServer\bin\Debug\RankingServer.exe.config
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\RankingServer\bin\Debug\RankingServer.exe
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\RankingServer\bin\Debug\RankingServer.pdb
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\RankingServer\obj\Debug\RankingServer.csprojResolveAssemblyReference.cache
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\RankingServer\obj\Debug\RankingServer.exe
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\src\RankingServer\obj\Debug\RankingServer.pdb
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\bin\Debug\RankingServer.exe.config
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\bin\Debug\RankingServer.exe
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\bin\Debug\RankingServer.pdb

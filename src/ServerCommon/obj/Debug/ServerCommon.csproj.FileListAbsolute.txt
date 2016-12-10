@@ -1,7 +1,0 @@
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\ServerCommon\bin\Debug\ServerCommon.dll
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\ServerCommon\bin\Debug\ServerCommon.pdb
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\ServerCommon\obj\Debug\ServerCommon.csprojResolveAssemblyReference.cache
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\ServerCommon\obj\Debug\ServerCommon.dll
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\ServerCommon\obj\Debug\ServerCommon.pdb
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\bin\Debug\ServerCommon.dll
-C:\Users\GigaToni\Documents\Visual Studio 2015\Projects\MittronMadness\bin\Debug\ServerCommon.pdb
