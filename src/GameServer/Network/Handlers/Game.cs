@@ -234,5 +234,11 @@ namespace GameServer.Network.Handlers
               unsigned __int16 m_Age;
             */
         }
+
+        /*
+        [Packet(3200)]
+        public static void ChangeArea(Packet packet)
+        {
+        }*/
     }
 }
