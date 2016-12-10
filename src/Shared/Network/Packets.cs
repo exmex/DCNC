@@ -20,6 +20,7 @@ namespace Shared.Network
         public const ushort LoadCharThreadAck = 124;
         public const ushort JoinChannelAck = 126;
         public const ushort ChatMsgAck = 147;
+        public const ushort ChasePropose = 186;
         public const ushort FriendListAck = 231;
         public const ushort MyQuestListAck = 273;
 

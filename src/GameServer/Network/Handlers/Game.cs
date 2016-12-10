@@ -264,6 +264,43 @@ namespace GameServer.Network.Handlers
             packet.Sender.Send(ack);
         }
 
+        [Packet(Packets.CmdChaseRequest)]
+        public static void ChaseRequest(Packet packet)
+        {
+            /*
+            [Debug] - ChaseRequest: 000000: 01 9A 45 91 45 66 4A AA 45 A6 52 E7 40 00 00 00  · · E · E f J · E · R · @ · · ·
+            000016: 00  ·
+
+            [Info] - Received ChaseRequest (id 189, 0xBD) on 11021.
+            */
+
+            var bNow = packet.Reader.ReadBoolean();
+            var posX = packet.Reader.ReadSingle(); // X
+            var posY = packet.Reader.ReadSingle(); // Y
+            var posZ = packet.Reader.ReadSingle(); // Z
+            var rot = packet.Reader.ReadSingle(); // W
+
+            //Wrong Packet Size. CMD(186) CmdLen: : 252, AnalysisSize: 250
+            var ack = new Packet(Packets.ChasePropose);
+            ack.Writer.Write((ushort)0);
+            ack.Writer.Write(posX); // Start X
+            ack.Writer.Write(posY); // Start Y
+            ack.Writer.Write(posZ); // Start Z
+            ack.Writer.Write(rot); // Start W
+
+            ack.Writer.Write(posX); // End X
+            ack.Writer.Write(posY); // End Y
+            ack.Writer.Write(posZ); // End Z
+
+            ack.Writer.Write(0); // CourseId
+            ack.Writer.Write(2 - (bNow ? 1 : 0)); // Type?
+            ack.Writer.WriteUnicodeStatic("test", 100);
+
+            ack.Writer.Write(1); // HUV first level
+            ack.Writer.Write(10001); // HUV first Id
+            packet.Sender.Send(ack);
+        }
+
         /*
         [Packet(3200)]
         public static void ChangeArea(Packet packet)

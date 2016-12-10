@@ -52,6 +52,7 @@
     <Compile Include="Network\Handlers\Friends.cs" />
     <Compile Include="Network\Handlers\Game.cs" />
     <Compile Include="Network\Handlers\Joining.cs" />
+    <Compile Include="Network\Handlers\Messages.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\GameConfig.cs" />

@@ -254,9 +254,9 @@ namespace GameServer.Network.Handlers
             var ack = new Packet(Packets.ItemListAck);
             ack.Writer.Write((uint)0x40000); // WHAT THE? unsigned int ListUpdate;
             //ack.Writer.Write((uint)0); // Count
-            ack.Writer.Write((uint)1); // Count
+            ack.Writer.Write((uint)0); // Count
             // 52 bytes of data for each item
-
+            /*
             ack.Writer.Write((uint)1); // CarID
             ack.Writer.Write((ushort)1); // State
             ack.Writer.Write((ushort)1); // Slot
@@ -274,6 +274,7 @@ namespace GameServer.Network.Handlers
             ack.Writer.Write((uint)1); // TableIdx
             ack.Writer.Write((uint)0); // InvenIdx
             ack.Writer.Write(new byte[46]); // 94
+            */
 
             packet.Sender.Send(ack);
         }
