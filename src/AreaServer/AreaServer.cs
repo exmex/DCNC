@@ -62,6 +62,9 @@ namespace AreaServer
             Server = new DefaultServer(Config.Area.Port, false);
             Server.Start();
 
+            var Server2 = new DefaultServer(11041, false);
+            Server2.Start();
+
             ConsoleUtil.RunningTitle();
             _running = true;
 
