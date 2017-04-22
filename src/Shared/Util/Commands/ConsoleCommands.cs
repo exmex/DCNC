@@ -17,7 +17,7 @@ namespace Shared.Util.Commands
             Add("help", "Displays this help", HandleHelp);
             Add("exit", "Closes application/server", HandleExit);
             Add("status", "Displays application status", HandleStatus);
-            Add("sendpkt", "Sends an empty packet with the specified packet id", HandleSendPkt);
+            Add("sendpkt", "[packetid] [nullbyte count]", "Sends an empty packet with the specified packet id", HandleSendPkt);
         }
 
         /// <summary>

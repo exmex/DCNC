@@ -49,21 +49,53 @@ namespace GameServer.Util
 
                 return CommandResult.Okay;
             });
+
+            Add("weather", "[fine|cloudy|foggy|rain|sunset]", "Changes weather", HandleWeather);
+        }
+
+        private CommandResult HandleWeather(string command, IList<string> args)
+        {
+            var ack = new Packet(Packets.WeatherAck);
+            switch (args[1])
+            {
+                case "fine":
+                    ack.Writer.Write(0);
+                    break;
+                case "cloudy":
+                    ack.Writer.Write(1);
+                    break;
+                case "foggy":
+                    ack.Writer.Write(2);
+                    break;
+                case "rain":
+                    ack.Writer.Write(3);
+                    break;
+                case "sunset":
+                    ack.Writer.Write(4);
+                    break;
+                default:
+                    return CommandResult.InvalidArgument;
+            }
+
+            GameServer.Instance.Server.Broadcast(ack);
+
+            return CommandResult.Okay;
         }
 
         protected override CommandResult HandleSendPkt(string command, IList<string> args)
         {
-            short res;
+            ushort res;
             int res2;
-            if(args.Count < 2)
-                return CommandResult.Fail;
-            if (!short.TryParse(args[1], out res))
+            if(args.Count < 3)
+                return CommandResult.InvalidArgument;
+
+            if (!ushort.TryParse(args[1], out res))
                 return CommandResult.InvalidArgument;
 
             if (!int.TryParse(args[2], out res2) || res2 > 256)
                 return CommandResult.InvalidArgument;
 
-            var packet = new Packet(Convert.ToUInt16(args[1]));
+            var packet = new Packet(res);
             packet.Writer.Write(new byte[res2]);
             GameServer.Instance.Server.Broadcast(packet);
             return CommandResult.Okay;

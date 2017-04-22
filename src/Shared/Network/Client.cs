@@ -141,7 +141,8 @@ namespace Shared.Network
                 hexDump = hexDump + s3 + Environment.NewLine;
             }
 
-            Log.Debug("Sending ({0}): {1}", packet.Id, hexDump);
+            if (packet.Id != 3917 && packet.Id != 7 && packet.Id != 706 && packet.Id != 707 && packet.Id != 702)
+                Log.Debug("Sending ({0}): {1}", packet.Id, hexDump);
 
             try
             {
@@ -167,7 +168,7 @@ namespace Shared.Network
             }
 
 #if DEBUG
-            Error(ex.Message + ": " + ex.StackTrace);
+            //Error(ex.Message + ": " + ex.StackTrace);
 #endif
 
             Kill(ex.Message + ": " + ex.StackTrace);

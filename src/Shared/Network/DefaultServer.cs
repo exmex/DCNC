@@ -121,7 +121,7 @@ namespace Shared.Network
             }
 
 #if DEBUG
-            if (packet.Id != 3917 && packet.Id != 7)
+            if (packet.Id != 3917 && packet.Id != 7 && packet.Id != 706 && packet.Id != 707 && packet.Id != 702)
             {
                 if (!_debugNameDatabase.ContainsKey(packet.Id))
                     Log.Debug("{0}: {1}", packet.Id, hexDump);
@@ -147,7 +147,7 @@ namespace Shared.Network
                 if (!File.Exists("packetcaptures\\" + packet.Id + ".txt"))
                     System.IO.File.WriteAllText("packetcaptures\\" + packet.Id + ".txt", hexDump);
 
-            if (packet.Id != 3917 && packet.Id != 7)
+            if (packet.Id != 3917 && packet.Id != 7 && packet.Id != 706 && packet.Id != 707)
             {
                 if (_parsers.ContainsKey(packet.Id))
                     _parsers[packet.Id](packet);

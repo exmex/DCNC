@@ -41,6 +41,8 @@ namespace Shared.Network
         public const ushort GetDateTimeAck = 785;
         public const ushort MyPositionAck = 789;
         public const ushort MyTeamInfoAck = 841;
+        public const ushort InstantStartAck = 993;
+        public const ushort InstantGiveUpAck = 1000;
 
         // Client -> Server
         public const ushort CmdPing = 2;

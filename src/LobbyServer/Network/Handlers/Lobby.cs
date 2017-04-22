@@ -131,7 +131,7 @@ namespace LobbyServer.Network.Handlers
 
             var ack = new Packet(Packets.CheckCharNameAck);
             ack.Writer.WriteUnicodeStatic(characterName, 21);
-            ack.Writer.Write(CharacterModel.Exists(LobbyServer.Instance.Database.Connection, characterName)); // Availability. true = Available, false = Unavailable.
+            ack.Writer.Write(!CharacterModel.Exists(LobbyServer.Instance.Database.Connection, characterName)); // Availability. true = Available, false = Unavailable.
             packet.Sender.Send(ack);
         }
 

@@ -301,6 +301,28 @@ namespace GameServer.Network.Handlers
             packet.Sender.Send(ack);
         }
 
+        [Packet(Packets.CmdInstantStart)]
+        public static void InstantStart(Packet packet)
+        {
+            //Wrong Packet Size. CMD(993) CmdLen: : 11, AnalysisSize: 8
+            var tableIdx = packet.Reader.ReadUInt32();
+
+            var ack = new Packet(Packets.InstantStartAck);
+            ack.Writer.Write(tableIdx);
+            ack.Writer.Write(new byte[3]); // Missing?
+            packet.Sender.Send(ack);
+        }
+
+        [Packet(Packets.CmdInstantGiveUp)]
+        public static void InstantGiveUp(Packet packet)
+        {
+            var tableIdx = packet.Reader.ReadUInt32();
+
+            var ack = new Packet(Packets.InstantGiveUpAck);
+            ack.Writer.Write(tableIdx);
+            packet.Sender.Send(ack);
+        }
+
         /*
         [Packet(3200)]
         public static void ChangeArea(Packet packet)

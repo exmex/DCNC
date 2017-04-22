@@ -28,9 +28,15 @@ namespace AreaServer.Network.Handlers
             packet.Reader.ReadSingle(); // X
             packet.Reader.ReadSingle(); // Y
 
-            packet.Reader.ReadInt32(); // Time
-            packet.Reader.ReadInt32(); // Signal
-            packet.Reader.ReadInt32(); // State
+            var time = packet.Reader.ReadInt32(); // Time
+            var signal = packet.Reader.ReadInt32(); // Signal
+            var state = packet.Reader.ReadInt32(); // State
+
+            var ack = new Packet(706);
+            ack.Writer.Write(time);
+            ack.Writer.Write(signal);
+            ack.Writer.Write(state);
+            AreaServer.Instance.Server.Broadcast(ack);
         }
 
         [Packet(Packets.CmdUdpCastTcs)]
@@ -51,4 +57,10 @@ namespace AreaServer.Network.Handlers
   int m_OwnTime;
   int m_dwGlobalTime;
   int m_FreedTime; 
+
+    &pArea->m_spaceGrid,
+      lpMsg->m_x,
+      lpMsg->m_y,
+      320.0,
+      (CastTask<BS_PktTCSSignal> *)&param);
 */
