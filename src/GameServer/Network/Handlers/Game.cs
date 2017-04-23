@@ -160,6 +160,7 @@ namespace GameServer.Network.Handlers
             ack.Writer.Write(packet.Sender.User.ActiveCar.MitronEfficiency);
 
             ack.Writer.Write(0); // 1 = Item Discount 50%
+			ack.Writer.Write(new byte[2]); // Not sure.
             packet.Sender.Send(ack);
             /*
             SaleFlag = 0;
@@ -298,6 +299,7 @@ namespace GameServer.Network.Handlers
 
             ack.Writer.Write(1); // HUV first level
             ack.Writer.Write(10001); // HUV first Id
+			ack.Writer.Write(new byte[2]); // Not sure.
             packet.Sender.Send(ack);
         }
 
@@ -312,6 +314,20 @@ namespace GameServer.Network.Handlers
             ack.Writer.Write(new byte[3]); // Missing?
             packet.Sender.Send(ack);
         }
+		
+		[Packet(Packets.CmdInstantGoalPlace)]
+		public static void InstantGoalPlace(Packet packet)
+		{
+			var tableIdx = packet.Reader.ReadUInt32();
+			var placeIdx = packet.Reader.ReadUInt32();
+			
+			var ack = new Packet(Packets.CmdInstantGoalPlace+1);
+			ack.Writer.Write(tableIdx);
+			ack.Writer.Write(placeIdx);
+			ack.Writer.Write(0); // EXP??
+			ack.Writer.Write(new byte[28]);
+			packet.Sender.Send(ack);
+		}
 
         [Packet(Packets.CmdInstantGiveUp)]
         public static void InstantGiveUp(Packet packet)
@@ -322,11 +338,58 @@ namespace GameServer.Network.Handlers
             ack.Writer.Write(tableIdx);
             packet.Sender.Send(ack);
         }
-
-        /*
+		
+		//000000: 01 00 00 00  · · · ·
+		[Packet(Packets.CmdQuestStart)]
+		public static void QuestStart(Packet packet)
+		{
+			var tableIdx = packet.Reader.ReadUInt32();
+			
+			var ack = new Packet(Packets.CmdQuestStart+1);
+			ack.Writer.Write(tableIdx);
+			ack.Writer.Write(0); // Fail num maybe?
+			packet.Sender.Send(ack);
+		}
+		
+		[Packet(Packets.CmdQuestGiveUp)]
+		public static void QuestGiveup(Packet packet)
+		{
+			var tableIdx = packet.Reader.ReadUInt32();
+			
+			var ack = new Packet(Packets.CmdQuestGiveUp+1);
+			ack.Writer.Write(tableIdx);
+			ack.Writer.Write((byte)0);
+			packet.Sender.Send(ack);
+		}
+		
+		//000000: 01 00 00 00  · · · ·
+		[Packet(Packets.CmdQuestGoalPlace)]
+		public static void QuestGoalPlace(Packet packet)
+		{
+			/*var tableIdx = packet.Reader.ReadUInt32();
+			
+			var ack = new Packet(Packets.CmdQuestGoalPlace+1);
+			ack.Writer.Write(tableIdx);
+			packet.Sender.Send(ack);*/
+		}
+		
+		//000000: 01 00 00 00 14 43 8B 42 4E 9E D0 FE  · · · · · C · B N · · ·
+		[Packet(Packets.CmdQuestComplete)]
+		public static void QuestComplete(Packet packet)
+		{
+			var tableIdx = packet.Reader.ReadUInt32();
+			
+			var ack = new Packet(Packets.CmdQuestComplete+1);
+			ack.Writer.Write(tableIdx);
+			packet.Sender.Send(ack);
+		}
+		
         [Packet(3200)]
         public static void ChangeArea(Packet packet)
         {
-        }*/
+			var ack = new Packet(3201);
+			ack.Writer.Write(new byte[520]);
+			packet.Sender.Send(ack);
+        }
     }
 }
