@@ -4,6 +4,8 @@ namespace Shared.Network
 {
     public static class Packets
     {
+		// 4010 -> Ranking Racing Team Info
+		// 4001 -> Ranking Gameplay
         // Server -> Client
         public const ushort ErrorAck = 1;
 
@@ -16,6 +18,7 @@ namespace Shared.Network
         public const ushort CharInfoAck = 62;
         public const ushort CheckCharNameAck = 81;
         public const ushort DeleteCharAck = 84;
+		public const ushort BuyCarAck = 86; // TODO: Wrong Packet Size. CMD(86) CmdLen: : 56, AnalysisSize: 24
         public const ushort CheckInGameAck = 121;
         public const ushort LoadCharThreadAck = 124;
         public const ushort JoinChannelAck = 126;
@@ -36,15 +39,17 @@ namespace Shared.Network
         public const ushort EnterAreaAck = 563;
 
         public const ushort WeatherAck = 640;
-        public const ushort GameCharInfoAck = 661;
+        public const ushort GameCharInfoAck = 661; // TODO: Wrong Packet Size. CMD(661) CmdLen: : 1177, AnalysisSize: 831
         public const ushort AreaStatusAck = 683;
         public const ushort FuelChargeReqAck = 724;
+		public const ushort StatUpdateAck = 760;
         public const ushort FirstPositionAck = 783;
         public const ushort GetDateTimeAck = 785;
         public const ushort MyPositionAck = 789;
-        public const ushort MyTeamInfoAck = 841;
+        public const ushort MyTeamInfoAck = 841; // TODO: Wrong Packet Size. CMD(841) CmdLen: : 692, AnalysisSize: 393
         public const ushort InstantStartAck = 993;
         public const ushort InstantGiveUpAck = 1000;
+		public const ushort GetMyHancoinAck = 1401; // TODO: Wrong Packet Size. CMD(1401) CmdLen: : 14, AnalysisSize: 12
 
         // Client -> Server
         public const ushort CmdPing = 2;

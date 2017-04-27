@@ -395,30 +395,133 @@ namespace GameServer.Network.Handlers
 		[Packet(Packets.CmdBuyCar)]
 		public static void BuyCar(Packet packet)
 		{
-			var charName = packet.Reader.ReadUnicodeStatic(17); // Possibly 21?
-			packet.Reader.Read(0x18); // I can't find this out due to corruption..
-			int carId = packet.Reader.ReadInt32(); // CarID to buy.
-			packet.Reader.ReadInt16(); // Bumper? Either short or 2 bytes.
-			short color = packet.Reader.ReadInt16();
-			Console.WriteLine("CarID: "+carId+", Color: "+color);
+			var charName = packet.Reader.ReadUnicodeStatic(21); // Possibly 21?
+			Console.WriteLine(charName);
 			
-			/*
-			PacketSend::Send_StatUpdate((BS_PacketDispatch *)&pGameDispatch->vfptr);
-		  PacketSend::Send_PartyEnChantUpdateAll((BS_PacketDispatch *)&pGameDispatch->vfptr);
-		  PacketSend::Send_ItemModList((BS_PacketDispatch *)&pGameDispatch->vfptr);
-		  PacketSend::Send_VSItemModList((BS_PacketDispatch *)&pGameDispatch->vfptr);
-		  PacketSend::Send_VisualUpdate((BS_PacketDispatch *)&pGameDispatch->vfptr, 0);
+			uint CarType = packet.Reader.ReadUInt32();
+			Console.WriteLine(CarType);
+			uint Bumper = packet.Reader.ReadUInt16();
+			Console.WriteLine(Bumper);
+			uint Color = packet.Reader.ReadUInt16();
+			Console.WriteLine(Color);
+			
+			var ack = new Packet(Packets.BuyCarAck);
+			ack.Writer.Write(10000); // Price
+			ack.Writer.Write(1); // ID
+			ack.Writer.Write(CarType);
+			ack.Writer.Write(Bumper);
+			ack.Writer.Write(Color);
+			packet.Sender.Send(ack);
+			/*PacketSend::Send_StatUpdate((BS_PacketDispatch *)&pGameDispatch->vfptr);
+			  PacketSend::Send_PartyEnChantUpdateAll((BS_PacketDispatch *)&pGameDispatch->vfptr);
+			  PacketSend::Send_ItemModList((BS_PacketDispatch *)&pGameDispatch->vfptr);
+			  PacketSend::Send_VSItemModList((BS_PacketDispatch *)&pGameDispatch->vfptr);
+			  PacketSend::Send_VisualUpdate((BS_PacketDispatch *)&pGameDispatch->vfptr, 0);
 		  
-		  qmemcpy(&lpAckPkt->CarInfo, pCharInfo->m_pCurCarInfo, 0x2Cu);
-        v28[44] = v27->m_CarInfo.AuctionOn;
-        lpAckPkt->Gold = Price;
+			  qmemcpy(&lpAckPkt->CarInfo, pCharInfo->m_pCurCarInfo, 0x2Cu);
+			v28[44] = v27->m_CarInfo.AuctionOn;
+			lpAckPkt->Gold = Price;
 			*/
+		}
+		
+		[Packet(Packets.CmdGetMyHancoinThread)]
+		public static void GetMyHancoin(Packet packet)
+		{
+			var ack = new Packet(Packets.GetMyHancoinAck);
+			ack.Writer.Write(10000); // Hancoins?
+			ack.Writer.Write(100); // Mileage?
+			packet.Sender.Send(ack);
+		}
+		
+		[Packet(Packets.CmdCheckStat)]
+		public static void CheckStat(Packet packet)
+		{
+			var ack = new Packet(Packets.StatUpdateAck);
+			ack.Writer.Write(0); // Speed (Car) Testvalue:100 -> http://i.imgur.com/AndRGwK.png
+			ack.Writer.Write(0); // Durability (Car) Testvalue:100 -> http://i.imgur.com/zuaxZu5.png
+			ack.Writer.Write(0); // Acceleration (Car) Testvalue:100 -> http://i.imgur.com/97UkLkj.png
+			ack.Writer.Write(0); // Boost (Car) Testvalue:100 -> http://i.imgur.com/FQ9EYVO.png
+			ack.Writer.Write(0); // Speed (Parts) Testvalue:300 -> http://i.imgur.com/FQ9EYVO.png
+			ack.Writer.Write(0); // Durability (Parts) Testvalue:400 -> http://i.imgur.com/FQ9EYVO.png
+			ack.Writer.Write(0); // Acceleration (Parts) Testvalue:500 -> http://i.imgur.com/FQ9EYVO.png
+			ack.Writer.Write(0); // Boost (Parts) Testvalue:600 -> http://i.imgur.com/FQ9EYVO.png
+						
+			ack.Writer.Write(0); // Speed (User)
+			ack.Writer.Write(0); // Durability (User)
+			ack.Writer.Write(0); // Acceleration (User)
+			ack.Writer.Write(0); // Boost (User)
+			ack.Writer.Write(0); // Speed (User) WTF?
+			ack.Writer.Write(0); // Durability (User) WTF?
+			ack.Writer.Write(0); // Acceleration (User) WTF?
+			ack.Writer.Write(0); // Boost (User) WTF?
+			ack.Writer.Write(0); // Char Speed
+			ack.Writer.Write(0); // Char Durability
+			ack.Writer.Write(0); // Char Acceleration
+			ack.Writer.Write(0); // Char Boost
+			ack.Writer.Write(0); // int ItemUseSpeed;
+			ack.Writer.Write(0); // int ItemUseCrash;
+			ack.Writer.Write(0); // int ItemUseAccel;
+			ack.Writer.Write(0); // int ItemUseBoost;
+			ack.Writer.Write(0); // Unknown
+			ack.Writer.Write(0); // Unknown
+			ack.Writer.Write(0); // Unknown
+			ack.Writer.Write(0); // Unknown
+			ack.Writer.Write(0); // Vehicle Speed Testvalue:100 -> http://i.imgur.com/3GV9enQ.png
+			ack.Writer.Write(0); // Vehicle Durability Testvalue:200 -> http://i.imgur.com/3GV9enQ.png
+			ack.Writer.Write(0); // Vehicle Acceleration Testvalue:300 -> http://i.imgur.com/3GV9enQ.png
+			ack.Writer.Write(0); // Vehicle Boost Testvalue:400 -> http://i.imgur.com/3GV9enQ.png
+			ack.Writer.Write(0); // Unknown
+			ack.Writer.Write(0); // Unknown
+			ack.Writer.Write(0); // Unknown
+			ack.Writer.Write(0); // Unknown
+			ack.Writer.Write(0); // Unknown
+			ack.Writer.Write(0); // Unknown
+			ack.Writer.Write((short)0); // Unknown
+			packet.Sender.Send(ack);
+			/*
+			Send_StatUpdate:
+				XiStrStatInfo StatInfo;
+				XiStrEnChantBonus EnChantBonus;
+				
+			struct XiStrEnChantBonus
+{
+  int Speed;
+  int Crash;
+  int Accel;
+  int Boost;
+  float Drop;
+  float Exp;
+  float MitronCapacity;
+  float MitronEfficiency;
+};
+
+struct XiStrStatInfo
+{
+  int BasedSpeed;
+  int BasedCrash;
+  int BasedAccel;
+  int BasedBoost;
+  int EquipSpeed;
+  int EquipCrash;
+  int EquipAccel;
+  int EquipBoost;
+  int CharSpeed;
+  int CharCrash;
+  int CharAccel;
+  int CharBoost;
+  int ItemUseSpeed;
+  int ItemUseCrash;
+  int ItemUseAccel;
+  int ItemUseBoost;
+  int TotalSpeed;
+  int TotalCrash;
+  int TotalAccel;
+  int TotalBoost;
+};
 			
-			// carType, color, bumper?
-			// Last part, short = color
-			// After that, always 02 01 00 01
-			/*packet.Reader.ReadInt32(); // Timestamp.
-			packet.Reader.ReadInt32(); // Active until Timestamp?
+			XiCsCharInfo::StatUpdate(pCharInfo);
+			PacketSend::Send_StatUpdate(lpDispatch);
+			PacketSend::Send_PartyEnChantUpdateAll(lpDispatch); // TODO
 			*/
 		}
 		
