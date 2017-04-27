@@ -391,5 +391,38 @@ namespace GameServer.Network.Handlers
 			ack.Writer.Write(new byte[520]);
 			packet.Sender.Send(ack);
         }
+		
+		[Packet(Packets.CmdBuyCar)]
+		public static void BuyCar(Packet packet)
+		{
+			var charName = packet.Reader.ReadUnicodeStatic(17); // Possibly 21?
+			packet.Reader.Read(0x18); // I can't find this out due to corruption..
+			int carId = packet.Reader.ReadInt32(); // CarID to buy.
+			packet.Reader.ReadInt16(); // Bumper? Either short or 2 bytes.
+			short color = packet.Reader.ReadInt16();
+			Console.WriteLine("CarID: "+carId+", Color: "+color);
+			
+			/*
+			PacketSend::Send_StatUpdate((BS_PacketDispatch *)&pGameDispatch->vfptr);
+		  PacketSend::Send_PartyEnChantUpdateAll((BS_PacketDispatch *)&pGameDispatch->vfptr);
+		  PacketSend::Send_ItemModList((BS_PacketDispatch *)&pGameDispatch->vfptr);
+		  PacketSend::Send_VSItemModList((BS_PacketDispatch *)&pGameDispatch->vfptr);
+		  PacketSend::Send_VisualUpdate((BS_PacketDispatch *)&pGameDispatch->vfptr, 0);
+		  
+		  qmemcpy(&lpAckPkt->CarInfo, pCharInfo->m_pCurCarInfo, 0x2Cu);
+        v28[44] = v27->m_CarInfo.AuctionOn;
+        lpAckPkt->Gold = Price;
+			*/
+			
+			// carType, color, bumper?
+			// Last part, short = color
+			// After that, always 02 01 00 01
+			/*packet.Reader.ReadInt32(); // Timestamp.
+			packet.Reader.ReadInt32(); // Active until Timestamp?
+			*/
+		}
+		
+		/*BuyHistoryList: int32 pageNumber, int32 unknown, int32 tab (1=purchase history, 2=sent gift, 3=received gift)*/
+		/* Mito gotcha play: packet number 3500*/
     }
 }

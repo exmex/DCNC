@@ -1,4 +1,3 @@
-=================
  Drift City Mittron Madness Emulator
 =================
 Compatible with the v0.77a Client.
