@@ -186,5 +186,39 @@ namespace Shared.Models
                 return reader.HasRows;
             }
         }
+		
+		public static void CreateCharacter(MySqlConnection dbconn, ulong uid, string characterName, short avatar, uint carType, uint carColor)
+		{
+			long insertedCharId = -1;
+			long insertedCarId = -1;
+			
+			using (var cmd = new InsertCommand("INSERT INTO `Characters` {0}", dbconn))
+            {
+				cmd.Set("UID", uid);
+                cmd.Set("Name", characterName);
+                cmd.Set("Avatar", avatar);
+                cmd.Set("CurrentCarId", -1); // Invalidate this.
+                cmd.Set("City", 1);
+				
+                cmd.Execute();
+				insertedCharId = cmd.LastId;
+			}
+			using (var cmd = new InsertCommand("INSERT INTO `vehicles` {0}", dbconn))
+			{
+				cmd.Set("CharID", insertedCharId);
+				cmd.Set("color", carColor);
+				cmd.Set("carType", carType);
+				
+				cmd.Execute();
+				insertedCarId = cmd.LastId;
+			}
+			using (var cmd = new UpdateCommand("UPDATE `Characters` SET {0} WHERE `CID` = @charId", dbconn))
+			{
+				cmd.AddParameter("@charId", insertedCharId);
+				cmd.Set("CurrentCarID", insertedCarId);
+				
+				cmd.Execute();
+			}
+		}
     }
 }

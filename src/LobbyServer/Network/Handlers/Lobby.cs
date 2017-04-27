@@ -134,6 +134,23 @@ namespace LobbyServer.Network.Handlers
             ack.Writer.Write(!CharacterModel.Exists(LobbyServer.Instance.Database.Connection, characterName)); // Availability. true = Available, false = Unavailable.
             packet.Sender.Send(ack);
         }
+		
+		[Packet(Packets.CmdCreateChar)]
+		public static void CreateChar(Packet packet)
+		{
+			string characterName = packet.Reader.ReadUnicodeStatic(21);
+			short avatar = packet.Reader.ReadInt16();
+			uint carType = packet.Reader.ReadUInt32();
+			uint color = packet.Reader.ReadUInt32();
+			Console.WriteLine(characterName + " " + avatar + " " + carType + " " + color);
+			
+			CharacterModel.CreateCharacter(LobbyServer.Instance.Database.Connection, packet.Sender.User.UID, characterName, avatar, carType, color);
+			
+			var ack = new Packet(Packets.CmdCreateChar+1);
+            ack.Writer.WriteUnicodeStatic(characterName, 21);
+			packet.Sender.Send(ack);
+		}
+		
 
         /*
         000000: 41 00 64 00 6D 00 69 00 6E 00 00 00 00 01 00 00  A · d · m · i · n · · · · · · ·

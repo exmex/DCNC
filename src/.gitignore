@@ -1,2 +1,3 @@
 *.tss
 *.sln.GhostDoc.xml
+/ServerCommon/

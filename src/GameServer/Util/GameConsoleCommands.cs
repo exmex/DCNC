@@ -56,7 +56,7 @@ namespace GameServer.Util
         private CommandResult HandleWeather(string command, IList<string> args)
         {
 			if(args.Count != 2)
-				return CommandResult.InvalidArgument;
+				return CommandResult.Fail;
 			
             var ack = new Packet(Packets.WeatherAck);
             switch (args[1])

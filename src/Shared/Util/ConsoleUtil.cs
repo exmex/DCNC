@@ -33,7 +33,9 @@ namespace Shared.Util
         public static void WriteHeader(string consoleTitle, ConsoleColor color)
         {
             Console.Title = TitlePrefix + consoleTitle;
-
+			
+			Console.WriteLine();
+			
             Console.ForegroundColor = color;
             WriteLinesCentered(Logo);
 
