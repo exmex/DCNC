@@ -405,6 +405,7 @@ namespace GameServer.Network.Handlers
 			uint Color = packet.Reader.ReadUInt16();
 			Console.WriteLine(Color);
 			
+			// TODO: Buy car still has not the correct structure.
 			var ack = new Packet(Packets.BuyCarAck);
 			ack.Writer.Write(10000); // Price
 			ack.Writer.Write(1); // ID
