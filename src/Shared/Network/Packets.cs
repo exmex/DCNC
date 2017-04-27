@@ -4,8 +4,6 @@ namespace Shared.Network
 {
     public static class Packets
     {
-		// 4010 -> Ranking Racing Team Info
-		// 4001 -> Ranking Gameplay
         // Server -> Client
         public const ushort ErrorAck = 1;
 
@@ -50,6 +48,11 @@ namespace Shared.Network
         public const ushort InstantStartAck = 993;
         public const ushort InstantGiveUpAck = 1000;
 		public const ushort GetMyHancoinAck = 1401; // TODO: Wrong Packet Size. CMD(1401) CmdLen: : 14, AnalysisSize: 12
+		
+		// 4010 -> Ranking Racing Team Info
+		// 4001 -> Ranking Gameplay
+		public const ushort RankingGameplayAck = 4001;
+		public const ushort RankingRacingTeamInfoAck = 4010;
 
         // Client -> Server
         public const ushort CmdPing = 2;
