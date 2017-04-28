@@ -1,18 +1,17 @@
 typedef struct
 {
-    //CHAR charName[21];
-    CHAR charName[17] <bgcolor=cYellow>;
+    CHAR charName[21];
+    //CHAR charName[17] <bgcolor=cYellow>;
+    //wstring charName;
     UINT unknown1 <comment="Unknown", bgcolor=cRed>;
     UINT unknown2 <comment="Unknown", bgcolor=cRed>;
     UINT unknown3 <comment="Unknown", bgcolor=cRed>;
     UINT unknown4 <comment="Unknown", bgcolor=cRed>;
     UINT unknown5 <comment="Unknown", bgcolor=cRed>;
-    UINT unknown6 <comment="Unknown", bgcolor=cRed>;
-    UINT unknown7 <comment="Unknown", bgcolor=cRed>;
-    BYTE unknown8 <comment="Unknown", bgcolor=cRed>;
-    BYTE carType <comment="CarType">;
+    BYTE unknown6 <comment="Unknown", bgcolor=cRed>;
+    INT carType <comment="CarType">;
     SHORT bumper <comment="Bumper">;
-    BYTE color <comment="Color">;
+    SHORT color <comment="Color">;
 } BuyCar;
 
 BuyCar pkt;

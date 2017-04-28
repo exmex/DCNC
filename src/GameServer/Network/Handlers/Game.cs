@@ -526,6 +526,124 @@ struct XiStrStatInfo
 			*/
 		}
 		
+		[Packet(Packets.CmdBuyVisualItemThread)]
+		public static void BuyItemVisual(Packet packet)
+		{
+			var tableIdx = packet.Reader.ReadUInt32();
+			var carId = packet.Reader.ReadUInt32();
+			var plateName = packet.Reader.ReadUnicodeStatic(10);
+			packet.Reader.ReadInt32(); // Unknown
+			packet.Reader.ReadInt32(); // Unknown
+			packet.Reader.ReadInt32(); // Unknown
+			packet.Reader.ReadInt32(); // Unknown
+			packet.Reader.ReadInt32(); // Unknown
+			// 20 bytes
+			
+			var periodIdx = packet.Reader.ReadUInt32();
+			
+			packet.Reader.ReadInt16(); // Unknown / 2 bytes
+			packet.Reader.ReadInt64(); // curCash
+			
+			packet.Reader.ReadInt32(); // Unknown
+			
+			var ack = new Packet(Packets.CmdBuyVisualItemThread+1);
+			ack.Writer.Write(0); // Type?
+			ack.Writer.Write(tableIdx);
+			ack.Writer.Write(carId);
+			ack.Writer.Write(0); // Inventory Id (Slot?)
+			ack.Writer.Write(0); // Period (1 = 7d, 2 = 30d, 4 = 00?, 5 = infinite)
+			ack.Writer.Write(0); // Mito
+			ack.Writer.Write(0); // Hancoin
+			ack.Writer.Write(0); // BonusMito
+			ack.Writer.Write(0); // Mileage
+			
+			packet.Sender.Send(ack);
+			
+			var ack2 = new Packet(Packets.RoomNotifyChangeAck); // TODO: Wrong Packet Size. CMD(467) CmdLen: : 240, AnalysisSize: 62
+			ack2.Writer.Write((ushort)0); // Serial?
+			ack2.Writer.Write((ushort)0); // Age?
+			
+			ack2.Writer.Write((ushort)0); // CarAttr Sort
+			ack2.Writer.Write((ushort)0); // CarAttr Body
+			ack2.Writer.Write(new char[4]); // CarAttr Color
+			ack2.Writer.Write(0); // CarAttr lvalSortBody
+			ack2.Writer.Write(0); // CarAttr lvalColor
+			ack2.Writer.Write((long)0); // CarAttr llval
+			
+			ack2.Writer.WriteUnicodeStatic("Hello", 21); // PlayerInfo Cname
+			ack2.Writer.Write((ushort)0); // PlayerInfo serial
+			ack2.Writer.Write((ushort)0); // PlayerInfo age
+			ack2.Writer.Write((long)1); // PlayerInfo Cid
+			ack2.Writer.Write((ushort)1); // PlayerInfo Level
+			ack2.Writer.Write((uint)0); // PlayerInfo Exp
+			ack2.Writer.Write((long)0); // PlayerInfo TeamId
+			ack2.Writer.Write((long)0); // PlayerInfo TeamMarkId
+			ack2.Writer.WriteUnicodeStatic("Staff", 14); // PlayerInfo TeamName
+			ack2.Writer.Write((ushort)1); // PlayerInfo teamNLevel
+			
+			ack2.Writer.Write((ushort)1); // VisualItem Neon
+			ack2.Writer.Write((ushort)1); // VisualItem Plate
+			ack2.Writer.Write((ushort)1); // VisualItem Decal
+			ack2.Writer.Write((ushort)1); // VisualItem DecalColor
+			ack2.Writer.Write((ushort)1); // VisualItem AeroBumper
+			ack2.Writer.Write((ushort)1); // VisualItem AeroIntercooler
+			ack2.Writer.Write((ushort)1); // VisualItem AeroSet
+			ack2.Writer.Write((ushort)1); // VisualItem MufflerFlame
+			ack2.Writer.Write((ushort)1); // VisualItem Wheel
+			ack2.Writer.Write((ushort)1); // VisualItem Spoiler
+			
+			ack2.Writer.Write((ushort)0); // VisualItem Reserved?
+			ack2.Writer.Write((ushort)0); // VisualItem Reserved?
+			ack2.Writer.Write((ushort)0); // VisualItem Reserved?
+			ack2.Writer.Write((ushort)0); // VisualItem Reserved?
+			ack2.Writer.Write((ushort)0); // VisualItem Reserved?
+			ack2.Writer.Write((ushort)0); // VisualItem Reserved?
+			
+			ack2.Writer.WriteUnicodeStatic("HELLO", 9); // VisualItem PlateString
+			
+			ack2.Writer.Write((float)100.0f); // PlayerInfo UseItem
+			
+			/*
+struct XiVisualItem
+{
+  __int16 Neon;
+  __int16 Plate;
+  __int16 Decal;
+  __int16 DecalColor;
+  __int16 AeroBumper;
+  __int16 AeroIntercooler;
+  __int16 AeroSet;
+  __int16 MufflerFlame;
+  __int16 Wheel;
+  __int16 Spoiler;
+  __int16 Reserve[6];
+  wchar_t PlateString[9];
+};
+			*/
+			
+			packet.Sender.Send(ack2);
+			
+			// TODO: Send visual update aka BS_PktRoomNotifyChange
+/* BS_PktRoomNotifyChange
+
+struct XiPlayerInfo
+{
+  wchar_t Cname[13];
+  unsigned __int16 Serial;
+  unsigned __int16 Age;
+  __unaligned __declspec(align(1)) __int64 Cid;
+  unsigned __int16 Level;
+  unsigned int Exp;
+  __unaligned __declspec(align(1)) __int64 TeamId;
+  __unaligned __declspec(align(1)) __int64 TeamMarkId;
+  wchar_t TeamName[14];
+  unsigned __int16 TeamNLevel;
+  XiVisualItem VisualItem;
+  float UseTime;
+};
+*/
+		}
+		
 		/*BuyHistoryList: int32 pageNumber, int32 unknown, int32 tab (1=purchase history, 2=sent gift, 3=received gift)*/
 		/* Mito gotcha play: packet number 3500*/
     }

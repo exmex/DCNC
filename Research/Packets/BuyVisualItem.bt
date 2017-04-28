@@ -1,0 +1,32 @@
+typedef struct
+{
+    UINT tableIdx;
+    UINT carId;
+    wchar_t plateName[10]; // Can also be colour.
+    BYTE unknown1[20] <comment="Unknown", bgcolor=cRed>;
+    //BYTE useMileage <comment="Bool">;
+    UINT periodIdx <comment="1 = 7d, 2 = 30d, 3 = 90d, 4 = 00?, 5 = infinite">;
+    BYTE unknown2[2] <comment="Unknown", bgcolor=cRed>;
+    int64 curCash;
+    BYTE unknown3[4] <comment="Unknown", bgcolor=cRed>;
+} BuyVisualItem_Plate;
+
+typedef struct
+{
+    UINT tableIdx;
+    UINT carId;
+    SHORT mName1;
+    SHORT mName2;
+    SHORT mName3;
+    SHORT mName4;
+    wchar_t plateName[10]; // Can also be colour.
+    BYTE unknown1[20] <comment="Unknown", bgcolor=cRed>;
+    //BYTE useMileage <comment="Bool">;
+    UINT periodIdx <comment="1 = 7d, 2 = 30d, 3 = 90d, 4 = 00?, 5 = infinite">;
+    BYTE unknown2[2] <comment="Unknown", bgcolor=cRed>;
+    int64 curCash;
+    BYTE unknown3[4] <comment="Unknown", bgcolor=cRed>;
+} BuyVisualItem;
+
+//BuyVisualItem_Plate pkt;
+BuyVisualItem pkt;

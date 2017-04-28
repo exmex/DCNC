@@ -33,6 +33,8 @@ namespace Shared.Network
         public const ushort ItemListAck = 401;
         public const ushort BuyItemAck = 404;
         public const ushort SellItemAck = 406;
+		
+		public const ushort RoomNotifyChangeAck = 467;
 
         public const ushort UdpTimeSyncAck = 540;
         public const ushort EnterAreaAck = 563;
