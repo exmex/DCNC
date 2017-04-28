@@ -119,7 +119,6 @@ namespace Shared.Network
                 var s3 = $"{j++*bytesPerLine:d6}: {s1} {s2}";
                 hexDump = hexDump + s3 + Environment.NewLine;
             }
-
 #if DEBUG
 			// Hide frequent sync packets from console log.
             if (packet.Id != Packets.CmdUnknownSync/*3917*/ && packet.Id != Packets.CmdNullPing/*7*/ && packet.Id != 706 && packet.Id != 707 && packet.Id != Packets.CmdUdpCastTcs/*702*/)
@@ -147,6 +146,13 @@ namespace Shared.Network
             else
                 if (!File.Exists("packetcaptures\\" + packet.Id + ".txt"))
                     System.IO.File.WriteAllText("packetcaptures\\" + packet.Id + ".txt", hexDump);
+				
+			if (_debugNameDatabase.ContainsKey(packet.Id))
+                if (!File.Exists("packetcaptures\\" + _debugNameDatabase[packet.Id] + ".bin"))
+                    System.IO.File.WriteAllBytes("packetcaptures\\" + _debugNameDatabase[packet.Id] + ".bin", packet.Buffer);
+            else
+                if (!File.Exists("packetcaptures\\" + packet.Id + ".bin"))
+                    System.IO.File.WriteAllBytes("packetcaptures\\" + packet.Id + ".bin", packet.Buffer);
 
 			// Hide frequent sync packets from console log.
             if (packet.Id != Packets.CmdUnknownSync/*3917*/ && packet.Id != Packets.CmdNullPing/*7*/ && packet.Id != 706 && packet.Id != 707)
