@@ -32,6 +32,7 @@ namespace GameServer.Network.Handlers
         public static void MyCityPosition(Packet packet)
         {
             //Console.WriteLine(packet.Reader.ReadUInt32());
+			// SHORT CHANNELID
             // -> Gate ID!
             var ack = new Packet(Packets.MyPositionAck);
 
@@ -306,7 +307,6 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdInstantStart)]
         public static void InstantStart(Packet packet)
         {
-            //Wrong Packet Size. CMD(993) CmdLen: : 11, AnalysisSize: 8
             var tableIdx = packet.Reader.ReadUInt32();
 
             var ack = new Packet(Packets.InstantStartAck);
@@ -379,15 +379,15 @@ namespace GameServer.Network.Handlers
 		{
 			var tableIdx = packet.Reader.ReadUInt32();
 			
-			var ack = new Packet(Packets.CmdQuestComplete+1);
+			var ack = new Packet(Packets.QuestCompleteAck);
 			ack.Writer.Write(tableIdx);
 			packet.Sender.Send(ack);
 		}
 		
-        [Packet(3200)]
+        [Packet(CmdChangeArea)]
         public static void ChangeArea(Packet packet)
         {
-			var ack = new Packet(3201);
+			var ack = new Packet(ChangeAreaAck);
 			ack.Writer.Write(new byte[520]);
 			packet.Sender.Send(ack);
         }

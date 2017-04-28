@@ -23,6 +23,7 @@ namespace Shared.Network
         public const ushort ChatMsgAck = 147;
         public const ushort ChasePropose = 186;
         public const ushort FriendListAck = 231;
+		public const ushort QuestCompleteAck = 265;
         public const ushort MyQuestListAck = 273;
 		
 		public const ushort FriendStatus = 274;
@@ -39,6 +40,7 @@ namespace Shared.Network
         public const ushort WeatherAck = 640;
         public const ushort GameCharInfoAck = 661; // TODO: Wrong Packet Size. CMD(661) CmdLen: : 1177, AnalysisSize: 831
         public const ushort AreaStatusAck = 683;
+		public const ushort UdpCastTcsSignalAck = 706;
         public const ushort FuelChargeReqAck = 724;
 		public const ushort StatUpdateAck = 760;
         public const ushort FirstPositionAck = 783;
@@ -48,6 +50,8 @@ namespace Shared.Network
         public const ushort InstantStartAck = 993;
         public const ushort InstantGiveUpAck = 1000;
 		public const ushort GetMyHancoinAck = 1401; // TODO: Wrong Packet Size. CMD(1401) CmdLen: : 14, AnalysisSize: 12
+		
+		public const ushort ChangeAreaAck = 3201;
 		
 		// 4010 -> Ranking Racing Team Info
 		// 4001 -> Ranking Gameplay
@@ -300,7 +304,7 @@ namespace Shared.Network
         public const ushort CmdCBattleGetSetting = 910;
         public const ushort CmdObserverSupport = 916;
         public const ushort CmdInstantRequest = 990;
-        public const ushort CmdInstantStart = 992;
+        public const ushort CmdInstantStart = 992; // TODO: Wrong Packet Size. CMD(993) CmdLen: : 11, AnalysisSize: 8
         public const ushort CmdInstantComplete = 994;
         public const ushort CmdInstantGiveUp = 999;
         public const ushort CmdInstantGoalPlace = 1001;
@@ -364,6 +368,7 @@ namespace Shared.Network
         public const ushort CmdUcBossPatrolStart = 3010;
         public const ushort CmdUcBossPatrolGiveUp = 3012;
         public const ushort CmdUcBossPatrolGoalPlace = 3014;
+		public const ushort CmdChangeArea = 3200;
         public const ushort CmdUnknownSync = 3917;
 
         public static string GetName(ushort packetId)
