@@ -384,10 +384,10 @@ namespace GameServer.Network.Handlers
 			packet.Sender.Send(ack);
 		}
 		
-        [Packet(CmdChangeArea)]
+        [Packet(Packets.CmdChangeArea)]
         public static void ChangeArea(Packet packet)
         {
-			var ack = new Packet(ChangeAreaAck);
+			var ack = new Packet(Packets.ChangeAreaAck);
 			ack.Writer.Write(new byte[520]);
 			packet.Sender.Send(ack);
         }

@@ -32,7 +32,7 @@ namespace AreaServer.Network.Handlers
             var signal = packet.Reader.ReadInt32(); // Signal
             var state = packet.Reader.ReadInt32(); // State
 
-            var ack = new Packet(UdpCastTcsSignalAck);
+            var ack = new Packet(Packets.UdpCastTcsSignalAck);
             ack.Writer.Write(time);
             ack.Writer.Write(signal);
             ack.Writer.Write(state);
