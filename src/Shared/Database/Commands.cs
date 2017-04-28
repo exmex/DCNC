@@ -55,7 +55,7 @@ namespace Shared.Database
     /// </remarks>
     /// <example>
     /// <code>
-    /// using (var conn = AuraDb.Instance.Connection)
+    /// using (var conn = Db.Instance.Connection)
     /// using (var cmd = new UpdateCommand("UPDATE `accounts` SET {0} WHERE `accountId` = @accountId", conn))
     /// {
     /// 	cmd.AddParameter("@accountId", account.Id);

@@ -82,7 +82,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>taskkill /F /IM "AuthServer.exe" 2&gt;nul 1&gt;nul
+    <PreBuildEvent>"$(SolutionDir)External\NetRevisionTool.exe" /info /patch "$(ProjectDir)"
+taskkill /F /IM "AuthServer.exe" 2&gt;nul 1&gt;nul
 taskkill /F /IM "LobbyServer.exe" 2&gt;nul 1&gt;nul
 taskkill /F /IM "AreaServer.exe" 2&gt;nul 1&gt;nul
 taskkill /F /IM "GameServer.exe" 2&gt;nul 1&gt;nul
@@ -90,7 +91,7 @@ taskkill /F /IM "RankingServer.exe" 2&gt;nul 1&gt;nul
 Exit 0</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)External\NetRevisionTool.exe" /restore "$(ProjectDir)"
     </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

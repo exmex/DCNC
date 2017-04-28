@@ -1,4 +1,4 @@
- Drift City Mittron Madness Emulator
+ Drift City NeoCity Emulator
 =================
 Compatible with the v0.77a Client.
 

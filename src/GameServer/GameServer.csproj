@@ -70,11 +70,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)External\NetRevisionTool.exe" /restore "$(ProjectDir)"
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>taskkill /F /IM "GameServer.exe" 2&gt;nul 1&gt;nul
+    <PreBuildEvent>"$(SolutionDir)External\NetRevisionTool.exe" /info /patch "$(ProjectDir)"
+taskkill /F /IM "GameServer.exe" 2&gt;nul 1&gt;nul
 Exit 0</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

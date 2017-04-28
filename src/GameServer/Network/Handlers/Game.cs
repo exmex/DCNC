@@ -570,10 +570,10 @@ struct XiStrStatInfo
 			ack2.Writer.Write(0); // CarAttr lvalColor
 			ack2.Writer.Write((long)0); // CarAttr llval
 			
-			ack2.Writer.WriteUnicodeStatic("Hello", 21); // PlayerInfo Cname
-			ack2.Writer.Write((ushort)0); // PlayerInfo serial
+			ack2.Writer.WriteUnicodeStatic("Gigatoni", 21); // PlayerInfo Cname
+			ack2.Writer.Write((ushort)5); // PlayerInfo serial
 			ack2.Writer.Write((ushort)0); // PlayerInfo age
-			ack2.Writer.Write((long)1); // PlayerInfo Cid
+			ack2.Writer.Write((long)4); // PlayerInfo Cid
 			ack2.Writer.Write((ushort)1); // PlayerInfo Level
 			ack2.Writer.Write((uint)0); // PlayerInfo Exp
 			ack2.Writer.Write((long)0); // PlayerInfo TeamId

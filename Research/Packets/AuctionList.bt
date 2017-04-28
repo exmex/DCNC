@@ -1,0 +1,11 @@
+typedef struct
+{
+    UINT offset;
+    UINT listNum;
+    UINT type;
+    UINT sortType;
+    UINT unknown1 <comment="Unknown", bgcolor=cRed>;
+    UINT unknown2 <comment="Unknown", bgcolor=cRed>;
+} AuctionList;
+
+AuctionList pkt;

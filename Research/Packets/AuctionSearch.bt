@@ -1,0 +1,46 @@
+typedef struct
+{
+    int64 cId;
+    CHAR charName[17]; // 21
+    UINT regNum;
+    UINT buyNum;
+    UINT sellNum;
+} XiStrAuctionClientInfo;
+
+typedef struct
+{
+  int StackNum;
+  int Random;
+  unsigned int AssistA;
+  unsigned int AssistB;
+  unsigned int Upgrade;
+  unsigned int UpgradePoint;
+  int16 Period;
+  int CreateTime;
+} XiStrItemUnit;
+
+typedef struct
+{
+  UINT Serial;
+  XiStrItemUnit ItemUnit;
+  UINT TableIdx;
+  UINT InvenIdx;
+  UINT Price;
+  UINT State;
+  int RegDate;
+} XiStrAuctionItemInfo;
+
+typedef struct
+{
+    XiStrAuctionClientInfo ClientInfo;
+    XiStrAuctionItemInfo ItemInfo;
+} XiStrAuctionUnitInfo;
+
+typedef struct
+{
+    UINT auctionTotalNum;
+    UINT auctionNum;
+    XiStrAuctionUnitInfo auctionInfo;
+} AuctionSearch;
+
+AuctionSearch pkt;
