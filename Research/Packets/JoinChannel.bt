@@ -1,0 +1,7 @@
+typedef struct
+{
+    CHAR channelName[16];
+    BYTE unknown[8] <comment="Unknown", bgcolor=cRed>;;
+} JoinChannel;
+
+JoinChannel pkt;

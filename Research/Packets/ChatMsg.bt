@@ -1,0 +1,12 @@
+typedef struct
+{
+    CHAR channel[10] <bgcolor=cYellow>;
+    UINT color <comment="Color in hex 0xFF00FF00 = green", format=hex>;
+    INT unknown1 <comment="Unknown", bgcolor=cRed>;
+    INT unknown2 <comment="Unknown", bgcolor=cRed>;
+    SHORT unknown1 <comment="Unknown", bgcolor=cRed>;
+    SHORT messageLength <comment="Message length">;
+    CHAR message[messageLength] <bgcolor=cYellow>;
+} ChatMsg;
+
+ChatMsg pkt;

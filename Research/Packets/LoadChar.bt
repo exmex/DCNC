@@ -1,0 +1,8 @@
+typedef struct
+{
+    wstring characterName <bgcolor=cYellow>;
+    UINT serial;
+    BYTE unknown1[14] <comment="Unknown", bgcolor=cRed>;
+} LoadChar;
+
+LoadChar pkt;

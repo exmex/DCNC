@@ -1,0 +1,8 @@
+typedef struct
+{
+    UINT slot1;
+    UINT slot2;
+    BYTE unknown1[16] <comment="Unknown", bgcolor=cRed>;
+} UpdateQuickSlot;
+
+UpdateQuickSlot pkt;

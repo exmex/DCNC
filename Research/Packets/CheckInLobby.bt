@@ -1,0 +1,9 @@
+typedef struct {
+    UINT version;
+    UINT ticket;
+    CHAR username[40]; // 0x28
+    UINT time;
+    CHAR stringTicket[64]; // 0x40
+} CheckInLobby;
+
+CheckInLobby pkt;

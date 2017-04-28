@@ -1,0 +1,11 @@
+typedef struct
+{
+    wstring charName <comment="This would make more sense">;
+    SHORT unknown1 <comment="Unknown probably short", bgcolor=cRed>;
+    SHORT unknown2 <comment="Unknown probably short", bgcolor=cRed>;
+    // TODO: CURRENT IMPLEMENTATION:
+    //CHAR charName[21] <comment="Fixed Length of 21">;
+    //BYTE unknown[25] <comment="Unknown", bgcolor=cRed>;
+} GameCharInfo;
+
+GameCharInfo pkt;

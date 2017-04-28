@@ -1,0 +1,7 @@
+typedef struct {
+    //CHAR charName[21];
+    wstring charName;
+    ulong charId; // Unsure.
+} DeleteCharacter;
+
+DeleteCharacter pkt;

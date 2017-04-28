@@ -1,0 +1,11 @@
+typedef struct
+{
+    INT channelId;
+    FLOAT x;
+    FLOAT y;
+    FLOAT z;
+    FLOAT w;
+    INT cityId;
+    INT posState <comment="1 should be tutorial, 2 is load from Car city Id random channel, and everything else is last channel city id 0">;
+} SaveCarPos;
+SaveCarPos pkt;

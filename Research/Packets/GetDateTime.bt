@@ -1,0 +1,8 @@
+typedef struct
+{
+    UINT globalTime;
+    UINT localTime;
+    UINT action;
+} GetDateTime;
+
+GetDateTime pkt;

@@ -1,0 +1,8 @@
+typedef struct
+{
+    UINT tableIdx;
+    UINT unknown1 <comment="Unknown", bgcolor=cRed>;
+    UINT unknown2 <comment="Unknown", bgcolor=cRed>;
+} QuestComplete;
+
+QuestComplete pkt;

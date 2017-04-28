@@ -1,0 +1,12 @@
+typedef struct 
+{
+    INT areaId;
+    FLOAT m_x;
+    FLOAT m_y;
+    INT time; // Order could be different.
+    INT signal;
+    INT state;
+    // next maybe short
+} UdpCastTcsSignal;
+
+UdpCastTcsSignal pkt;

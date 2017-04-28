@@ -1,0 +1,8 @@
+typedef struct
+{
+   BYTE unknown1[90] <comment="Unknown", bgcolor=cRed>;
+   SHORT maxLevel;
+   BYTE unknown2[12] <comment="Unknown", bgcolor=cRed>;
+} GameSettings;
+
+GameSettings settings;

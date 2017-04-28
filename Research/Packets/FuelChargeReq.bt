@@ -1,0 +1,10 @@
+typedef struct
+{
+    UINT carId;
+    LONG pay;
+    FLOAT fuel;
+    FLOAT unknown1 <comment="Unknown Data type", bgcolor=cRed>;
+    INT unknown2 <comment="Unknown Data type", bgcolor=cRed>;
+} FuelChargeReq;
+
+FuelChargeReq pkt;

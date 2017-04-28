@@ -1,0 +1,10 @@
+typedef struct
+{
+    short sessionId; // Serial
+    wstring username;
+    uint areaId; // could be int too
+    uint localTime; // could be int too
+    uint groupId; // could be int too
+} EnterArea;
+
+EnterArea pkt;

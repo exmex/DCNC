@@ -1,0 +1,6 @@
+typedef struct {
+	CHAR username[32];
+	DWORD ticket;
+} UserInfo;
+
+UserInfo pkt;

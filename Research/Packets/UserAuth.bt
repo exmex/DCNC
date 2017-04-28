@@ -1,0 +1,6 @@
+typedef struct 
+{
+	DWORD version;
+	CHAR username[40];
+	CHAR password[40]; // Actually ASCII.
+} UserAuth;

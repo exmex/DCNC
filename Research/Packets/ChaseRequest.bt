@@ -1,0 +1,10 @@
+typedef struct 
+{
+    BYTE bNow <comment="Actually a boolean">;
+    FLOAT posX <bgcolor=cRed>;
+    FLOAT posY <bgcolor=cYellow>;
+    FLOAT posZ <bgcolor=cGreen>;
+    FLOAT rotation <bgcolor=cGray>;
+} ChaseRequest;
+
+ChaseRequest pkt;

@@ -1,0 +1,6 @@
+typedef struct
+{
+    UINT time;
+} TimeSync;
+
+TimeSync pkt;

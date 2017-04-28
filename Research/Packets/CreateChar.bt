@@ -1,0 +1,9 @@
+typedef struct
+{
+    CHAR characterName[21];
+    short avatar;
+    uint carType;
+    uint color;
+} CreateChar;
+
+CreateChar pkt;

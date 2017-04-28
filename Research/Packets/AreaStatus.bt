@@ -1,0 +1,6 @@
+typedef struct
+{
+    // Empty
+} AreaStatus;
+
+AreaStatus pkt;

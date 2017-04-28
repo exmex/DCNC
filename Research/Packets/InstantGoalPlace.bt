@@ -1,0 +1,7 @@
+typedef struct
+{
+    UINT tableIdx;
+    UINT placeIdx;
+} InstantGoalPlace;
+
+InstantGoalPlace pkt;

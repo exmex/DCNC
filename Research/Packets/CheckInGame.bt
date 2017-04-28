@@ -1,0 +1,10 @@
+typedef struct
+{
+    UINT version <comment="Protocol version maybe?">;
+    UINT ticket <comment="SessionTicket">;
+    CHAR name[17];
+    
+    BYTE unknown1[93] <comment="Unknown", bgcolor=cRed>;
+} CheckInGame;
+
+CheckInGame pkt;
