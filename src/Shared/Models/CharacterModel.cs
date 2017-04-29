@@ -195,6 +195,11 @@ namespace Shared.Models
                 cmd.Set("Avatar", avatar);
                 cmd.Set("CurrentCarId", -1); // Invalidate this.
                 cmd.Set("City", 1);
+                cmd.Set("CreationDate", (DateTimeOffset.Now).ToUnixTimeSeconds());
+                cmd.Set("Level", 1);
+                cmd.Set("GarageLevel", 1);
+                cmd.Set("InventoryLevel", 1);
+                cmd.Set("posState", 1);
 				
                 cmd.Execute();
 				insertedCharId = cmd.LastId;

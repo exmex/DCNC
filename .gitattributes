@@ -1,2 +1,4 @@
+Research/* linguist-vendored
+packetcaptures/* linguist-vendored
 *.bt linguist-language=C
 *.bin -text binary
