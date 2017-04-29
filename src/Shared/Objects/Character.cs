@@ -54,7 +54,8 @@ namespace Shared.Objects
         public int Flags;
         public int Guild;
         public long Mileage;
-        
+
+        public Vehicle ActiveCar;
 
         public void Serialize(PacketWriter writer)
         {

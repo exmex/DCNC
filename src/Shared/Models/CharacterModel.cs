@@ -121,6 +121,7 @@ namespace Shared.Models
                         PositionZ = (float)Convert.ToDouble(reader["posZ"]),
                         Rotation = (float)Convert.ToDouble(reader["posW"]),
                         posState = Convert.ToInt32(reader["posState"]),
+                        ActiveCar = VehicleModel.Retrieve(dbconn, Convert.ToInt32(reader["CurrentCarID"]))
                     };
                     chars.Add(character);
                 }

@@ -12,6 +12,8 @@ namespace Shared
     /// </summary>
     public abstract class ServerMain
     {
+        public const int ProtocolVersion = 10249;
+
         const int SWP_NOZORDER = 0x4;
         const int SWP_NOACTIVATE = 0x10;
 

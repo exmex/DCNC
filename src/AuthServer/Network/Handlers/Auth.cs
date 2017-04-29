@@ -1,4 +1,5 @@
-﻿using Shared.Models;
+﻿using Shared;
+using Shared.Models;
 using Shared.Network;
 using Shared.Network.AuthServer;
 using Shared.Objects;
@@ -15,7 +16,7 @@ namespace AuthServer.Network.Handlers
 
             Log.Debug("Login (v{0}) request from {1}", authPacket.ProtocolVersion.ToString(), authPacket.Username);
 
-            if (authPacket.ProtocolVersion < AuthServer.ProtocolVersion)
+            if (authPacket.ProtocolVersion < ServerMain.ProtocolVersion)
             {
                 Log.Debug("Client too old?");
                 packet.Sender.Error("Your client is outdated!");

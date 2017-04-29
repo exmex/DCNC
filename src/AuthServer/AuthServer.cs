@@ -9,7 +9,6 @@ namespace AuthServer
 {
     public class AuthServer : ServerMain
     {
-        public const int ProtocolVersion = 10249;
         public static readonly AuthServer Instance = new AuthServer();
 
         private bool _running;
