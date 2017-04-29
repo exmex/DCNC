@@ -1,5 +1,4 @@
-﻿using Shared;
-using Shared.Database;
+﻿using Shared.Database;
 
 namespace GameServer.Database
 {

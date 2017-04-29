@@ -20,7 +20,7 @@
             Port = GetInt("port", 3306);
             User = GetString("user", "root");
             Pass = GetString("pass", "");
-            Db = GetString("database", "dcmm");
+            Db = GetString("database", "dcnc");
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Shared.Database
         {
             _connectionString =
                 $"server={host}; port={port}; database={db}; uid={user}; password={pass}; pooling=true; min pool size=0; max pool size=100; ConvertZeroDateTime=true";
-            this.TestConnection();
+            TestConnection();
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Shared.Database
             MySqlConnection conn = null;
             try
             {
-                conn = this.Connection;
+                conn = Connection;
             }
             finally
             {

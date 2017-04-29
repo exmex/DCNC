@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
-using Shared;
 using Shared.Database;
 using Shared.Util;
 
@@ -20,7 +15,7 @@ namespace AuthServer.Database
         /// <returns></returns>
         public bool CheckUpdate(string updateFile)
         {
-            using (var conn = this.Connection)
+            using (var conn = Connection)
             using (var mc = new MySqlCommand("SELECT * FROM `updates` WHERE `path` = @path", conn))
             {
                 mc.Parameters.AddWithValue("@path", updateFile);
@@ -38,7 +33,7 @@ namespace AuthServer.Database
         {
             try
             {
-                using (var conn = this.Connection)
+                using (var conn = Connection)
                 {
                     // Run update
                     using (var cmd = new MySqlCommand(File.ReadAllText(Path.Combine("sql", updateFile)), conn))

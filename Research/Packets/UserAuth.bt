@@ -1,6 +1,9 @@
 typedef struct 
 {
-	DWORD version;
-	CHAR username[40];
-	CHAR password[40]; // Actually ASCII.
+	DWORD protocolVersion;
+	CHAR username[80];
+	string password;
+    BYTE unknown1[62] <comment="Unknown", bgcolor=cRed>;
 } UserAuth;
+
+UserAuth pkt;

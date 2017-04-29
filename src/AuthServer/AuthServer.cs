@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Forms;
 using AuthServer.Database;
 using AuthServer.Util;
 using Shared;
@@ -10,6 +9,7 @@ namespace AuthServer
 {
     public class AuthServer : ServerMain
     {
+        public const int ProtocolVersion = 10249;
         public static readonly AuthServer Instance = new AuthServer();
 
         private bool _running;

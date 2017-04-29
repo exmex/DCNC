@@ -15,7 +15,7 @@ namespace AreaServer.Database
         /// <returns></returns>
         public bool CheckUpdate(string updateFile)
         {
-            using (var conn = this.Connection)
+            using (var conn = Connection)
             using (var mc = new MySqlCommand("SELECT * FROM `updates` WHERE `path` = @path", conn))
             {
                 mc.Parameters.AddWithValue("@path", updateFile);
@@ -33,7 +33,7 @@ namespace AreaServer.Database
         {
             try
             {
-                using (var conn = this.Connection)
+                using (var conn = Connection)
                 {
                     // Run update
                     using (var cmd = new MySqlCommand(File.ReadAllText(Path.Combine("sql", updateFile)), conn))

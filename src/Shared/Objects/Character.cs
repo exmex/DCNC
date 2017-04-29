@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Shared.Network;
-using Shared.Util;
+﻿using Shared.Network;
 
 namespace Shared.Objects
 {

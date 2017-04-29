@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+// ReSharper disable UnusedMember.Global
 
 namespace Shared.Network
 {
@@ -385,7 +386,7 @@ namespace Shared.Network
             return "?";
         }
 
-        [Packet(Packets.CmdNullPing)]
+        [Packet(CmdNullPing)]
         public static void NullPing(Packet packet)
         {
             

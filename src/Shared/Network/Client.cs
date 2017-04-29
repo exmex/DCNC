@@ -167,10 +167,6 @@ namespace Shared.Network
                 return;
             }
 
-#if DEBUG
-            //Error(ex.Message + ": " + ex.StackTrace);
-#endif
-
             Kill(ex.Message + ": " + ex.StackTrace);
         }
 

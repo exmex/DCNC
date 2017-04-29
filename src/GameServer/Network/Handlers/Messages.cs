@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Shared.Network;
+﻿using Shared.Network;
 
 namespace GameServer.Network.Handlers
 {
-    class Messages
+    public static class Messages
     {
         [Packet(1486)]
         public static void SendMessage(Packet packet)

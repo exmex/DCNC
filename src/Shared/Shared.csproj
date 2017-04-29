@@ -49,12 +49,14 @@
     <Compile Include="Math2.cs" />
     <Compile Include="Models\AccountModel.cs" />
     <Compile Include="Models\CharacterModel.cs" />
+    <Compile Include="Models\ServerModel.cs" />
     <Compile Include="Models\VehicleModel.cs" />
     <Compile Include="Network\Client.cs" />
     <Compile Include="Network\DefaultServer.cs" />
     <Compile Include="Network\Packet.cs" />
     <Compile Include="Network\PacketIO.cs" />
     <Compile Include="Network\Packets.cs" />
+    <Compile Include="Network\Packets\AuthServer\UserAuthPacket.cs" />
     <Compile Include="Objects\Character.cs" />
     <Compile Include="Objects\Item.cs" />
     <Compile Include="Models\TeamModel.cs" />
@@ -79,6 +81,12 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Network\Packets\AreaServer\" />
+    <Folder Include="Network\Packets\GameServer\" />
+    <Folder Include="Network\Packets\LobbyServer\" />
+    <Folder Include="Network\Packets\Ranking\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
