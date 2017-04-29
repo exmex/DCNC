@@ -64,8 +64,7 @@ namespace Shared.Network.LobbyServer
                 packet.Writer.Write(character.Tid);
                 packet.Writer.Write(character.TeamMarkId);
                 packet.Writer.WriteUnicodeStatic(character.TeamName, 13);
-                packet.Writer.Write((short)1);
-                packet.Writer.Write((short)-1);
+                packet.Writer.Write(0); // GuildType?
             }
 
             client.Send(packet);

@@ -70,6 +70,8 @@ namespace Shared.Network
 
 		public void Start()
 		{
+			Log.Info("Starting server on port {0}", _port);
+
 			_listener.Start();
 			_listener.BeginAcceptTcpClient(OnAccept, _listener);
 

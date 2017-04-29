@@ -64,12 +64,12 @@ namespace Shared
         }
 
         /// <summary>
-        /// Tries to find aura root folder and changes the working directory to it.
+        /// Tries to find root folder and changes the working directory to it.
         /// Exits if not successful.
         /// </summary>
         protected static void NavigateToRoot()
         {
-            // Go back max 2 folders, the bins should be in [aura]/bin/(Debug|Release)
+            // Go back max 2 folders, the bins should be in /bin/(Debug|Release)
             for (int i = 0; i < 3; ++i)
             {
                 if (Directory.Exists("system"))

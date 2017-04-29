@@ -156,7 +156,7 @@ namespace GameServer.Network.Handlers
 
             packet.Sender.User = user;
             packet.Sender.User.ActiveCharacterId = character.Uid;
-            packet.Sender.User.ActiveCharacter = CharacterModel.RetrieveOne(GameServer.Instance.Database.Connection, character.Uid);
+            packet.Sender.User.ActiveCharacter = character;
             packet.Sender.User.ActiveCarId = character.CurrentCarId;
             packet.Sender.User.ActiveTeam = team;
             packet.Sender.User.Characters = CharacterModel.Retrieve(GameServer.Instance.Database.Connection, user.UID);
