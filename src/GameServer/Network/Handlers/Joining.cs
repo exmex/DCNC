@@ -1,4 +1,6 @@
-﻿using Shared.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Shared.Models;
 using Shared.Network;
 using Shared.Objects;
 
@@ -49,6 +51,12 @@ namespace GameServer.Network.Handlers
             ack = new Packet(Packets.WeatherAck);
             ack.Writer.Write(3); // RAIN
             packet.Sender.Send(ack);
+
+            // Channel Msg
+            ack = new Packet(Packets.ChatMsgAck);
+            ack.Writer.Write(System.Array.ConvertAll(new char[16], v => (char)99));
+            ack.Writer.Write(new char[32]);
+            ack.Writer.WriteUnicode("Server powered by DCNC - GigaToni");
         }
 
         [Packet(Packets.CmdJoinArea)]
@@ -67,7 +75,7 @@ namespace GameServer.Network.Handlers
             var ack = new Packet(Packets.FirstPositionAck);
 
             ack.Writer.Write(packet.Sender.User.ActiveCharacter.City); // City ID
-            ack.Writer.Write(1); // Channel ID
+            ack.Writer.Write(packet.Sender.User.ActiveCharacter.LastChannel); // Channel ID
             ack.Writer.Write(packet.Sender.User.ActiveCharacter.PositionX); // x
             ack.Writer.Write(packet.Sender.User.ActiveCharacter.PositionY); // y
             ack.Writer.Write(packet.Sender.User.ActiveCharacter.PositionZ); // z
@@ -155,7 +163,7 @@ namespace GameServer.Network.Handlers
             var user = AccountModel.Retrieve(GameServer.Instance.Database.Connection, character.Uid);
 
             packet.Sender.User = user;
-            packet.Sender.User.ActiveCharacterId = character.Uid;
+            packet.Sender.User.ActiveCharacterId = character.Cid;
             packet.Sender.User.ActiveCharacter = character;
             packet.Sender.User.ActiveCarId = character.CurrentCarId;
             packet.Sender.User.ActiveTeam = team;
@@ -226,19 +234,31 @@ namespace GameServer.Network.Handlers
         public static void MyQuestList(Packet packet) // TODO: Send actual data
         {
             var ack = new Packet(Packets.MyQuestListAck);
+
+            List<Quest> quests = QuestModel.Retrieve(GameServer.Instance.Database.Connection, 0, packet.Sender.User.ActiveCharacterId);
+            ack.Writer.Write(quests.Count);
+            foreach (var quest in quests)
+            {
+                ack.Writer.Write(quest.QuestId);
+                ack.Writer.Write(quest.State);
+                ack.Writer.Write(quest.PlaceIdx);
+                ack.Writer.Write(quest.FailNum);
+            }
+
+            /*
             //ack.Writer.Write(0); // Quest num
             ack.Writer.Write(1); // Quest num
 
 
             ack.Writer.Write((uint)0);
-            ack.Writer.Write((uint)2);
             ack.Writer.Write((uint)0);
-            ack.Writer.Write((ushort)0);
+            ack.Writer.Write((uint)0);
+            ack.Writer.Write((ushort)0);*/
             /*
-              unsigned int TableIdx;
-              unsigned int State;
-              unsigned int PlaceIdx;
-              unsigned __int16 FailNum;
+            unsigned int TableIdx;
+            unsigned int State;
+            unsigned int PlaceIdx;
+            unsigned __int16 FailNum;
             */
             packet.Sender.Send(ack);
         }

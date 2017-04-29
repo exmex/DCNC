@@ -1,4 +1,5 @@
-﻿using Shared.Network;
+﻿using System;
+using Shared.Network;
 
 namespace Shared.Objects
 {
@@ -20,7 +21,7 @@ namespace Shared.Objects
         
         public int posState;
 
-        public ulong CID;
+        //public ulong CID;
         public string LastMessageFrom; // 0xB
         public int LastDate;
 
@@ -59,7 +60,7 @@ namespace Shared.Objects
 
         public void Serialize(PacketWriter writer)
         {
-            writer.Write(CID);
+            writer.Write(Cid);
             writer.WriteUnicodeStatic(Name, 21);
             writer.WriteUnicodeStatic(LastMessageFrom, 0xB);
             writer.Write(LastDate);

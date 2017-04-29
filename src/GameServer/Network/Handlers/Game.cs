@@ -149,7 +149,7 @@ namespace GameServer.Network.Handlers
 			ack.Writer.Write(CarId);
 			ack.Writer.Write(Pay);
 			ack.Writer.Write(fuel);
-			ack.Writer.Write(packet.Sender.User.ActiveCharacter.MitoMoney);
+			ack.Writer.Write(packet.Sender.User.ActiveCharacter.MitoMoney-Pay);
 			ack.Writer.Write(packet.Sender.User.ActiveCar.Mitron+fuel);
 			ack.Writer.Write(20.0f); // Mito Price per liter
 			ack.Writer.Write(15.0f); // Discounted Price per liter (Normal channel, major channel is free?)
@@ -340,8 +340,19 @@ namespace GameServer.Network.Handlers
 		public static void QuestStart(Packet packet)
 		{
 			var tableIdx = packet.Reader.ReadUInt32();
-			
-			var ack = new Packet(Packets.CmdQuestStart+1);
+
+		    QuestModel.Add(GameServer.Instance.Database.Connection, new Quest
+		    {
+		        CharacterId = packet.Sender.User.ActiveCharacterId,
+                CharacterName = packet.Sender.User.ActiveCharacter.Name,
+                FailNum = 0,
+                PlaceIdx = 0,
+                QuestId = tableIdx,
+                ServerId = 0,
+                State = 0,
+		    });
+
+            var ack = new Packet(Packets.CmdQuestStart+1);
 			ack.Writer.Write(tableIdx);
 			ack.Writer.Write(0); // Fail num maybe?
 			packet.Sender.Send(ack);
@@ -351,8 +362,10 @@ namespace GameServer.Network.Handlers
 		public static void QuestGiveup(Packet packet)
 		{
 			var tableIdx = packet.Reader.ReadUInt32();
-			
-			var ack = new Packet(Packets.CmdQuestGiveUp+1);
+
+            QuestModel.Update(GameServer.Instance.Database.Connection, 0, packet.Sender.User.ActiveCharacterId, tableIdx, 4);
+
+            var ack = new Packet(Packets.CmdQuestGiveUp+1);
 			ack.Writer.Write(tableIdx);
 			ack.Writer.Write((byte)0);
 			packet.Sender.Send(ack);
@@ -362,11 +375,6 @@ namespace GameServer.Network.Handlers
 		[Packet(Packets.CmdQuestGoalPlace)]
 		public static void QuestGoalPlace(Packet packet)
 		{
-			/*var tableIdx = packet.Reader.ReadUInt32();
-			
-			var ack = new Packet(Packets.CmdQuestGoalPlace+1);
-			ack.Writer.Write(tableIdx);
-			packet.Sender.Send(ack);*/
 		}
 		
 		//000000: 01 00 00 00 14 43 8B 42 4E 9E D0 FE  · · · · · C · B N · · ·
@@ -374,11 +382,46 @@ namespace GameServer.Network.Handlers
 		public static void QuestComplete(Packet packet)
 		{
 			var tableIdx = packet.Reader.ReadUInt32();
+
+            QuestModel.Update(GameServer.Instance.Database.Connection, 0, packet.Sender.User.ActiveCharacterId, tableIdx, 1);
 			
 			var ack = new Packet(Packets.QuestCompleteAck);
 			ack.Writer.Write(tableIdx);
 			packet.Sender.Send(ack);
 		}
+
+	    [Packet(Packets.CmdQuestReward)]
+	    public static void QuestReward(Packet packet)
+	    {
+            var tableIdx = packet.Reader.ReadUInt32();
+
+	        Quest quest = QuestModel.RetrieveOne(GameServer.Instance.Database.Connection, 0, packet.Sender.User.ActiveCharacterId,
+	            tableIdx);
+	        if (quest == null)
+	        {
+                packet.Sender.Error("Quest was not started!");
+	            return;
+	        }
+	        if (quest.State != 1)
+	        {
+                packet.Sender.Error("Quest finished!");
+                return;
+            }
+
+            var ack = new Packet(Packets.QuestRewardAck);
+            ack.Writer.Write((uint)0); // TableIdx
+            ack.Writer.Write((uint)0); // GetExp
+            ack.Writer.Write((uint)0); // GetMoney
+            ack.Writer.Write((uint)0); // ExpInfo Current
+            ack.Writer.Write((uint)0); // ExpInfo Next
+            ack.Writer.Write((uint)0); // ExpInfo Base
+            ack.Writer.Write((ushort)0); // Level
+            ack.Writer.Write((ushort)0); // ItemNum
+            ack.Writer.Write((uint)0); // RewardItem
+            ack.Writer.Write((uint)0); // RewardItem
+            ack.Writer.Write((uint)0); // RewardItem
+            packet.Sender.Send(ack);
+        }
 		
 		[Packet(Packets.CmdChangeArea)]
 		public static void ChangeArea(Packet packet)

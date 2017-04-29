@@ -25,6 +25,7 @@ namespace Shared.Network
         public const ushort ChasePropose = 186;
         public const ushort FriendListAck = 231;
 		public const ushort QuestCompleteAck = 265;
+		public const ushort QuestRewardAck = 267;
         public const ushort MyQuestListAck = 273;
 		
 		public const ushort FriendStatus = 274;

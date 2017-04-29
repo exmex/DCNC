@@ -73,8 +73,8 @@ namespace Shared.Models
 						Level = Convert.ToUInt16(reader["Level"]),
 						City = Convert.ToInt32(reader["City"]),
 						CurrentCarId = Convert.ToInt32(reader["CurrentCarID"]),
-						InventoryLevel = Convert.ToInt32(reader["InventoryLevel"]),
-						GarageLevel = Convert.ToInt32(reader["GarageLevel"]),
+                        HancoinInven = Convert.ToInt32(reader["InventoryLevel"]),
+                        HancoinGarage = Convert.ToInt32(reader["GarageLevel"]),
 						Tid = Convert.ToInt64(reader["TID"]),
 						PositionX = (float)Convert.ToDouble(reader["posX"]),
 						PositionY = (float)Convert.ToDouble(reader["posY"]),
@@ -113,8 +113,8 @@ namespace Shared.Models
 						Level = Convert.ToUInt16(reader["Level"]),
 						City = Convert.ToInt32(reader["City"]),
 						CurrentCarId = Convert.ToInt32(reader["CurrentCarID"]),
-						InventoryLevel = Convert.ToInt32(reader["InventoryLevel"]),
-						GarageLevel = Convert.ToInt32(reader["GarageLevel"]),
+                        HancoinInven = Convert.ToInt32(reader["InventoryLevel"]),
+                        HancoinGarage = Convert.ToInt32(reader["GarageLevel"]),
 						Tid = Convert.ToInt64(reader["TID"]),
 						PositionX = (float)Convert.ToDouble(reader["posX"]),
 						PositionY = (float)Convert.ToDouble(reader["posY"]),
@@ -204,6 +204,11 @@ namespace Shared.Models
 				cmd.Set("GarageLevel", 1);
 				cmd.Set("InventoryLevel", 1);
 				cmd.Set("posState", 1);
+				cmd.Set("channelId", -1);
+			    cmd.Set("posX", -2157.2f + 4 * (new Random().Next() % 10));
+			    cmd.Set("posY", -205.05 + 4 * (new Random().Next() % 10));
+			    cmd.Set("posZ", 85.720001+4 * (new Random().Next() % 10));
+			    cmd.Set("posW", 90.967003 + 4 * (new Random().Next() % 10));
 				
 				cmd.Execute();
 				insertedCharId = cmd.LastId;
