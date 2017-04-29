@@ -2,6 +2,9 @@
 {
     public class GameSettingsAnswerPacket
     {
+        /*
+		 * byte 91 is level cap in short
+		*/
         public static byte[] GameSettings;
 
         public GameSettingsAnswerPacket()
