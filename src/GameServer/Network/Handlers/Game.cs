@@ -397,33 +397,42 @@ namespace GameServer.Network.Handlers
 
 	        Quest quest = QuestModel.RetrieveOne(GameServer.Instance.Database.Connection, 0, packet.Sender.User.ActiveCharacterId,
 	            tableIdx);
-	        if (quest == null)
+            QuestModel.Update(GameServer.Instance.Database.Connection, 0, packet.Sender.User.ActiveCharacterId, tableIdx, 2);
+            if (quest == null)
 	        {
                 packet.Sender.Error("Quest was not started!");
 	            return;
 	        }
 	        if (quest.State != 1)
 	        {
-                packet.Sender.Error("Quest finished!");
+                packet.Sender.Error("Quest not finished!");
                 return;
             }
+            
+            // TODO: Load quest reward information here, and send it.
 
             var ack = new Packet(Packets.QuestRewardAck);
-            ack.Writer.Write((uint)0); // TableIdx
+            ack.Writer.Write((uint)tableIdx); // TableIdx
             ack.Writer.Write((uint)0); // GetExp
             ack.Writer.Write((uint)0); // GetMoney
-            ack.Writer.Write((uint)0); // ExpInfo Current
-            ack.Writer.Write((uint)0); // ExpInfo Next
-            ack.Writer.Write((uint)0); // ExpInfo Base
-            ack.Writer.Write((ushort)0); // Level
+            ack.Writer.Write((ulong)packet.Sender.User.ActiveCharacter.CurExp); // ExpInfo Current
+            ack.Writer.Write((ulong)packet.Sender.User.ActiveCharacter.NextExp); // ExpInfo Next
+            ack.Writer.Write((ulong)packet.Sender.User.ActiveCharacter.BaseExp); // ExpInfo Base
+            ack.Writer.Write((ushort)packet.Sender.User.ActiveCharacter.Level); // Level
             ack.Writer.Write((ushort)0); // ItemNum
             ack.Writer.Write((uint)0); // RewardItem
             ack.Writer.Write((uint)0); // RewardItem
             ack.Writer.Write((uint)0); // RewardItem
+
             packet.Sender.Send(ack);
+
+            /*
+            if ( pStrQuest->Item01Ptr || pStrQuest->Item02Ptr || pStrQuest->Item03Ptr )
+              PacketSend::Send_ItemModList((BS_PacketDispatch *)&pGameDispatch->vfptr);
+            */
         }
-		
-		[Packet(Packets.CmdChangeArea)]
+
+        [Packet(Packets.CmdChangeArea)]
 		public static void ChangeArea(Packet packet)
 		{
 			var ack = new Packet(Packets.ChangeAreaAck);
