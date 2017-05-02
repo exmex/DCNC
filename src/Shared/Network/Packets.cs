@@ -16,6 +16,7 @@ namespace Shared.Network
         public const ushort UserInfoAck = 61;
         public const ushort CharInfoAck = 62;
         public const ushort CheckCharNameAck = 81;
+        public const ushort CreateCharAck = 83;
         public const ushort DeleteCharAck = 84;
 		public const ushort BuyCarAck = 86; // TODO: Wrong Packet Size. CMD(86) CmdLen: : 56, AnalysisSize: 24
         public const ushort CheckInGameAck = 121;
