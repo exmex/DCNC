@@ -3,14 +3,16 @@
     public class UserInfoPacket
     {
         /// <summary>
-        /// The currently logged in username
+        /// The currently logged in username reported by client
+        /// DO NOT TRUST! RE-CHECK WITH SERVER VALUES
         /// </summary>
-        public string Username;
+        public readonly string Username;
 
         /// <summary>
-        /// The currently logged in user ticket
+        /// The currently logged in user ticket reported by client
+        /// DO NOT TRUST! RE-CHECK WITH SERVER VALUES
         /// </summary>
-        public uint Ticket;
+        public readonly uint Ticket;
 
         public UserInfoPacket(Packet packet)
         {

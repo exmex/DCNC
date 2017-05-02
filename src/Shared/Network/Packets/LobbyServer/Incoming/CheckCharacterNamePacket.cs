@@ -8,7 +8,7 @@ namespace Shared.Network.LobbyServer
 {
     public class CheckCharacterNamePacket
     {
-        public string CharacterName;
+        public readonly string CharacterName;
 
         public CheckCharacterNamePacket(Packet packet)
         {

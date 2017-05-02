@@ -4,6 +4,7 @@ typedef struct {
     CHAR username[40]; // 0x28
     UINT time;
     CHAR stringTicket[64]; // 0x40
+    BYTE unknown1[50] <comment="Unknown", bgcolor=cRed>;
 } CheckInLobby;
 
 CheckInLobby pkt;

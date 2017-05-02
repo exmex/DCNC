@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using Shared.Objects;
 using Shared.Util;
@@ -18,7 +20,10 @@ namespace Shared.Network
         private ushort _packetLength, _packetId;
 
         private bool _connected;
+
         public User User;
+
+        public IPEndPoint EndPoint => _tcp.Client.RemoteEndPoint as IPEndPoint;
 
         public Client(TcpClient tcp, DefaultServer parent, bool exchangeRequired)
         {

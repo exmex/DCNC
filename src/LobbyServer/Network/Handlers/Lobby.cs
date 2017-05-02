@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 using Shared.Models;
 using Shared.Network;
@@ -16,12 +17,23 @@ namespace LobbyServer.Network.Handlers
 
             Log.Debug("UserInfo request. (Username: {0}, Ticket: {1})", userInfoPacket.Username, userInfoPacket.Ticket);
 
-            if (userInfoPacket.Ticket != packet.Sender.User.Ticket)
+            if (userInfoPacket.Ticket != packet.Sender.User.Ticket ||
+                userInfoPacket.Username != packet.Sender.User.Name)
             {
-                Log.Error("Rejecting packet from {0} (ticket {1}) for invalid user-ticket combination.",
+                Log.Error("Rejecting packet from {0}:{1} (user: {2} vs {3}, ticket {4} vs {5}) for invalid user-ticket combination.",
+                    packet.Sender.EndPoint.Address.ToString(),
+                    packet.Sender.EndPoint.Port,
                     userInfoPacket.Username,
-                    userInfoPacket.Ticket);
+                    packet.Sender.User.Name,
+                    userInfoPacket.Ticket,
+                    packet.Sender.User.Ticket);
+
+#if DEBUG
                 packet.Sender.Error("Invalid ticket-user combination.");
+                packet.Sender.Kill();
+#else
+                packet.Sender.Kill();
+#endif
             }
 
             new GameSettingsAnswerPacket().Send(Packets.GameSettingsAck, packet.Sender);
@@ -43,30 +55,59 @@ namespace LobbyServer.Network.Handlers
         public static void CheckInLobby(Packet packet)
         {
             var checkInLobbyPacket = new CheckInLobbyPacket(packet);
+            if (checkInLobbyPacket.ProtocolVersion != Shared.ServerMain.ProtocolVersion)
+            {
+#if DEBUG
+                packet.Sender.Error("Invalid protocol.");
+#else
+                packet.Sender.Kill("Too old client");
+#endif
+                return;
+            }
+
+            var checkInLobbyAnswerPacket = new CheckInLobbyAnswerPacket
+            {
+                Result = 1,
+                Permission = 0x0
+            };
 
             var user = AccountModel.GetSession(LobbyServer.Instance.Database.Connection, checkInLobbyPacket.Username,
                 checkInLobbyPacket.Ticket);
-            if (user == null)
+            
+            Log.Debug("CheckInLobby {0} {1} {2} {3} {4}", checkInLobbyPacket.ProtocolVersion, checkInLobbyPacket.Ticket,
+                checkInLobbyPacket.Username, checkInLobbyPacket.Time,
+                BitConverter.ToString(Encoding.UTF8.GetBytes(checkInLobbyPacket.StringTicket)));
+
+            // Check is session is really valid, and the client is not tricking us somehow.
+            if (user == null ||
+                checkInLobbyPacket.Ticket != packet.Sender.User.Ticket ||
+                checkInLobbyPacket.Username != packet.Sender.User.Name)
             {
-                Log.Error("Rejecting {0} (ticket {1}) for invalid user-ticket combination.", checkInLobbyPacket.Username,
-                    checkInLobbyPacket.Ticket);
+                Log.Error("Rejecting {0}:{1} (user {2} vs {3}, ticket {4} vs {5}) for invalid user-ticket combination.",
+                    packet.Sender.EndPoint.Address.ToString(),
+                    packet.Sender.EndPoint.Port,
+                    checkInLobbyPacket.Username,
+                    packet.Sender.User.Name,
+                    checkInLobbyPacket.Ticket,
+                    packet.Sender.User.Ticket);
+#if DEBUG
                 packet.Sender.Error("Invalid ticket-user combination.");
+#else
+                checkInLobbyAnswerPacket.Send(Packets.CheckInLobbyAck, packet.Sender);
+                packet.Sender.Kill("");
+#endif
                 return;
             }
             packet.Sender.User = user;
 
-            var checkInLobbyAnswerPacket = new CheckInLobbyAnswerPacket
-            {
-                Result = 0
-            };
+            // Send check in lobby answer.
+            checkInLobbyAnswerPacket.Result = 0;
+            checkInLobbyAnswerPacket.Permission = 0x8000; // TODO: Use account model instead.
             checkInLobbyAnswerPacket.Send(Packets.CheckInLobbyAck, packet.Sender);
 
+            // Send current lobby time.
             var lobbyTimeAnswerPacket = new LobbyTimeAnswerPacket();
             lobbyTimeAnswerPacket.Send(Packets.LobbyTimeAck, packet.Sender);
-
-            Log.Debug("CheckInLobby {0} {1} {2} {3} {4}", checkInLobbyPacket.ProtocolVersion, checkInLobbyPacket.Ticket,
-                checkInLobbyPacket.Username, checkInLobbyPacket.Time,
-                BitConverter.ToString(Encoding.UTF8.GetBytes(checkInLobbyPacket.StringTicket)));
         }
 
         [Packet(Packets.CmdCheckCharName)]
@@ -89,7 +130,9 @@ namespace LobbyServer.Network.Handlers
         {
             var createCharPacket = new CreateCharPacket(packet);
 
-            Console.WriteLine(createCharPacket.CharacterName + " " + createCharPacket.Avatar + " " +
+            // TODO: Check if the values send by client are valid.
+
+            Log.Debug(createCharPacket.CharacterName + " " + createCharPacket.Avatar + " " +
                               createCharPacket.CarType + " " + createCharPacket.Color);
 
             CharacterModel.CreateCharacter(LobbyServer.Instance.Database.Connection, packet.Sender.User.UID,
@@ -108,6 +151,7 @@ namespace LobbyServer.Network.Handlers
         {
             var deleteCharacterPacket = new DeleteCharacterPacket(packet);
 
+            // Check if the user owns the character, if not don't do anything.
             if (CharacterModel.HasCharacter(LobbyServer.Instance.Database.Connection, deleteCharacterPacket.CharacterId,
                 packet.Sender.User.UID))
             {
@@ -122,7 +166,11 @@ namespace LobbyServer.Network.Handlers
                 return;
             }
 
+#if DEBUG
             packet.Sender.Error("This character doesn't belong to you!");
+#else
+            packet.Sender.Kill("Suspected hack.");
+#endif
         }
     }
 }

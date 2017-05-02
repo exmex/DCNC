@@ -20,9 +20,9 @@ namespace Shared.Network.LobbyServer
         000048: 00 00 52 00 00 00 03 00 00 00  · · R · · · · · · ·
         */
 
-        public string CharacterName;
+        public readonly string CharacterName;
 
-        public ulong CharacterId;
+        public readonly ulong CharacterId;
         
         public DeleteCharacterPacket(Packet packet)
         {

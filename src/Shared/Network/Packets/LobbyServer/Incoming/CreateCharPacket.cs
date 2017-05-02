@@ -8,10 +8,10 @@ namespace Shared.Network.LobbyServer
 {
     public class CreateCharPacket
     {
-        public string CharacterName;
-        public short Avatar;
-        public uint CarType;
-        public uint Color;
+        public readonly string CharacterName;
+        public readonly short Avatar;
+        public readonly uint CarType;
+        public readonly uint Color;
 
         public CreateCharPacket(Packet packet)
         {
