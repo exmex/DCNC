@@ -1,4 +1,5 @@
 ﻿using Shared.Network;
+using Shared.Network.AreaServer;
 
 namespace AreaServer.Network.Handlers
 {
@@ -8,29 +9,15 @@ namespace AreaServer.Network.Handlers
         [Packet(Packets.CmdUdpCastTcsSignal)]
         public static void UdpCastTcsSignal(Packet packet)
         {
-            /*
-              int m_AreaId;
-              float m_x;
-              float m_y;
-              XiTCSSignal m_signal;
+            UdpCastTcsSignalPacket udpCastTcsSignalPacket = new UdpCastTcsSignalPacket(packet);
+            
+            var ack = new UdpCastTcsSignalAnswerPacket() // Weird hack because Class doesn't have access to broadcast.
+            {
+                Signal = udpCastTcsSignalPacket.Signal,
+                Time = udpCastTcsSignalPacket.Time,
+                State = udpCastTcsSignalPacket.State
+            }.Send(packet.Sender);
 
-              int m_time;
-              int m_signal;
-              int m_state;
-            */
-
-            packet.Reader.ReadInt32(); // AreaId
-            packet.Reader.ReadSingle(); // X
-            packet.Reader.ReadSingle(); // Y
-
-            var time = packet.Reader.ReadInt32(); // Time
-            var signal = packet.Reader.ReadInt32(); // Signal
-            var state = packet.Reader.ReadInt32(); // State
-
-            var ack = new Packet(Packets.UdpCastTcsSignalAck);
-            ack.Writer.Write(time);
-            ack.Writer.Write(signal);
-            ack.Writer.Write(state);
             AreaServer.Instance.Server.Broadcast(ack);
         }
 
