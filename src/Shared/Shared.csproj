@@ -57,10 +57,27 @@
     <Compile Include="Network\Packet.cs" />
     <Compile Include="Network\PacketIO.cs" />
     <Compile Include="Network\Packets.cs" />
+    <Compile Include="Network\Packets\AreaServer\Incoming\EnterAreaPacket.cs" />
+    <Compile Include="Network\Packets\AreaServer\Incoming\TimeSyncPacket.cs" />
+    <Compile Include="Network\Packets\AreaServer\Incoming\UdpCastTcsSignalPacket.cs" />
+    <Compile Include="Network\Packets\AreaServer\Outgoing\AreaStatusAnswerPacket.cs" />
+    <Compile Include="Network\Packets\AreaServer\Outgoing\EnterAreaAnswerPacket.cs" />
+    <Compile Include="Network\Packets\AreaServer\Outgoing\TimeSyncAnswerPacket.cs" />
+    <Compile Include="Network\Packets\AreaServer\Outgoing\UdpCastTcsSignalAnswerPacket.cs" />
     <Compile Include="Network\Packets\AuthServer\Incoming\UserAuthPacket.cs" />
     <Compile Include="Network\Packets\AuthServer\Outgoing\UserAuthAnswerPacket.cs" />
+    <Compile Include="Network\Packets\GameServer\Outgoing\FriendListAnswerPacket.cs" />
+    <Compile Include="Network\Packets\LobbyServer\Incoming\CheckCharacterNamePacket.cs" />
+    <Compile Include="Network\Packets\LobbyServer\Incoming\CheckInLobbyPacket.cs" />
+    <Compile Include="Network\Packets\LobbyServer\Incoming\CreateCharPacket.cs" />
+    <Compile Include="Network\Packets\LobbyServer\Incoming\DeleteCharacterPacket.cs" />
     <Compile Include="Network\Packets\LobbyServer\Incoming\UserInfoPacket.cs" />
+    <Compile Include="Network\Packets\LobbyServer\Outgoing\CheckCharacterNameAnswerPacket.cs" />
+    <Compile Include="Network\Packets\LobbyServer\Outgoing\CheckInLobbyAnswerPacket.cs" />
+    <Compile Include="Network\Packets\LobbyServer\Outgoing\CreateCharAnswerPacket.cs" />
+    <Compile Include="Network\Packets\LobbyServer\Outgoing\DeleteCharacterAnswerPacket.cs" />
     <Compile Include="Network\Packets\LobbyServer\Outgoing\GameSettingsAnswerPacket.cs" />
+    <Compile Include="Network\Packets\LobbyServer\Outgoing\LobbyTimeAnswerPacket.cs" />
     <Compile Include="Network\Packets\LobbyServer\Outgoing\UserInfoAnswerPacket.cs" />
     <Compile Include="Objects\Character.cs" />
     <Compile Include="Objects\Item.cs" />
@@ -88,10 +105,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Network\Packets\AreaServer\Incoming\" />
-    <Folder Include="Network\Packets\AreaServer\Outgoing\" />
     <Folder Include="Network\Packets\GameServer\Incoming\" />
-    <Folder Include="Network\Packets\GameServer\Outgoing\" />
     <Folder Include="Network\Packets\Ranking\Incoming\" />
     <Folder Include="Network\Packets\Ranking\Outgoing\" />
   </ItemGroup>

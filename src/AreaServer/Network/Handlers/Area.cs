@@ -14,7 +14,7 @@ namespace AreaServer.Network.Handlers
 		    {
                 GlobalTime = timeSyncPacket.LocalTime,
                 SystemTick = 0
-		    }.Send(Packets.UdpTimeSyncAck, packet.Sender);
+		    }.Send(packet.Sender);
 		}
 
 		[Packet(Packets.CmdAreaStatus)]

@@ -1,39 +1,35 @@
 ﻿using Shared.Network;
+using Shared.Network.GameServer;
 
 namespace GameServer.Network.Handlers
 {
     public class Friends
     {
         [Packet(Packets.CmdFriendList)]
-        public static void FriendList(Packet packet) // TODO: Send actual data not just dummies
+        public static void FriendList(Packet packet)
         {
-            /*
-            [Debug] - FriendList:
-            [Info] - Received FriendList (id 230, 0xE6) on 11021.
-            */
-            var ack = new Packet(Packets.FriendListAck);
-            ack.Writer.Write(1);
-            ack.Writer.Write(0x40000); // or 262145
+            FriendListAnswerPacket friendListAnswerPacket = new FriendListAnswerPacket
+            {
+                TotalItemNum = 1,
+                FriendList = new Friend[1]
+            };
+            friendListAnswerPacket.FriendList[1] = new Friend()
+            {
+                CharacterName = "TESTING",
+                TeamName = "Staff",
+                CharacterId = 1L,
+                TeamId = 1L,
+                TeamMarkId = 1L,
+                State = 0,
 
-            // Friend
-            ack.Writer.WriteUnicodeStatic("TESTING", 21); // Name
-            ack.Writer.WriteUnicodeStatic("Staff", 13); // Team Name
-            ack.Writer.Write(1L); // Cid
-            ack.Writer.Write(1L); // TeamId
-            ack.Writer.Write(1L); // TeamMarkId
-            ack.Writer.Write(0); // State (0 = Blocked?)
-
-            // StrLocation
-            ack.Writer.Write((uint)0); // Serial
-            ack.Writer.Write('A'); // LocType
-            ack.Writer.Write('A'); // ChId
-            ack.Writer.Write((ushort)1); // LocId
-
-            ack.Writer.Write((ushort)1); // Level
-            ack.Writer.Write((ushort)1); // CurCarGrade
-            ack.Writer.Write((uint)0); // Serial
-
-            packet.Sender.Send(ack);
+                Serial = 0,
+                LocationType = (char)41,
+                ChannelId = (char)41,
+                LocationId = 1,
+                Level = 1,
+                CurCarGrade = 1
+            };
+            friendListAnswerPacket.Send(packet.Sender);
         }
 
         [Packet(Packets.CmdFriendDel)]
