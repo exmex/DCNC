@@ -8,7 +8,6 @@
 8: Cmd_SystemMessage
 9: Cmd_ScriptMessage
 10: Cmd_UserAuth
-20: Cmd_UserAuth
 21: Cmd_UserAuth2
 22: Cmd_UserAuthAck
 23: Cmd_ServerList
@@ -372,7 +371,6 @@
 594: Cmd_AuctionBuyed
 595: Cmd_AuctionSearch
 596: Cmd_AuctionSearchAck
-620: Cmd_RoomModify
 621: Cmd_RoomModify
 622: Cmd_RoomMaster
 623: Cmd_RoomChangeTeam
