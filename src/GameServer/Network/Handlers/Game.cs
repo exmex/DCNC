@@ -486,12 +486,21 @@ namespace GameServer.Network.Handlers
 			
 			// TODO: Buy car still has not the correct structure.
 			var ack = new Packet(Packets.BuyCarAck);
-			ack.Writer.Write(10000); // Price
 			ack.Writer.Write(1); // ID
 			ack.Writer.Write(CarType);
-			ack.Writer.Write(Bumper);
-			ack.Writer.Write(Color);
-			packet.Sender.Send(ack);
+			ack.Writer.Write(0); // BaseColor?
+			ack.Writer.Write(0); // Grade?
+			ack.Writer.Write(0); // SlotType?
+			ack.Writer.Write(0); // AuctionCnt?
+			ack.Writer.Write(100.0f); // Mitron?
+			ack.Writer.Write(0.0f); // Kmh?
+            ack.Writer.Write(Color);
+            ack.Writer.Write(0.0f); // Mitron cap?
+			ack.Writer.Write(0.0f); // Mitron eff?
+			ack.Writer.Write(false); // AuctionOn
+            ack.Writer.Write(10000); // Price
+            //ack.Writer.Write(Bumper);
+            packet.Sender.Send(ack);
 			/*PacketSend::Send_StatUpdate((BS_PacketDispatch *)&pGameDispatch->vfptr);
 			  PacketSend::Send_PartyEnChantUpdateAll((BS_PacketDispatch *)&pGameDispatch->vfptr);
 			  PacketSend::Send_ItemModList((BS_PacketDispatch *)&pGameDispatch->vfptr);

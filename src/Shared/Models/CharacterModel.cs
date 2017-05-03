@@ -214,6 +214,7 @@ namespace Shared.Models
 				cmd.Set("InventoryLevel", 1);
 				cmd.Set("posState", 1);
 				cmd.Set("channelId", -1);
+                // TODO: Change to packet Cmd_FirstPositon.
 			    cmd.Set("posX", -2157.2f + 4 * (new Random().Next() % 10));
 			    cmd.Set("posY", -205.05 + 4 * (new Random().Next() % 10));
 			    cmd.Set("posZ", 85.720001+4 * (new Random().Next() % 10));
