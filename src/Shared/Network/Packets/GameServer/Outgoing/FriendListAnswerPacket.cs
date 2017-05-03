@@ -84,7 +84,7 @@ namespace Shared.Network.GameServer
         public long TeamMarkId;
         public int State; // FriendState (0 = Blocked?)
 
-        public uint Serial;
+        public uint Serial; // SessionId
         public char LocationType; // byte..?
         public char ChannelId;
         public ushort LocationId;

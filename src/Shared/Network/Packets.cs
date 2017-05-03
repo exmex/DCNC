@@ -34,8 +34,9 @@ namespace Shared.Network
         public const ushort JoinAreaAck = 301;
 
         public const ushort ItemListAck = 401;
-        public const ushort BuyItemAck = 404;
-        public const ushort SellItemAck = 406;
+        public const ushort ItemModListAck = 402;
+        public const ushort BuyItemAck = 406;
+        public const ushort SellItemAck = 408;
 		
 		public const ushort RoomNotifyChangeAck = 467;
 
@@ -132,6 +133,8 @@ namespace Shared.Network
         public const ushort CmdBattleReq = 200;
         public const ushort CmdBattleEnd = 203;
         public const ushort CmdRegisterChannelAdmin = 220;
+        public const ushort CmdBlockDel = 223;
+        public const ushort CmdBlockAddByName = 226;
         public const ushort CmdPartyPreCheck = 228;
         public const ushort CmdFriendList = 230;
         public const ushort CmdFriendAddByName = 232;
@@ -330,6 +333,7 @@ namespace Shared.Network
         public const ushort CmdRequestSwitchRushHuv = 1125;
         public const ushort CmdMita500Get = 1151;
         public const ushort CmdMita500GetBuff = 1154;
+        public const ushort CmdInventoryRequest = 1156; // Unsure. Might be something else?
         public const ushort CmdDayMissionGetReward = 1162;
         public const ushort CmdDayMileageGetReward = 1163;
         public const ushort CmdDayEventGetItem = 1170;
@@ -352,6 +356,7 @@ namespace Shared.Network
         public const ushort CmdAttachSticker = 1352;
         public const ushort CmdDetachSticker = 1354;
         public const ushort CmdEndingUserRecord = 1360;
+        public const ushort CmdSendMail = 1486;
         public const ushort CmdGetMyHancoinThread = 1400;
         public const ushort CmdNotifyDelCharacter = 1410;
         public const ushort CmdNotifyDelCharacterAck = 1411;

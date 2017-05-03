@@ -79,9 +79,7 @@ namespace LobbyServer.Network.Handlers
                 BitConverter.ToString(Encoding.UTF8.GetBytes(checkInLobbyPacket.StringTicket)));
 
             // Check is session is really valid, and the client is not tricking us somehow.
-            if (user == null ||
-                checkInLobbyPacket.Ticket != packet.Sender.User.Ticket ||
-                checkInLobbyPacket.Username != packet.Sender.User.Name)
+            if (user == null)
             {
                 Log.Error("Rejecting {0}:{1} (user {2} vs {3}, ticket {4} vs {5}) for invalid user-ticket combination.",
                     packet.Sender.EndPoint.Address.ToString(),

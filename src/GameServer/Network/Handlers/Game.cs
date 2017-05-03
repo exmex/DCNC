@@ -573,8 +573,50 @@ struct XiStrStatInfo
 			PacketSend::Send_PartyEnChantUpdateAll(lpDispatch); // TODO
 			*/
 		}
-		
-		[Packet(Packets.CmdBuyVisualItemThread)]
+
+	    [Packet(Packets.CmdBuyItem)]
+	    public static void BuyItem(Packet packet)
+	    {
+            int itemID = packet.Reader.ReadInt16();
+            int unknown = packet.Reader.ReadInt16();
+            int quantity = packet.Reader.ReadInt16();
+
+            var ack = new Packet(Packets.BuyItemAck);
+            ack.Writer.Write(itemID);
+            ack.Writer.Write(quantity);
+            ack.Writer.Write(0);
+
+            packet.Sender.Send(ack);
+
+	        ack = new Packet(Packets.ItemModListAck);
+            ack.Writer.Write(1);
+
+            ack.Writer.Write((uint)4); // CarID
+            ack.Writer.Write((ushort)1); // State
+            ack.Writer.Write((ushort)1); // Slot
+            ack.Writer.Write((uint)1); // StateVar
+            ack.Writer.Write(quantity); // StackNum
+            ack.Writer.Write(0); // Random
+
+            ack.Writer.Write((uint)0); // AssistA
+            ack.Writer.Write((uint)0); // AssistB
+            ack.Writer.Write((uint)0); // Box
+            ack.Writer.Write((uint)0); // Belonging
+            ack.Writer.Write(0); // Upgrade
+            ack.Writer.Write(0); // UpgradePoint
+            ack.Writer.Write((uint)0); // ExpireTick
+            ack.Writer.Write((uint)itemID); // TableIdx
+            ack.Writer.Write((uint)0); // InvenIdx
+
+            ack.Writer.Write(0); // State
+            packet.Sender.Send(ack);
+
+            //BS_PktItemDataList
+
+            //PacketSend::Send_ItemModList((BS_PacketDispatch *)&pGameDispatch->vfptr);
+        }
+
+        [Packet(Packets.CmdBuyVisualItemThread)]
 		public static void BuyItemVisual(Packet packet)
 		{
 			var tableIdx = packet.Reader.ReadUInt32();

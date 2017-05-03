@@ -24,6 +24,17 @@ namespace AreaServer.Network.Handlers
         [Packet(Packets.CmdUdpCastTcs)]
         public static void UdpCastTcs(Packet packet)
         {
+            // Traffic?
+        }
+
+        [Packet(Packets.CmdRegisterAgent)]
+        public static void RegisterAgent(Packet packet)
+        {
+        }
+
+        [Packet(Packets.CmdUdpCastTraffic)]
+        public static void CastTraffic(Packet packet)
+        {
             
         }
     }

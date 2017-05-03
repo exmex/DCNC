@@ -150,6 +150,14 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdLoadCharThread)]
         public static void LoadCharThread(Packet packet)
         {
+            /*
+            struct __cppobj __unaligned __declspec(align(2)) BS_PktETCInfo : BS_PktBody
+            {
+              int m_IsPcBang;
+              int m_NumPCBangCoupon;
+              int m_reserve[32];
+            };
+            */
             string characterName = packet.Reader.ReadUnicode();
             uint serial = packet.Reader.ReadUInt32();
 
@@ -267,13 +275,13 @@ namespace GameServer.Network.Handlers
         public static void ItemList(Packet packet) // TODO: Send actual data
         {
             var ack = new Packet(Packets.ItemListAck);
-            ack.Writer.Write((uint)0x40000); // WHAT THE? unsigned int ListUpdate;
+            ack.Writer.Write((uint)0x40000); // WHAT THE? unsigned int ListUpdate; <-- Multiple pages -> Multiple packets
             //ack.Writer.Write((uint)0); // Count
-            ack.Writer.Write((uint)0); // Count
+            ack.Writer.Write((uint)1); // Count
             // 52 bytes of data for each item
-            /*
-            ack.Writer.Write((uint)1); // CarID
-            ack.Writer.Write((ushort)1); // State
+            
+            ack.Writer.Write((uint)4); // CarID
+            ack.Writer.Write((ushort)0); // State // (0 = Inventory, 1 = Equip, 4 = Auction)
             ack.Writer.Write((ushort)1); // Slot
             ack.Writer.Write((uint)1); // StateVar
             ack.Writer.Write(1); // StackNum
@@ -281,15 +289,17 @@ namespace GameServer.Network.Handlers
 
             ack.Writer.Write((uint)0); // AssistA
             ack.Writer.Write((uint)0); // AssistB
-            ack.Writer.Write((uint)0); // Box
-            ack.Writer.Write((uint)0); // Belonging
+            ack.Writer.Write((uint)0); // Box // 255 = drop rate 5.7???
+            ack.Writer.Write((uint)0); // Belonging (0 = , 1 = equip, 2 = get)
             ack.Writer.Write(0); // Upgrade
             ack.Writer.Write(0); // UpgradePoint
             ack.Writer.Write((uint)0); // ExpireTick
             ack.Writer.Write((uint)1); // TableIdx
             ack.Writer.Write((uint)0); // InvenIdx
-            ack.Writer.Write(new byte[46]); // 94
-            */
+            ack.Writer.Write((uint)0); // Is upgrade pack??
+            ack.Writer.Write((uint)0); // Tradeable?
+
+            //ack.Writer.Write(new byte[46]); // 94
 
             packet.Sender.Send(ack);
         }

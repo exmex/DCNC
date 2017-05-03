@@ -49,6 +49,7 @@
     <Compile Include="Math2.cs" />
     <Compile Include="Models\AccountModel.cs" />
     <Compile Include="Models\CharacterModel.cs" />
+    <Compile Include="Models\FriendModel.cs" />
     <Compile Include="Models\QuestModel.cs" />
     <Compile Include="Models\ServerModel.cs" />
     <Compile Include="Models\VehicleModel.cs" />

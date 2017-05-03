@@ -1,4 +1,6 @@
-﻿using Shared.Network;
+﻿using System.Collections.Generic;
+using Shared.Models;
+using Shared.Network;
 using Shared.Network.GameServer;
 
 namespace GameServer.Network.Handlers
@@ -8,12 +10,13 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdFriendList)]
         public static void FriendList(Packet packet)
         {
+            List<Friend> friends = FriendModel.Retrieve(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacterId);
             FriendListAnswerPacket friendListAnswerPacket = new FriendListAnswerPacket
             {
-                TotalItemNum = 1,
-                FriendList = new Friend[1]
+                TotalItemNum = friends.Count,
+                FriendList = friends.ToArray(), //new Friend[1]
             };
-            friendListAnswerPacket.FriendList[1] = new Friend()
+            /*friendListAnswerPacket.FriendList[0] = new Friend()
             {
                 CharacterName = "TESTING",
                 TeamName = "Staff",
@@ -23,12 +26,12 @@ namespace GameServer.Network.Handlers
                 State = 0,
 
                 Serial = 0,
-                LocationType = (char)41,
-                ChannelId = (char)41,
-                LocationId = 1,
+                LocationType = (char)1, // 1 => Area Not working.
+                ChannelId = (char)0,
+                LocationId = 1, // Area
                 Level = 1,
                 CurCarGrade = 1
-            };
+            };*/
             friendListAnswerPacket.Send(packet.Sender);
         }
 
@@ -42,11 +45,27 @@ namespace GameServer.Network.Handlers
 
             [Info] - Received FriendDel (id 235, 0xEB) on 11021. 
             */
+            var charName = packet.Reader.ReadUnicodeStatic(21);
+
+            FriendModel.Delete(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacterId, charName);
+
             FriendList(packet);
-            //var charName = packet.Reader.ReadUnicodeStatic(21);
         }
 
-        [Packet(226)]
+        [Packet(Packets.CmdFriendAddByName)]
+        public static void FriendAddByName(Packet packet)
+        {
+            var charName = packet.Reader.ReadUnicodeStatic(21);
+
+            //TODO: Send friend request instead of instantly adding him.
+            if (FriendModel.AddByName(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacterId,
+                charName))
+            {
+                FriendList(packet);
+            }
+        }
+
+        [Packet(Packets.CmdBlockAddByName)]
         public static void BlockAddByName(Packet packet)
         {
             /*
@@ -59,35 +78,25 @@ namespace GameServer.Network.Handlers
 
             var charName = packet.Reader.ReadUnicodeStatic(21);
 
-            var ack = new Packet(227);
-            ack.Writer.Write(1);
-            ack.Writer.Write(0x40000); // or 262145
-
-            // Friend
-            ack.Writer.WriteUnicodeStatic("TESTING", 21); // Name
-            ack.Writer.WriteUnicodeStatic("Staff", 13); // Team Name
-            ack.Writer.Write(1L); // Cid
-            ack.Writer.Write(1L); // TeamId
-            ack.Writer.Write(1L); // TeamMarkId
-            ack.Writer.Write(0); // State (0 = Blocked?)
-
-            // StrLocation
-            ack.Writer.Write((uint)0); // Serial
-            ack.Writer.Write('A'); // LocType
-            ack.Writer.Write('A'); // ChId
-            ack.Writer.Write((ushort)1); // LocId
-
-            ack.Writer.Write((ushort)1); // Level
-            ack.Writer.Write((ushort)1); // CurCarGrade
-            ack.Writer.Write((uint)0); // Serial
-
-            packet.Sender.Send(ack);
+            if(FriendModel.AddByName(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacterId,
+                charName, 'B'))
+            {
+                FriendList(packet);
+            }
         }
 
-        [Packet(223)]
+        [Packet(Packets.CmdBlockDel)]
         public static void BlockDel(Packet packet)
         {
-            
+            var charName = packet.Reader.ReadUnicodeStatic(21);
+
+            FriendModel.Delete(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacterId, charName);
+        }
+
+        [Packet(Packets.CmdSendMail)]
+        public static void SendMail(Packet packet)
+        {
+            // TODO:
         }
 
         /*
