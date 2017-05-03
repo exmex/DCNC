@@ -447,26 +447,27 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdCityLeaveCheck)]
 		public static void CityLeaveCheck(Packet packet)
         {
-            packet.Reader.ReadInt32(); // CityId?
-            string post1 = packet.Reader.ReadAsciiStatic(17); // Gate?
-            packet.Reader.ReadBytes(238);
-            string post2 = packet.Reader.ReadAsciiStatic(17); // Gate?
+            int cityId = packet.Reader.ReadInt32(); // CityId?
+            string post1 = packet.Reader.ReadAsciiStatic(255); // Gate?
+            string post2 = packet.Reader.ReadAsciiStatic(255); // Gate?
+
+            Console.WriteLine(post2);
 
 
 			var ack = new Packet(Packets.CityLeaveCheckAck);
-		    ack.Writer.Write((long)1); // Result???
+		    ack.Writer.Write(1); // Result???
+		    ack.Writer.Write(cityId);
             /* 0-Moon Palace, 1=Koinonia, 2=Cras, 3=Oros, 4=Taipei, 5=NeoOros, else szPassword? */
-            ack.Writer.WriteAsciiStatic(post1, 17);
-            ack.Writer.Write(new byte[238]);
-            ack.Writer.WriteAsciiStatic(post2, 17);
-			packet.Sender.Send(ack);
+            ack.Writer.WriteAsciiStatic(post1, 255);
+            ack.Writer.WriteAsciiStatic(post2, 255);
+            packet.Sender.Send(ack);
 
             /*
              * Used bytes are:
-             * 0 - 6 -> Result?
-             * 6 - 10 -> CityId?
-             * 10 - ?? -> Some kind of string, maybe Gate?
-             * 265 - ?? -> Some kind of string, maybe Gate?
+             * 2 - 6 -> Result? // int?
+             * 6 - 10 -> CityId? // int?
+             * 10 - ?? -> Some kind of string, maybe Gate? // 255?
+             * 265 - ?? -> Some kind of string, maybe Gate? // 255?
              */
         }
 
