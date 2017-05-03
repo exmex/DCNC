@@ -408,13 +408,22 @@ namespace GameServer.Network.Handlers
                 packet.Sender.Error("Quest not finished!");
                 return;
             }
-            
+
+	        if (!GameServer.QuestTable.ContainsKey(tableIdx))
+	        {
+	            packet.Sender.Error("Quest reward not found.");
+	            return;
+	        }
+	        XiStrQuest questReward = GameServer.QuestTable[tableIdx];
+            packet.Sender.User.ActiveCharacter.CurExp += questReward.RewardExp;
+            // TODO: Check if user has leveled up.
+
             // TODO: Load quest reward information here, and send it.
 
             var ack = new Packet(Packets.QuestRewardAck);
-            ack.Writer.Write((uint)tableIdx); // TableIdx
-            ack.Writer.Write((uint)0); // GetExp
-            ack.Writer.Write((uint)0); // GetMoney
+            ack.Writer.Write((uint)questReward.QuestIdN); // TableIdx
+            ack.Writer.Write((uint)questReward.RewardExp); // GetExp
+            ack.Writer.Write((uint)questReward.RewardMoney); // GetMoney
             ack.Writer.Write((ulong)packet.Sender.User.ActiveCharacter.CurExp); // ExpInfo Current
             ack.Writer.Write((ulong)packet.Sender.User.ActiveCharacter.NextExp); // ExpInfo Next
             ack.Writer.Write((ulong)packet.Sender.User.ActiveCharacter.BaseExp); // ExpInfo Base
@@ -430,17 +439,38 @@ namespace GameServer.Network.Handlers
             if ( pStrQuest->Item01Ptr || pStrQuest->Item02Ptr || pStrQuest->Item03Ptr )
               PacketSend::Send_ItemModList((BS_PacketDispatch *)&pGameDispatch->vfptr);
             */
+            
+	        CharacterModel.UpdateExp(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacter);
+	    }
+
+        //signed __int16 __usercall sub_52CAB0@<ax>(int a1@<ebp>, double a2@<st0>, int a3, int a4)
+        [Packet(Packets.CmdCityLeaveCheck)]
+		public static void CityLeaveCheck(Packet packet)
+        {
+            packet.Reader.ReadInt32(); // CityId?
+            string post1 = packet.Reader.ReadAsciiStatic(17); // Gate?
+            packet.Reader.ReadBytes(238);
+            string post2 = packet.Reader.ReadAsciiStatic(17); // Gate?
+
+
+			var ack = new Packet(Packets.CityLeaveCheckAck);
+		    ack.Writer.Write((long)1); // Result???
+            /* 0-Moon Palace, 1=Koinonia, 2=Cras, 3=Oros, 4=Taipei, 5=NeoOros, else szPassword? */
+            ack.Writer.WriteAsciiStatic(post1, 17);
+            ack.Writer.Write(new byte[238]);
+            ack.Writer.WriteAsciiStatic(post2, 17);
+			packet.Sender.Send(ack);
+
+            /*
+             * Used bytes are:
+             * 0 - 6 -> Result?
+             * 6 - 10 -> CityId?
+             * 10 - ?? -> Some kind of string, maybe Gate?
+             * 265 - ?? -> Some kind of string, maybe Gate?
+             */
         }
 
-        [Packet(Packets.CmdChangeArea)]
-		public static void ChangeArea(Packet packet)
-		{
-			var ack = new Packet(Packets.ChangeAreaAck);
-			ack.Writer.Write(new byte[520]);
-			packet.Sender.Send(ack);
-		}
-		
-		[Packet(Packets.CmdBuyCar)]
+        [Packet(Packets.CmdBuyCar)]
 		public static void BuyCar(Packet packet)
 		{
 			var charName = packet.Reader.ReadUnicodeStatic(21); // Possibly 21?

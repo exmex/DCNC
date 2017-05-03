@@ -239,5 +239,17 @@ namespace Shared.Models
 				cmd.Execute();
 			}
 		}
+
+	    public static void UpdateExp(MySqlConnection dbconn, Character character)
+	    {
+            using (var cmd = new UpdateCommand("UPDATE characters SET {0} WHERE CID=@charId", dbconn))
+            {
+                cmd.AddParameter("@charId", character.Cid);
+                cmd.Set("BaseExp", character.BaseExp);
+                cmd.Set("CurExp", character.CurExp);
+                cmd.Set("NextExp", character.NextExp);
+                cmd.Execute();
+            }
+        }
 	}
 }

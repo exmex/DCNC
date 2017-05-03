@@ -86,8 +86,11 @@
     <Compile Include="Objects\StatInfo.cs" />
     <Compile Include="Objects\Team.cs" />
     <Compile Include="Objects\Vehicle.cs" />
+    <Compile Include="Objects\XiStrIcon.cs" />
+    <Compile Include="Objects\XiStrQuest.cs" />
     <Compile Include="ServerMain.cs" />
     <Compile Include="Objects\User.cs" />
+    <Compile Include="Util\BinaryReaderExt.cs" />
     <Compile Include="Util\Commands\CommandManager.cs" />
     <Compile Include="Util\Commands\ConsoleCommands.cs" />
     <Compile Include="Util\Configuration\BaseConf.cs" />
@@ -100,6 +103,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\Password.cs" />
     <Compile Include="Util\RandomProvider.cs" />
+    <Compile Include="Util\TdfReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
