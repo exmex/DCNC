@@ -27,11 +27,10 @@ namespace Shared.Network.LobbyServer
         /// <summary>
         /// Sends the answer packet.
         /// </summary>
-        /// <param name="packetId">The packet identifier.</param>
         /// <param name="client">The client to send the packet to.</param>
-        public void Send(ushort packetId, Client client)
+        public void Send(Client client)
         {
-            var ack = new Packet(packetId);
+            var ack = new Packet(Packets.CheckInLobbyAck);
             ack.Writer.Write(Result);
             ack.Writer.Write(Permission);
             client.Send(ack);

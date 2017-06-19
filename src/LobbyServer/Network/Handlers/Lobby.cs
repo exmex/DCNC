@@ -91,7 +91,7 @@ namespace LobbyServer.Network.Handlers
 #if DEBUG
                 packet.Sender.Error("Invalid ticket-user combination.");
 #else
-                checkInLobbyAnswerPacket.Send(Packets.CheckInLobbyAck, packet.Sender);
+                checkInLobbyAnswerPacket.Send(packet.Sender);
                 packet.Sender.Kill("");
 #endif
                 return;
@@ -101,7 +101,7 @@ namespace LobbyServer.Network.Handlers
             // Send check in lobby answer.
             checkInLobbyAnswerPacket.Result = 0;
             checkInLobbyAnswerPacket.Permission = 0x8000; // TODO: Use account model instead.
-            checkInLobbyAnswerPacket.Send(Packets.CheckInLobbyAck, packet.Sender);
+            checkInLobbyAnswerPacket.Send(packet.Sender);
 
             // Send current lobby time.
             var lobbyTimeAnswerPacket = new LobbyTimeAnswerPacket();
@@ -120,7 +120,7 @@ namespace LobbyServer.Network.Handlers
                     !CharacterModel.Exists(LobbyServer.Instance.Database.Connection,
                         checkCharacterNamePacket.CharacterName)
             };
-            checkCharacterNameAnswerPacket.Send(Packets.CheckCharNameAck, packet.Sender);
+            checkCharacterNameAnswerPacket.Send(packet.Sender);
         }
 
         [Packet(Packets.CmdCreateChar)]
@@ -159,7 +159,7 @@ namespace LobbyServer.Network.Handlers
                 new DeleteCharacterAnswerPacket
                 {
                     CharacterName = deleteCharacterPacket.CharacterName
-                }.Send(Packets.DeleteCharAck, packet.Sender);
+                }.Send(packet.Sender);
 
                 return;
             }

@@ -9,6 +9,24 @@ namespace Shared.Network
         void Serialize(PacketWriter writer);
     }
 
+    /// <summary>
+    /// Class PacketWriter.
+    /// Size reference:
+    /// sizeof(sbyte)	1
+    /// sizeof(byte)	1
+    /// sizeof(short)	2
+    /// sizeof(ushort)	2
+    /// sizeof(int)	4
+    /// sizeof(uint)	4
+    /// sizeof(long)	8
+    /// sizeof(ulong)	8
+    /// sizeof(char)	2 (Unicode)
+    /// sizeof(float)	4
+    /// sizeof(double)	8
+    /// sizeof(decimal)	16
+    /// sizeof(bool)	1
+    /// </summary>
+    /// <seealso cref="System.IO.BinaryWriter" />
     public class PacketWriter : BinaryWriter
     {
         public PacketWriter(MemoryStream stream)

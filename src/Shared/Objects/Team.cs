@@ -52,6 +52,8 @@ namespace Shared.Objects
         public string OwnerName; // 21
         public string LeaderName; // 21
 
+        // 243 <-- length
+
         //Wrong Packet Size. CMD(841) CmdLen: : 692, AnalysisSize: 393
         // We're still missing ~209 bytes of data
         public void Serialize(PacketWriter writer)

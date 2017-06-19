@@ -214,13 +214,18 @@ namespace GameServer.Network.Handlers
 		[Packet(Packets.CmdMyTeamInfo)]
 		public static void MyTeamInfo(Packet packet)
 		{
-			uint m_Act = packet.Reader.ReadUInt32(); // nAct?
+			uint act = packet.Reader.ReadUInt32(); // nAct?
 
 			var ack = new Packet(Packets.MyTeamInfoAck);
 
-			ack.Writer.Write(m_Act); // Act!?
-			ack.Writer.Write(packet.Sender.User.ActiveCharacterId); // Char ID
-			ack.Writer.Write(1); // Rank
+			ack.Writer.Write(act); // Action (1003, 1004, 1031, 1034)
+            
+            /* After the action id, it seems the rest until byte 16 is ignored? */
+            ack.Writer.Write(packet.Sender.User.ActiveCharacterId); // Char ID
+            ack.Writer.Write(0); // Rank
+            /* After the action id, it seems the rest above is ignored*/
+
+            // This must be 664 bytes long starting at byte 18
 			packet.Sender.User.ActiveTeam.Serialize(ack.Writer);
 			ack.Writer.Write((ushort)0); // Age?
 			packet.Sender.Send(ack);
@@ -498,6 +503,8 @@ namespace GameServer.Network.Handlers
             ack.Writer.Write(0.0f); // Mitron cap?
 			ack.Writer.Write(0.0f); // Mitron eff?
 			ack.Writer.Write(false); // AuctionOn
+			ack.Writer.Write(0); // ?????
+			ack.Writer.Write((short)0); // ?????
             ack.Writer.Write(10000); // Price
             //ack.Writer.Write(Bumper);
             packet.Sender.Send(ack);

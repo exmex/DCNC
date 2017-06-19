@@ -298,7 +298,6 @@ namespace GameServer.Network.Handlers
             ack.Writer.Write((uint)0); // InvenIdx
             ack.Writer.Write((uint)0); // Is upgrade pack??
             ack.Writer.Write((uint)0); // Tradeable?
-
             //ack.Writer.Write(new byte[46]); // 94
 
             packet.Sender.Send(ack);
