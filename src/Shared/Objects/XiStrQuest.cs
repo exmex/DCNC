@@ -85,8 +85,10 @@ namespace Shared.Objects
                 {
                     XiStrQuest quest = new XiStrQuest();
                     quest.QuestId = reader.ReadUnicode();
-                    quest.QuestIdN = Convert.ToUInt32(reader.ReadUnicode());
-                    quest.PrevQuestIdN = Convert.ToUInt32(reader.ReadUnicode());
+                    /*quest.QuestIdN = Convert.ToUInt32(reader.ReadUnicode());
+                    quest.PrevQuestIdN = Convert.ToUInt32(reader.ReadUnicode());*/
+                    quest.QuestIdN = Convert.ToUInt32(reader.ReadUnicode())-1;// -1 since the request the client sents us are 0 based
+                    quest.PrevQuestIdN = Convert.ToUInt32(reader.ReadUnicode())-1; // -1 since the request the client sents us are 0 based
                     quest.Event = (uint) QuestEventStrToVar(reader.ReadUnicode());
                     quest.NeedLevel = Convert.ToUInt32(reader.ReadUnicode());
                     quest.NeedLevelPercent = Convert.ToUInt32(reader.ReadUnicode());
