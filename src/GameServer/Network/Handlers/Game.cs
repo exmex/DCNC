@@ -44,6 +44,9 @@ namespace GameServer.Network.Handlers
 			int m_ChannelId;
 			XiVec4 m_Pos;
 			int m_PositionState;*/
+			
+			// Rice sends an extra byte for some reason??
+			//ack.Writer.Write((byte)0);
 
 			packet.Sender.Send(ack);
 		}
@@ -466,6 +469,13 @@ namespace GameServer.Network.Handlers
             ack.Writer.WriteAsciiStatic(post1, 255);
             ack.Writer.WriteAsciiStatic(post2, 255);
             packet.Sender.Send(ack);
+			
+			/* Pulled from Rice:
+			var ack = new RicePacket(3201);
+            ack.Writer.Write(1); // if ( *(_DWORD *)(pktBuf + 2) == 1 )
+            ack.Writer.Write(packet.Reader.ReadBytes(514)); // apparently these fuckers want their own 514 bytes back
+            packet.Sender.Send(ack);
+			*/
 
             /*
              * Used bytes are:

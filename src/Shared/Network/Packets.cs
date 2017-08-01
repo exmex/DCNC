@@ -41,6 +41,7 @@ namespace Shared.Network
 		public const ushort RoomNotifyChangeAck = 467;
 
         public const ushort UdpTimeSyncAck = 540;
+		public const ushort MoveVehicleAck = 542;
         public const ushort EnterAreaAck = 563;
 
         public const ushort WeatherAck = 640;
@@ -49,6 +50,7 @@ namespace Shared.Network
 		public const ushort UdpCastTcsSignalAck = 706;
         public const ushort FuelChargeReqAck = 724;
 		public const ushort StatUpdateAck = 760;
+		public const ushort AreaListAck = 781;
         public const ushort FirstPositionAck = 783;
         public const ushort GetDateTimeAck = 785;
         public const ushort MyPositionAck = 789;
@@ -56,6 +58,7 @@ namespace Shared.Network
         public const ushort InstantStartAck = 993;
         public const ushort InstantGiveUpAck = 1000;
 		public const ushort GetMyHancoinAck = 1401; // TODO: Wrong Packet Size. CMD(1401) CmdLen: : 14, AnalysisSize: 12
+		public const ushort VisualItemListAck = 1801;
 
         public const ushort CityLeaveCheckAck = 3201;
 		

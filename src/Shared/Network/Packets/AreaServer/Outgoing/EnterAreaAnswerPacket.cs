@@ -25,11 +25,15 @@ namespace Shared.Network.AreaServer
 			*/
 
             var ack = new Packet(Packets.EnterAreaAck);
-            ack.Writer.Write(LocalTime); // (Shouldn't this be third?)
+			ack.Writer.Write(AreaId);
+			ack.Writer.Write(LocalTime);
+			ack.Writer.Write(Environment.TickCount);
+			
+            /*ack.Writer.Write(LocalTime); // (Shouldn't this be third?)
             ack.Writer.Write(SystemTick); // System Tick (Shouldn't this be last?)
             ack.Writer.Write(AreaId); // (Shouldn't this be first?)
             ack.Writer.Write(1); // ?? (Shouldn't this be second?)
-            ack.Writer.Write(new byte[2]); // Missing information for this one.
+            ack.Writer.Write(new byte[2]); // Missing information for this one.*/
             client.Send(ack);
         }
     }
