@@ -337,7 +337,7 @@ namespace GameServer.Network.Handlers
             packet.Sender.Send(ack);
         }
 		
-		[Packet(CmdVisualItemList)]
+		[Packet(Packets.CmdVisualItemList)]
         public static void VisualItemList(Packet packet)
         {
             var ack = new Packet(Packets.VisualItemListAck);
