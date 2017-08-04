@@ -1,31 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.SqlServer.Server;
-
-namespace Shared.Network.GameServer
+﻿namespace Shared.Network.GameServer
 {
     public class FriendListAnswerPacket
     {
-        public int TotalItemNum;
-
         public Friend[] FriendList;
+        public int TotalItemNum;
 
         public void Send(Client client) // TODO: Send actual data not just dummies
         {
             var ack = new Packet(Packets.FriendListAck);
 
-            int pktNum = TotalItemNum / 12 + 1; // Send maximum 12 friends per batch.
+            var pktNum = TotalItemNum / 12 + 1; // Send maximum 12 friends per batch.
             for (uint pktIdx = 0; pktIdx < pktNum; ++pktIdx)
             {
                 uint SendItemCnt = 12;
                 if (pktIdx + 1 == pktNum)
-                    SendItemCnt = (uint)TotalItemNum - 12 * pktIdx;
-                
+                    SendItemCnt = (uint) TotalItemNum - 12 * pktIdx;
+
                 ack.Writer.Write(SendItemCnt);
-                if(pktIdx < pktNum)
+                if (pktIdx < pktNum)
                     ack.Writer.Write(262145); // Send client that more packets coming after this one.
                 else
                     ack.Writer.Write(0x40000);
@@ -77,19 +69,19 @@ namespace Shared.Network.GameServer
 
     public class Friend // TODO: Move to Shared.Objects
     {
-        public string CharacterName;
-        public string TeamName;
-        public long CharacterId;
-        public long TeamId;
-        public long TeamMarkId;
-        public int State; // FriendState (0 = Blocked?)
-
-        public uint Serial; // SessionId
-        public char LocationType; // byte..?
         public char ChannelId;
-        public ushort LocationId;
+        public long CharacterId;
+        public string CharacterName;
+        public ushort CurCarGrade;
 
         public ushort Level;
-        public ushort CurCarGrade;
+        public ushort LocationId;
+        public char LocationType; // byte..?
+
+        public uint Serial; // SessionId
+        public int State; // FriendState (0 = Blocked?)
+        public long TeamId;
+        public long TeamMarkId;
+        public string TeamName;
     }
 }

@@ -11,9 +11,9 @@ namespace Shared.Models
     {
         public static List<UserAuthAnswerPacket.Server> Retrieve(MySqlConnection dbconn)
         {
-            MySqlCommand command = new MySqlCommand("SELECT * FROM servers", dbconn);
+            var command = new MySqlCommand("SELECT * FROM servers", dbconn);
 
-            List<UserAuthAnswerPacket.Server> servers = new List<UserAuthAnswerPacket.Server>();
+            var servers = new List<UserAuthAnswerPacket.Server>();
             using (DbDataReader reader = command.ExecuteReader())
             {
                 while (reader.Read())
@@ -21,7 +21,7 @@ namespace Shared.Models
                     var server = new UserAuthAnswerPacket.Server
                     {
                         ServerName = reader["Name"] as string,
-                        ServerId = (uint)servers.Count,
+                        ServerId = (uint) servers.Count,
                         PlayerCount = Convert.ToSingle(reader["PlayersOnline"]),
                         MaxPlayers = Convert.ToSingle(reader["MaxPlayers"]),
                         ServerState = 1,

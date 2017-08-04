@@ -4,8 +4,5 @@ namespace RankingServer.Util
 {
     public class RankingConsoleCommands : ConsoleCommands
     {
-        public RankingConsoleCommands()
-        {
-        }
     }
 }

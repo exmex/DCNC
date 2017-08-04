@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using NUnit.Framework;
 using Shared;
 using Shared.Network;
@@ -17,9 +12,12 @@ namespace SharedTests
         [Test]
         public void TestReceive()
         {
-            byte[] packet = System.IO.File.ReadAllBytes(Path.GetDirectoryName(Path.GetDirectoryName(TestContext.CurrentContext.TestDirectory)) + "/../../packetcaptures/UserAuth.bin");
-            Packet p = new Packet(null, Packets.CmdUserAuth, packet);
-            UserAuthPacket authPacket = new UserAuthPacket(p);
+            var packet =
+                File.ReadAllBytes(
+                    Path.GetDirectoryName(Path.GetDirectoryName(TestContext.CurrentContext.TestDirectory)) +
+                    "/../../packetcaptures/UserAuth.bin");
+            var p = new Packet(null, Packets.CmdUserAuth, packet);
+            var authPacket = new UserAuthPacket(p);
 
 
             Assert.AreEqual(authPacket.ProtocolVersion, ServerMain.ProtocolVersion);

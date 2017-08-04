@@ -1,62 +1,61 @@
-﻿using System;
-using Shared.Network;
+﻿using Shared.Network;
 
 namespace Shared.Objects
 {
     public class Character
     {
-        public User User;
-        public ulong Uid;
-        public ulong Cid;
-
-        public string Name;
-        public int CreationDate;
+        public Vehicle ActiveCar;
         public ushort Avatar;
-        public ushort Level;
+        public long BaseExp;
+        public ulong Cid;
         public int City;
+        public int CreationDate;
+
+        public long CurExp;
         public int CurrentCarId;
+        public int Flags;
         public int GarageLevel;
+        public int Guild;
+        public int HancoinGarage;
+        public int HancoinInven;
         public int InventoryLevel;
-        public long Tid;
-        
-        public int posState;
+        public int LastChannel;
+        public int LastDate;
 
         //public ulong CID;
         public string LastMessageFrom; // 0xB
-        public int LastDate;
 
-        public long CurExp;
-        public long NextExp;
-        public long BaseExp;
-
-        public long MitoMoney;
-        public long TeamId;
-        public long TeamMarkId;
-        public string TeamName;		 // 0xD / 13
-        public int TeamRank;
-        public byte PType;
-        public uint PvpCnt;
-        public uint PvpWinCnt;
-        public uint PvpPoint;
-        public uint TPvpCnt;
-        public uint TPvpWinCnt;
-        public uint TPvpPoint;
-        public uint QuickCnt;
-        public float TotalDistance, PositionX, PositionY, PositionZ, Rotation;
-        public int LastChannel;
-        public int PosState;
-        public uint QuickSlot1;
-        public uint QuickSlot2;
-        public int TeamJoinDate;
-        public int TeamCloseDate;
-        public int TeamLeaveDate;
-        public int HancoinInven;
-        public int HancoinGarage;
-        public int Flags;
-        public int Guild;
+        public ushort Level;
         public long Mileage;
 
-        public Vehicle ActiveCar;
+        public long MitoMoney;
+
+        public string Name;
+        public long NextExp;
+
+        public int posState;
+        public int PosState;
+        public byte PType;
+        public uint PvpCnt;
+        public uint PvpPoint;
+        public uint PvpWinCnt;
+        public uint QuickCnt;
+        public uint QuickSlot1;
+        public uint QuickSlot2;
+        public int TeamCloseDate;
+        public long TeamId;
+        public int TeamJoinDate;
+        public int TeamLeaveDate;
+        public long TeamMarkId;
+        public string TeamName; // 0xD / 13
+        public int TeamRank;
+        public long Tid;
+        public float TotalDistance, PositionX, PositionY, PositionZ, Rotation;
+        public uint TPvpCnt;
+        public uint TPvpPoint;
+        public uint TPvpWinCnt;
+        public ulong Uid;
+        public User User;
 
         public void Serialize(PacketWriter writer)
         {

@@ -3,9 +3,9 @@ using Shared.Util;
 
 namespace GameServer
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             try
             {

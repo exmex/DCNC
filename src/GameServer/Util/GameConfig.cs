@@ -4,15 +4,15 @@ namespace GameServer.Util
 {
     public class GameConf : BaseConf
     {
-        /// <summary>
-        /// login.conf
-        /// </summary>
-        public GameConfFile Game { get; protected set; }
-
         public GameConf()
         {
             Game = new GameConfFile();
         }
+
+        /// <summary>
+        ///     login.conf
+        /// </summary>
+        public GameConfFile Game { get; protected set; }
 
         public override void Load()
         {
@@ -22,7 +22,7 @@ namespace GameServer.Util
     }
 
     /// <summary>
-    /// Represents login.conf
+    ///     Represents login.conf
     /// </summary>
     public class GameConfFile : ConfFile
     {

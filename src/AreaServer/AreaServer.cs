@@ -14,29 +14,29 @@ namespace AreaServer
         private bool _running;
 
         /// <summary>
-        /// Instance of the actual server component.
-        /// </summary>
-        public DefaultServer Server { get; set; }
-
-        /// <summary>
-        /// Database
-        /// </summary>
-        public AreaDatabase Database { get; private set; }
-
-        /// <summary>
-        /// Configuration
-        /// </summary>
-        private AreaConf Config { get; set; }
-
-        /// <summary>
-        /// Initializes fields and properties
+        ///     Initializes fields and properties
         /// </summary>
         private AreaServer()
         {
         }
 
         /// <summary>
-        /// Loads all necessary components and starts the server.
+        ///     Instance of the actual server component.
+        /// </summary>
+        public DefaultServer Server { get; set; }
+
+        /// <summary>
+        ///     Database
+        /// </summary>
+        public AreaDatabase Database { get; private set; }
+
+        /// <summary>
+        ///     Configuration
+        /// </summary>
+        private AreaConf Config { get; set; }
+
+        /// <summary>
+        ///     Loads all necessary components and starts the server.
         /// </summary>
         public void Run()
         {

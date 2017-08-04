@@ -12,7 +12,8 @@ namespace AuthServer.Util
         {
             Add("shutdown", "<seconds>", "Orders all servers to shut down", HandleShutDown);
             Add("passwd", "<username> <password>", "Changes password of account", HandlePasswd);
-            Add("create", "<username> <password>", "Creates an account with the specified password", HandleAccountCreate);
+            Add("create", "<username> <password>", "Creates an account with the specified password",
+                HandleAccountCreate);
         }
 
         private CommandResult HandleAccountCreate(string command, IList<string> args)
@@ -49,9 +50,7 @@ namespace AuthServer.Util
         private CommandResult HandlePasswd(string command, IList<string> args)
         {
             if (args.Count < 3)
-            {
                 return CommandResult.InvalidArgument;
-            }
 
             var accountName = args[1];
             var password = args[2];

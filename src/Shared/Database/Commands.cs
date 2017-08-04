@@ -16,8 +16,13 @@ namespace Shared.Database
             _set = new Dictionary<string, object>();
         }
 
+        public void Dispose()
+        {
+            _mc.Dispose();
+        }
+
         /// <summary>
-        /// Adds a parameter that's not handled by Set.
+        ///     Adds a parameter that's not handled by Set.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>
@@ -27,7 +32,7 @@ namespace Shared.Database
         }
 
         /// <summary>
-        /// Sets value for field.
+        ///     Sets value for field.
         /// </summary>
         /// <param name="field"></param>
         /// <param name="value"></param>
@@ -37,22 +42,17 @@ namespace Shared.Database
         }
 
         public abstract int Execute();
-
-        public void Dispose()
-        {
-            _mc.Dispose();
-        }
     }
 
     /// <summary>
-    /// Wrapper around MySqlCommand, for easier, cleaner updating.
+    ///     Wrapper around MySqlCommand, for easier, cleaner updating.
     /// </summary>
     /// <remarks>
-    /// Include one {0} where the set statements normally would be.
-    /// It's automatically inserted, based on what was passed to "Set".
+    ///     Include one {0} where the set statements normally would be.
+    ///     It's automatically inserted, based on what was passed to "Set".
     /// </remarks>
     /// <example>
-    /// <code>
+    ///     <code>
     /// using (var conn = Db.Instance.Connection)
     /// using (var cmd = new UpdateCommand("UPDATE `accounts` SET {0} WHERE `accountId` = @accountId", conn))
     /// {
@@ -61,7 +61,6 @@ namespace Shared.Database
     /// 	cmd.Set("lastlogin", account.LastLogin);
     /// 	cmd.Set("banReason", account.BanReason);
     /// 	cmd.Set("banExpiration", account.BanExpiration);
-    /// 
     /// 	cmd.Execute();
     /// }
     /// </code>
@@ -74,7 +73,7 @@ namespace Shared.Database
         }
 
         /// <summary>
-        /// Runs MySqlCommand.ExecuteNonQuery
+        ///     Runs MySqlCommand.ExecuteNonQuery
         /// </summary>
         /// <returns></returns>
         public override int Execute()
@@ -97,37 +96,36 @@ namespace Shared.Database
     }
 
     /// <summary>
-    /// Wrapper around MySqlCommand, for easier, cleaner inserting.
+    ///     Wrapper around MySqlCommand, for easier, cleaner inserting.
     /// </summary>
     /// <remarks>
-    /// Include one {0} where the "(...) VALUES (...) part normally would be.
-    /// It's automatically inserted, based on what was passed to "Set".
+    ///     Include one {0} where the "(...) VALUES (...) part normally would be.
+    ///     It's automatically inserted, based on what was passed to "Set".
     /// </remarks>
     /// <example>
-    /// <code>
+    ///     <code>
     /// using (var cmd = new InsertCommand("INSERT INTO `keywords` {0}", conn, transaction))
     /// {
     /// 	cmd.Set("creatureId", creature.CreatureId);
     /// 	cmd.Set("keywordId", keywordId);
-    /// 
     /// 	cmd.Execute();
     /// }
     /// </code>
     /// </example>
     public class InsertCommand : SimpleCommand
     {
-        /// <summary>
-        /// Returns last insert id.
-        /// </summary>
-        public long LastId { get { return _mc.LastInsertedId; } }
-
         public InsertCommand(string command, MySqlConnection conn, MySqlTransaction transaction = null)
             : base(command, conn, transaction)
         {
         }
 
         /// <summary>
-        /// Runs MySqlCommand.ExecuteNonQuery
+        ///     Returns last insert id.
+        /// </summary>
+        public long LastId => _mc.LastInsertedId;
+
+        /// <summary>
+        ///     Runs MySqlCommand.ExecuteNonQuery
         /// </summary>
         /// <returns></returns>
         public override int Execute()
@@ -142,7 +140,7 @@ namespace Shared.Database
             }
 
             // Add values part
-            var values = "(" + (sb1.ToString().Trim(' ', ',')) + ") VALUES (" + (sb2.ToString().Trim(' ', ',')) + ")";
+            var values = "(" + sb1.ToString().Trim(' ', ',') + ") VALUES (" + sb2.ToString().Trim(' ', ',') + ")";
             _mc.CommandText = string.Format(_mc.CommandText, values);
 
             // Add parameters

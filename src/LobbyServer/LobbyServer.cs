@@ -14,29 +14,29 @@ namespace LobbyServer
         private bool _running;
 
         /// <summary>
-        /// Instance of the actual server component.
-        /// </summary>
-        private DefaultServer Server { get; set; }
-
-        /// <summary>
-        /// Database
-        /// </summary>
-        public LobbyDatabase Database { get; private set; }
-
-        /// <summary>
-        /// Configuration
-        /// </summary>
-        private LobbyConf Config { get; set; }
-
-        /// <summary>
-        /// Initializes fields and properties
+        ///     Initializes fields and properties
         /// </summary>
         private LobbyServer()
         {
         }
 
         /// <summary>
-        /// Loads all necessary components and starts the server.
+        ///     Instance of the actual server component.
+        /// </summary>
+        private DefaultServer Server { get; set; }
+
+        /// <summary>
+        ///     Database
+        /// </summary>
+        public LobbyDatabase Database { get; private set; }
+
+        /// <summary>
+        ///     Configuration
+        /// </summary>
+        private LobbyConf Config { get; set; }
+
+        /// <summary>
+        ///     Loads all necessary components and starts the server.
         /// </summary>
         public void Run()
         {

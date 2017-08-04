@@ -4,15 +4,15 @@ namespace LobbyServer.Util
 {
     public class LobbyConf : BaseConf
     {
-        /// <summary>
-        /// login.conf
-        /// </summary>
-        public LobbyConfFile Lobby { get; protected set; }
-
         public LobbyConf()
         {
             Lobby = new LobbyConfFile();
         }
+
+        /// <summary>
+        ///     login.conf
+        /// </summary>
+        public LobbyConfFile Lobby { get; protected set; }
 
         public override void Load()
         {
@@ -22,7 +22,7 @@ namespace LobbyServer.Util
     }
 
     /// <summary>
-    /// Represents login.conf
+    ///     Represents login.conf
     /// </summary>
     public class LobbyConfFile : ConfFile
     {

@@ -1,7 +1,7 @@
 ﻿namespace Shared.Util.Configuration.Files
 {
     /// <summary>
-    /// Represents database.conf
+    ///     Represents database.conf
     /// </summary>
     public class DatabaseConfFile : ConfFile
     {

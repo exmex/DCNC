@@ -4,8 +4,5 @@ namespace LobbyServer.Util
 {
     public class LobbyConsoleCommands : ConsoleCommands
     {
-        public LobbyConsoleCommands()
-        {
-        }
     }
 }

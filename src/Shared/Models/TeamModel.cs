@@ -8,11 +8,11 @@ namespace Shared.Objects
     {
         public static Team Retrieve(MySqlConnection dbconn, long Tid)
         {
-            MySqlCommand command = new MySqlCommand("SELECT * FROM Teams WHERE TID = @tid", dbconn);
+            var command = new MySqlCommand("SELECT * FROM Teams WHERE TID = @tid", dbconn);
 
             command.Parameters.AddWithValue("@tid", Tid);
 
-            Team team = new Team();
+            var team = new Team();
 
             using (DbDataReader reader = command.ExecuteReader())
             {

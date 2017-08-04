@@ -6,130 +6,129 @@ using System.IO;
 namespace Shared.Util
 {
 	/// <summary>
-	/// General use class to read files line for line.
+	///     General use class to read files line for line.
 	/// </summary>
 	/// <remarks>
-	/// Ignores empty lines and lines prefixed with '!', ';', '#', '//', or '--'.
-	/// Supports including of files via 'include {file}' and 'require {file}'.
-	/// Require raises an exception if the file couldn't be found.
+	///     Ignores empty lines and lines prefixed with '!', ';', '#', '//', or '--'.
+	///     Supports including of files via 'include {file}' and 'require {file}'.
+	///     Require raises an exception if the file couldn't be found.
 	/// </remarks>
 	/// <example>
-	/// <code>
-	///	using (var fr = new FileReader(filePath))
-	///	{
-	///		foreach (string line in fr)
-	///		{
-	///			// Do something with line
-	///		}
-	///	}
-	///	</code>
-	///	</example>
+	///     <code>
+	/// 	using (var fr = new FileReader(filePath))
+	/// 	{
+	/// 		foreach (string line in fr)
+	/// 		{
+	/// 			// Do something with line
+	/// 		}
+	/// 	}
+	/// 	</code>
+	/// </example>
 	public class FileReader : IEnumerable<FileReaderLine>, IDisposable
-	{
-		private readonly string _filePath;
-		private readonly string _relativePath;
-		private readonly StreamReader _streamReader;
+    {
+        private readonly string _filePath;
+        private readonly string _relativePath;
+        private readonly StreamReader _streamReader;
 
-		public int CurrentLine { get; protected set; }
+        public FileReader(string filePath)
+        {
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("File '" + filePath + "' not found.");
 
-		public FileReader(string filePath)
-		{
-			if (!File.Exists(filePath))
-				throw new FileNotFoundException("File '" + filePath + "' not found.");
+            _filePath = filePath;
+            _relativePath = Path.GetDirectoryName(Path.GetFullPath(filePath));
 
-			_filePath = filePath;
-			_relativePath = Path.GetDirectoryName(Path.GetFullPath(filePath));
+            _streamReader = new StreamReader(filePath);
+        }
 
-			_streamReader = new StreamReader(filePath);
-		}
+        public int CurrentLine { get; protected set; }
 
-		public IEnumerator<FileReaderLine> GetEnumerator()
-		{
-			string line;
+        public void Dispose()
+        {
+            _streamReader.Close();
+        }
 
-			// Until EOF
-			while ((line = _streamReader.ReadLine()) != null)
-			{
-				CurrentLine++;
+        public IEnumerator<FileReaderLine> GetEnumerator()
+        {
+            string line;
 
-				line = line.Trim();
+            // Until EOF
+            while ((line = _streamReader.ReadLine()) != null)
+            {
+                CurrentLine++;
 
-				if (string.IsNullOrWhiteSpace(line))
-					continue;
+                line = line.Trim();
 
-				// Ignore very short or commented lines
-				if (line.Length < 2 || line[0] == '!' || line[0] == ';' || line[0] == '#' || line.StartsWith("//") || line.StartsWith("--"))
-					continue;
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
 
-				// Include files
-				bool require = false, divert = false;
-				if (line.StartsWith("include ") || (require = line.StartsWith("require ")) || (divert = line.StartsWith("divert ")))
-				{
-					var fileName = line.Substring(line.IndexOf(' ')).Trim(' ', '"');
-					var includeFilePath = Path.Combine((!fileName.StartsWith("/") ? _relativePath : ""), fileName.TrimStart('/'));
+                // Ignore very short or commented lines
+                if (line.Length < 2 || line[0] == '!' || line[0] == ';' || line[0] == '#' || line.StartsWith("//") ||
+                    line.StartsWith("--"))
+                    continue;
 
-					// Prevent rekursive including
-					if (includeFilePath != _filePath)
-					{
-						// Silently ignore failed includes, only raise an
-						// exception on require.
-						if (File.Exists(includeFilePath))
-						{
-							using (var fr = new FileReader(includeFilePath))
-							{
-								foreach (var incLine in fr)
-									yield return incLine;
-							}
+                // Include files
+                bool require = false, divert = false;
+                if (line.StartsWith("include ") || (require = line.StartsWith("require ")) ||
+                    (divert = line.StartsWith("divert ")))
+                {
+                    var fileName = line.Substring(line.IndexOf(' ')).Trim(' ', '"');
+                    var includeFilePath = Path.Combine(!fileName.StartsWith("/") ? _relativePath : "",
+                        fileName.TrimStart('/'));
 
-							// Stop reading current file if divert was successful
-							if (divert)
-								yield break;
-						}
-						else if (require)
-						{
-							throw new FileNotFoundException("Required file '" + includeFilePath + "' not found.");
-						}
-					}
+                    // Prevent rekursive including
+                    if (includeFilePath != _filePath)
+                        if (File.Exists(includeFilePath))
+                        {
+                            using (var fr = new FileReader(includeFilePath))
+                            {
+                                foreach (var incLine in fr)
+                                    yield return incLine;
+                            }
 
-					continue;
-				}
+                            // Stop reading current file if divert was successful
+                            if (divert)
+                                yield break;
+                        }
+                        else if (require)
+                        {
+                            throw new FileNotFoundException("Required file '" + includeFilePath + "' not found.");
+                        }
 
-				yield return new FileReaderLine(line, _filePath);
-			}
-		}
+                    continue;
+                }
 
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return GetEnumerator();
-		}
+                yield return new FileReaderLine(line, _filePath);
+            }
+        }
 
-		public void Dispose()
-		{
-			_streamReader.Close();
-		}
-	}
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
 
-	public class FileReaderLine
-	{
-		/// <summary>
-		/// Current line.
-		/// </summary>
-		public string Value { get; private set; }
+    public class FileReaderLine
+    {
+	    /// <summary>
+	    ///     New FileReaderLine.
+	    /// </summary>
+	    /// <param name="line"></param>
+	    /// <param name="file"></param>
+	    public FileReaderLine(string line, string file)
+        {
+            Value = line;
+            File = Path.GetFullPath(file);
+        }
 
-		/// <summary>
-		/// Full path to the file the value was read from.
-		/// </summary>
-		public string File { get; private set; }
+	    /// <summary>
+	    ///     Current line.
+	    /// </summary>
+	    public string Value { get; }
 
-		/// <summary>
-		/// New FileReaderLine.
-		/// </summary>
-		/// <param name="line"></param>
-		/// <param name="file"></param>
-		public FileReaderLine(string line, string file)
-		{
-			Value = line;
-			File = Path.GetFullPath(file);
-		}
-	}
+	    /// <summary>
+	    ///     Full path to the file the value was read from.
+	    /// </summary>
+	    public string File { get; }
+    }
 }

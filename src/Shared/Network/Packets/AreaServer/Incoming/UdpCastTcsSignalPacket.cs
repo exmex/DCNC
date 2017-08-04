@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Shared.Network.AreaServer
+﻿namespace Shared.Network.AreaServer
 {
     public class UdpCastTcsSignalPacket
     {
         public readonly int AreaId;
-        public readonly float X;
-        public readonly float Y;
-        public readonly int Time;
         public readonly int Signal;
         public readonly int State;
+        public readonly int Time;
+        public readonly float X;
+        public readonly float Y;
 
         public UdpCastTcsSignalPacket(Packet packet)
         {

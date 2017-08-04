@@ -8,36 +8,30 @@ using Shared.Util.Configuration;
 namespace Shared
 {
     /// <summary>
-    /// General methods needed by all servers.
+    ///     General methods needed by all servers.
     /// </summary>
     public abstract class ServerMain
     {
         public const int ProtocolVersion = 10249;
 
-        const int SWP_NOZORDER = 0x4;
-        const int SWP_NOACTIVATE = 0x10;
+        private const int SWP_NOZORDER = 0x4;
+        private const int SWP_NOACTIVATE = 0x10;
 
-        struct RECT
-        {
-            public int left;
-            public int top;
-            public int right;
-            public int bottom;
-        };
+        public static IntPtr Handle => GetConsoleWindow();
 
         [DllImport("kernel32")]
-        static extern IntPtr GetConsoleWindow();
+        private static extern IntPtr GetConsoleWindow();
 
 
         [DllImport("user32")]
-        static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter,
+        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter,
             int x, int y, int cx, int cy, int flags);
 
         [DllImport("user32")]
-        static extern bool GetClientRect(IntPtr hWnd, ref RECT rect);
+        private static extern bool GetClientRect(IntPtr hWnd, ref RECT rect);
 
         /// <summary>
-        /// Sets the console window location and size in pixels
+        ///     Sets the console window location and size in pixels
         /// </summary>
         public static void SetWindowPosition(int x, int y, int width, int height)
         {
@@ -46,7 +40,7 @@ namespace Shared
 
         public void GetWindowPosition(out int x, out int y, out int width, out int height)
         {
-            RECT rect = new RECT();
+            var rect = new RECT();
             GetClientRect(Handle, ref rect);
             x = rect.top;
             y = rect.left;
@@ -54,23 +48,14 @@ namespace Shared
             height = rect.bottom - rect.top;
         }
 
-        public static IntPtr Handle
-        {
-            get
-            {
-                //Initialize();
-                return GetConsoleWindow();
-            }
-        }
-
         /// <summary>
-        /// Tries to find root folder and changes the working directory to it.
-        /// Exits if not successful.
+        ///     Tries to find root folder and changes the working directory to it.
+        ///     Exits if not successful.
         /// </summary>
         protected static void NavigateToRoot()
         {
             // Go back max 2 folders, the bins should be in /bin/(Debug|Release)
-            for (int i = 0; i < 3; ++i)
+            for (var i = 0; i < 3; ++i)
             {
                 if (Directory.Exists("system"))
                     return;
@@ -83,7 +68,7 @@ namespace Shared
         }
 
         /// <summary>
-        /// Tries to call conf's load method, exits on error.
+        ///     Tries to call conf's load method, exits on error.
         /// </summary>
         protected static void LoadConf(BaseConf conf)
         {
@@ -101,8 +86,8 @@ namespace Shared
         }
 
         /// <summary>
-        /// Tries to initialize database with the information from conf,
-        /// exits on error.
+        ///     Tries to initialize database with the information from conf,
+        ///     exits on error.
         /// </summary>
         protected static void InitDatabase(BaseDatabase db, BaseConf conf)
         {
@@ -110,13 +95,22 @@ namespace Shared
 
             try
             {
-                db.Init(conf.Database.Host, conf.Database.Port, conf.Database.User, conf.Database.Pass, conf.Database.Db);
+                db.Init(conf.Database.Host, conf.Database.Port, conf.Database.User, conf.Database.Pass,
+                    conf.Database.Db);
             }
             catch (Exception ex)
             {
                 Log.Error("Unable to open database connection. ({0})", ex.Message);
                 ConsoleUtil.Exit(1);
             }
+        }
+
+        private struct RECT
+        {
+            public int left;
+            public int top;
+            public int right;
+            public int bottom;
         }
     }
 }

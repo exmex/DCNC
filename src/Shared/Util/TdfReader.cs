@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
@@ -11,10 +10,10 @@ namespace Shared.Util
     public class TdfReader
     {
         public readonly SBitmap Bitmap;
-        public int[] DataTable;
         public readonly SHeader Header;
-        public byte[] ResTable;
         public readonly SVersion Version;
+        public int[] DataTable;
+        public byte[] ResTable;
 
         public TdfReader()
         {
@@ -29,7 +28,6 @@ namespace Shared.Util
         public bool Load(string fileName)
         {
             if (File.Exists(fileName) && new FileInfo(fileName).Extension == ".tdf")
-            {
                 using (var reader = new BinaryReader(File.Open(fileName, FileMode.Open)))
                 {
                     Bitmap.BfType = reader.ReadInt16();
@@ -73,7 +71,6 @@ namespace Shared.Util
 
                     return true;
                 }
-            }
             Log.Error($"File {fileName} either does not exist or is not a valid TDF file.");
             return false;
         }

@@ -3,15 +3,14 @@ using Shared.Network.AreaServer;
 
 namespace AreaServer.Network.Handlers
 {
-    class Traffic
+    internal class Traffic
     {
-
         [Packet(Packets.CmdUdpCastTcsSignal)]
         public static void UdpCastTcsSignal(Packet packet)
         {
-            UdpCastTcsSignalPacket udpCastTcsSignalPacket = new UdpCastTcsSignalPacket(packet);
-            
-            var ack = new UdpCastTcsSignalAnswerPacket() // Weird hack because Class doesn't have access to broadcast.
+            var udpCastTcsSignalPacket = new UdpCastTcsSignalPacket(packet);
+
+            var ack = new UdpCastTcsSignalAnswerPacket // Weird hack because Class doesn't have access to broadcast.
             {
                 Signal = udpCastTcsSignalPacket.Signal,
                 Time = udpCastTcsSignalPacket.Time,
@@ -35,7 +34,6 @@ namespace AreaServer.Network.Handlers
         [Packet(Packets.CmdUdpCastTraffic)]
         public static void CastTraffic(Packet packet)
         {
-            
         }
     }
 }

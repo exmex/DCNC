@@ -5,13 +5,12 @@ namespace Shared.Network
 {
     public class Packet
     {
-        public Client Sender;
-
-        public readonly PacketWriter Writer;
-        public readonly PacketReader Reader;
-
         public readonly byte[] Buffer;
         public readonly ushort Id;
+        public readonly PacketReader Reader;
+
+        public readonly PacketWriter Writer;
+        public Client Sender;
 
         public Packet(ushort id)
         {
@@ -33,13 +32,11 @@ namespace Shared.Network
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = true)]
     public class PacketAttribute : Attribute
     {
-        private readonly ushort _id;
-
         public PacketAttribute(ushort id)
         {
-            _id = id;
+            Id = id;
         }
 
-        public ushort Id => _id;
+        public ushort Id { get; }
     }
 }

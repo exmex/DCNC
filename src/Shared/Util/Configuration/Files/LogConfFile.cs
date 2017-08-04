@@ -3,9 +3,9 @@
 namespace Shared.Util.Configuration.Files
 {
     /// <summary>
-	/// Represents log.conf
-	/// </summary>
-	public class LogConfFile : ConfFile
+    ///     Represents log.conf
+    /// </summary>
+    public class LogConfFile : ConfFile
     {
         public bool Archive { get; protected set; }
         public LogLevel Hide { get; protected set; }
@@ -15,7 +15,7 @@ namespace Shared.Util.Configuration.Files
             Require("system/conf/log.conf");
 
             Archive = GetBool("archive", true);
-            Hide = (LogLevel)GetInt("cmd_hide", (int)(LogLevel.Debug));
+            Hide = (LogLevel) GetInt("cmd_hide", (int) LogLevel.Debug);
 
             if (Archive)
                 Log.Archive = "log/archive/";

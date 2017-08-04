@@ -14,29 +14,29 @@ namespace AuthServer
         private bool _running;
 
         /// <summary>
-        /// Instance of the actual server component.
-        /// </summary>
-        private DefaultServer Server { get; set; }
-
-        /// <summary>
-        /// Database
-        /// </summary>
-        public AuthDatabase Database { get; private set; }
-
-        /// <summary>
-        /// Configuration
-        /// </summary>
-        private AuthConf Config { get; set; }
-
-        /// <summary>
-        /// Initializes fields and properties
+        ///     Initializes fields and properties
         /// </summary>
         private AuthServer()
         {
         }
 
         /// <summary>
-        /// Loads all necessary components and starts the server.
+        ///     Instance of the actual server component.
+        /// </summary>
+        private DefaultServer Server { get; set; }
+
+        /// <summary>
+        ///     Database
+        /// </summary>
+        public AuthDatabase Database { get; private set; }
+
+        /// <summary>
+        ///     Configuration
+        /// </summary>
+        private AuthConf Config { get; set; }
+
+        /// <summary>
+        ///     Loads all necessary components and starts the server.
         /// </summary>
         public void Run()
         {

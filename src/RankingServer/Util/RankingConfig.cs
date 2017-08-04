@@ -4,15 +4,15 @@ namespace RankingServer.Util
 {
     public class RankingConf : BaseConf
     {
-        /// <summary>
-        /// login.conf
-        /// </summary>
-        public RankingConfFile Ranking { get; protected set; }
-
         public RankingConf()
         {
             Ranking = new RankingConfFile();
         }
+
+        /// <summary>
+        ///     login.conf
+        /// </summary>
+        public RankingConfFile Ranking { get; protected set; }
 
         public override void Load()
         {
@@ -22,7 +22,7 @@ namespace RankingServer.Util
     }
 
     /// <summary>
-    /// Represents login.conf
+    ///     Represents login.conf
     /// </summary>
     public class RankingConfFile : ConfFile
     {

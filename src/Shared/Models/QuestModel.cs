@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Net;
 using MySql.Data.MySqlClient;
 using Shared.Database;
 
@@ -9,26 +8,26 @@ namespace Shared.Models
 {
     public class Quest
     {
-        public int ServerId;
         public ulong CharacterId;
         public string CharacterName;
-        public uint QuestId;
-        public int State;
         public short FailNum;
-        public int PlaceIdx;
         public int LastDate;
+        public int PlaceIdx;
+        public uint QuestId;
+        public int ServerId;
+        public int State;
     }
 
     public class QuestModel
     {
         public static List<Quest> Retrieve(MySqlConnection dbconn, int serverId, ulong characterId)
         {
-            MySqlCommand command = new MySqlCommand("SELECT * FROM quests WHERE CID=@charId AND ServerId=@serverId", dbconn);
+            var command = new MySqlCommand("SELECT * FROM quests WHERE CID=@charId AND ServerId=@serverId", dbconn);
 
             command.Parameters.AddWithValue("@serverId", serverId);
             command.Parameters.AddWithValue("@charId", characterId);
 
-            List<Quest> quests = new List<Quest>();
+            var quests = new List<Quest>();
             using (DbDataReader reader = command.ExecuteReader())
             {
                 while (reader.Read())
@@ -42,7 +41,7 @@ namespace Shared.Models
                         State = Convert.ToInt32(reader["State"]),
                         FailNum = Convert.ToInt16(reader["FailNum"]),
                         PlaceIdx = Convert.ToInt32(reader["PlaceIdx"]),
-                        LastDate = Convert.ToInt32(reader["LastDate"]),
+                        LastDate = Convert.ToInt32(reader["LastDate"])
                     };
                     quests.Add(quest);
                 }
@@ -53,16 +52,17 @@ namespace Shared.Models
 
         public static Quest RetrieveOne(MySqlConnection dbconn, int serverId, ulong characterId, uint questId)
         {
-            MySqlCommand command = new MySqlCommand("SELECT * FROM quests WHERE CID=@charId AND ServerId=@serverId AND QuestId=@questId", dbconn);
+            var command =
+                new MySqlCommand("SELECT * FROM quests WHERE CID=@charId AND ServerId=@serverId AND QuestId=@questId",
+                    dbconn);
 
             command.Parameters.AddWithValue("@serverId", serverId);
             command.Parameters.AddWithValue("@charId", characterId);
             command.Parameters.AddWithValue("@questId", questId);
-            
+
             using (DbDataReader reader = command.ExecuteReader())
             {
                 if (reader.Read())
-                {
                     return new Quest
                     {
                         ServerId = Convert.ToInt32(reader["ServerId"]),
@@ -72,9 +72,8 @@ namespace Shared.Models
                         State = Convert.ToInt32(reader["State"]),
                         FailNum = Convert.ToInt16(reader["FailNum"]),
                         PlaceIdx = Convert.ToInt32(reader["PlaceIdx"]),
-                        LastDate = Convert.ToInt32(reader["LastDate"]),
+                        LastDate = Convert.ToInt32(reader["LastDate"])
                     };
-                }
             }
 
             return null;
@@ -99,12 +98,14 @@ namespace Shared.Models
 
         public static void Update(MySqlConnection dbconn, int serverId, ulong characterId, uint questId, int state)
         {
-            using (var cmd = new UpdateCommand("UPDATE Quests SET {0} WHERE CID=@charId AND QuestId=@questId AND ServerId=@serverId", dbconn))
+            using (var cmd =
+                new UpdateCommand("UPDATE Quests SET {0} WHERE CID=@charId AND QuestId=@questId AND ServerId=@serverId",
+                    dbconn))
             {
                 cmd.AddParameter("@serverId", serverId);
                 cmd.AddParameter("@charId", characterId);
                 cmd.AddParameter("@questId", questId);
-                
+
                 cmd.Set("State", state);
                 cmd.Execute();
             }
@@ -112,7 +113,9 @@ namespace Shared.Models
 
         public static void Update(MySqlConnection dbconn, int serverId, ulong characterId, uint questId, Quest quest)
         {
-            using (var cmd = new UpdateCommand("UPDATE Quests SET {0} WHERE CID=@charId AND QuestId=@questId AND ServerId=@serverId", dbconn))
+            using (var cmd =
+                new UpdateCommand("UPDATE Quests SET {0} WHERE CID=@charId AND QuestId=@questId AND ServerId=@serverId",
+                    dbconn))
             {
                 cmd.AddParameter("@serverId", serverId);
                 cmd.AddParameter("@charId", characterId);
@@ -129,7 +132,9 @@ namespace Shared.Models
 
         public static void Delete(MySqlConnection dbconn, int serverId, ulong characterId, uint questId)
         {
-            MySqlCommand command = new MySqlCommand("DELETE FROM Quests WHERE CID = @charId AND QuestId = @questId AND ServerId=@serverId", dbconn);
+            var command =
+                new MySqlCommand("DELETE FROM Quests WHERE CID = @charId AND QuestId = @questId AND ServerId=@serverId",
+                    dbconn);
             command.Parameters.AddWithValue("@serverId", serverId);
             command.Parameters.AddWithValue("@charId", characterId);
             command.Parameters.AddWithValue("@questId", questId);

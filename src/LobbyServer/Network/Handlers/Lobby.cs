@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Text;
+using Shared;
 using Shared.Models;
 using Shared.Network;
 using Shared.Network.LobbyServer;
@@ -20,7 +20,8 @@ namespace LobbyServer.Network.Handlers
             if (userInfoPacket.Ticket != packet.Sender.User.Ticket ||
                 userInfoPacket.Username != packet.Sender.User.Name)
             {
-                Log.Error("Rejecting packet from {0}:{1} (user: {2} vs {3}, ticket {4} vs {5}) for invalid user-ticket combination.",
+                Log.Error(
+                    "Rejecting packet from {0}:{1} (user: {2} vs {3}, ticket {4} vs {5}) for invalid user-ticket combination.",
                     packet.Sender.EndPoint.Address.ToString(),
                     packet.Sender.EndPoint.Port,
                     userInfoPacket.Username,
@@ -55,7 +56,7 @@ namespace LobbyServer.Network.Handlers
         public static void CheckInLobby(Packet packet)
         {
             var checkInLobbyPacket = new CheckInLobbyPacket(packet);
-            if (checkInLobbyPacket.ProtocolVersion != Shared.ServerMain.ProtocolVersion)
+            if (checkInLobbyPacket.ProtocolVersion != ServerMain.ProtocolVersion)
             {
 #if DEBUG
                 packet.Sender.Error("Invalid protocol.");
@@ -73,7 +74,7 @@ namespace LobbyServer.Network.Handlers
 
             var user = AccountModel.GetSession(LobbyServer.Instance.Database.Connection, checkInLobbyPacket.Username,
                 checkInLobbyPacket.Ticket);
-            
+
             Log.Debug("CheckInLobby {0} {1} {2} {3} {4}", checkInLobbyPacket.ProtocolVersion, checkInLobbyPacket.Ticket,
                 checkInLobbyPacket.Username, checkInLobbyPacket.Time,
                 BitConverter.ToString(Encoding.UTF8.GetBytes(checkInLobbyPacket.StringTicket)));
@@ -131,7 +132,7 @@ namespace LobbyServer.Network.Handlers
             // TODO: Check if the values send by client are valid.
 
             Log.Debug(createCharPacket.CharacterName + " " + createCharPacket.Avatar + " " +
-                              createCharPacket.CarType + " " + createCharPacket.Color);
+                      createCharPacket.CarType + " " + createCharPacket.Color);
 
             CharacterModel.CreateCharacter(LobbyServer.Instance.Database.Connection, packet.Sender.User.UID,
                 createCharPacket.CharacterName, createCharPacket.Avatar, createCharPacket.CarType,

@@ -4,26 +4,26 @@ namespace Shared.Objects
 {
     public class StatInfo : ISerializable
     {
-        int BasedSpeed;
-        int BasedCrash;
-        int BasedAccel;
-        int BasedBoost;
-        int EquipSpeed;
-        int EquipCrash;
-        int EquipAccel;
-        int EquipBoost;
-        int CharSpeed;
-        int CharCrash;
-        int CharAccel;
-        int CharBoost;
-        int ItemUseSpeed;
-        int ItemUseCrash;
-        int ItemUseAccel;
-        int ItemUseBoost;
-        int TotalSpeed;
-        int TotalCrash;
-        int TotalAccel;
-        int TotalBoost;
+        private int BasedAccel;
+        private int BasedBoost;
+        private int BasedCrash;
+        private int BasedSpeed;
+        private int CharAccel;
+        private int CharBoost;
+        private int CharCrash;
+        private int CharSpeed;
+        private int EquipAccel;
+        private int EquipBoost;
+        private int EquipCrash;
+        private int EquipSpeed;
+        private int ItemUseAccel;
+        private int ItemUseBoost;
+        private int ItemUseCrash;
+        private int ItemUseSpeed;
+        private int TotalAccel;
+        private int TotalBoost;
+        private int TotalCrash;
+        private int TotalSpeed;
 
 
         public void Serialize(PacketWriter writer)

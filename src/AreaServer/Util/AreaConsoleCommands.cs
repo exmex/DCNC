@@ -4,8 +4,5 @@ namespace AreaServer.Util
 {
     public class AreaConsoleCommands : ConsoleCommands
     {
-        public AreaConsoleCommands()
-        {
-        }
     }
 }

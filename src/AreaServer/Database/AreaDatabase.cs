@@ -9,7 +9,7 @@ namespace AreaServer.Database
     public class AreaDatabase : BaseDatabase
     {
         /// <summary>
-        /// Checks whether the SQL update file has already been applied.
+        ///     Checks whether the SQL update file has already been applied.
         /// </summary>
         /// <param name="updateFile"></param>
         /// <returns></returns>
@@ -21,12 +21,14 @@ namespace AreaServer.Database
                 mc.Parameters.AddWithValue("@path", updateFile);
 
                 using (var reader = mc.ExecuteReader())
+                {
                     return reader.Read();
+                }
             }
         }
 
         /// <summary>
-        /// Executes SQL update file.
+        ///     Executes SQL update file.
         /// </summary>
         /// <param name="updateFile"></param>
         public void RunUpdate(string updateFile)
@@ -37,7 +39,9 @@ namespace AreaServer.Database
                 {
                     // Run update
                     using (var cmd = new MySqlCommand(File.ReadAllText(Path.Combine("sql", updateFile)), conn))
+                    {
                         cmd.ExecuteNonQuery();
+                    }
 
                     // Log update
                     using (var cmd = new InsertCommand("INSERT INTO `updates` {0}", conn))

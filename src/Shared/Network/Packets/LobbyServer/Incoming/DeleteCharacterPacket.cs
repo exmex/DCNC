@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Shared.Network.LobbyServer
+﻿namespace Shared.Network.LobbyServer
 {
     public class DeleteCharacterPacket
     {
+        public readonly ulong CharacterId;
         /*
         000000: 41 00 64 00 6D 00 69 00 6E 00 00 00 00 01 00 00  A · d · m · i · n · · · · · · ·
         000016: 00 40 00 00 00 00 00 00 01 00 00 00 00 00 00 00  · @ · · · · · · · · · · · · · ·
@@ -22,8 +17,6 @@ namespace Shared.Network.LobbyServer
 
         public readonly string CharacterName;
 
-        public readonly ulong CharacterId;
-        
         public DeleteCharacterPacket(Packet packet)
         {
             CharacterName = packet.Reader.ReadUnicodeStatic(21);

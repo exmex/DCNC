@@ -13,13 +13,11 @@ namespace GameServer.Util
                 var packet = new Packet(547);
                 ushort carId = 1;
                 if (args.Count > 1)
-                {
                     carId = ushort.Parse(args[1]);
-                }
                 packet.Writer.Write(carId); // TCarId
-                packet.Writer.Write((ushort)1); // Owner
-                packet.Writer.Write((ushort)1); // Attr
-                packet.Writer.Write((ushort)0); // Path
+                packet.Writer.Write((ushort) 1); // Owner
+                packet.Writer.Write((ushort) 1); // Attr
+                packet.Writer.Write((ushort) 0); // Path
 
                 // Pos
                 packet.Writer.Write(1050.522f); // X
@@ -54,9 +52,9 @@ namespace GameServer.Util
 
         private CommandResult HandleWeather(string command, IList<string> args)
         {
-			if(args.Count != 2)
-				return CommandResult.Fail;
-			
+            if (args.Count != 2)
+                return CommandResult.Fail;
+
             var ack = new Packet(Packets.WeatherAck);
             switch (args[1])
             {
@@ -88,7 +86,7 @@ namespace GameServer.Util
         {
             ushort res;
             int res2;
-            if(args.Count < 3)
+            if (args.Count < 3)
                 return CommandResult.InvalidArgument;
 
             if (!ushort.TryParse(args[1], out res))

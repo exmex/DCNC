@@ -1,13 +1,13 @@
 ﻿namespace Shared
 {
     /// <summary>
-    /// A few commonly used math-related functions.
+    ///     A few commonly used math-related functions.
     /// </summary>
     public static class Math2
     {
         /// <summary>
-        /// Returns min, if val is lower than min, max, if val is
-        /// greater than max, or simply val.
+        ///     Returns min, if val is lower than min, max, if val is
+        ///     greater than max, or simply val.
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>
@@ -23,8 +23,8 @@
         }
 
         /// <summary>
-        /// Returns min, if val is lower than min, max, if val is
-        /// greater than max, or simply val.
+        ///     Returns min, if val is lower than min, max, if val is
+        ///     greater than max, or simply val.
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>
@@ -40,8 +40,8 @@
         }
 
         /// <summary>
-        /// Returns min, if val is lower than min, max, if val is
-        /// greater than max, or simply val.
+        ///     Returns min, if val is lower than min, max, if val is
+        ///     greater than max, or simply val.
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>
@@ -57,7 +57,7 @@
         }
 
         /// <summary>
-        /// Returns true if val is between min and max (incl).
+        ///     Returns true if val is between min and max (incl).
         /// </summary>
         /// <param name="val"></param>
         /// <param name="min"></param>
@@ -65,12 +65,12 @@
         /// <returns></returns>
         public static bool Between(int val, int min, int max)
         {
-            return (val >= min && val <= max);
+            return val >= min && val <= max;
         }
 
         /// <summary>
-        /// Multiplies initial value with multiplicator, returns either the
-        /// result or Min/MaxValue if the multiplication caused an overflow.
+        ///     Multiplies initial value with multiplicator, returns either the
+        ///     result or Min/MaxValue if the multiplication caused an overflow.
         /// </summary>
         /// <param name="initialValue"></param>
         /// <param name="multiplicator"></param>
@@ -79,19 +79,22 @@
         {
             try
             {
-                checked { return (short)(initialValue * multiplicator); }
+                checked
+                {
+                    return (short) (initialValue * multiplicator);
+                }
             }
             catch
             {
                 if (initialValue >= 0)
                     return short.MaxValue;
-                else
-                    return short.MinValue;
+                return short.MinValue;
             }
         }
+
         /// <summary>
-        /// Multiplies initial value with multiplicator, returns either the
-        /// result or Min/MaxValue if the multiplication caused an overflow.
+        ///     Multiplies initial value with multiplicator, returns either the
+        ///     result or Min/MaxValue if the multiplication caused an overflow.
         /// </summary>
         /// <param name="initialValue"></param>
         /// <param name="multiplicator"></param>
@@ -100,20 +103,22 @@
         {
             try
             {
-                checked { return (int)(initialValue * multiplicator); }
+                checked
+                {
+                    return (int) (initialValue * multiplicator);
+                }
             }
             catch
             {
                 if (initialValue >= 0)
                     return int.MaxValue;
-                else
-                    return int.MinValue;
+                return int.MinValue;
             }
         }
 
         /// <summary>
-        /// Multiplies initial value with multiplicator, returns either the
-        /// result or Min/MaxValue if the multiplication caused an overflow.
+        ///     Multiplies initial value with multiplicator, returns either the
+        ///     result or Min/MaxValue if the multiplication caused an overflow.
         /// </summary>
         /// <param name="initialValue"></param>
         /// <param name="multiplicator"></param>
@@ -122,14 +127,16 @@
         {
             try
             {
-                checked { return (long)(initialValue * multiplicator); }
+                checked
+                {
+                    return (long) (initialValue * multiplicator);
+                }
             }
             catch
             {
                 if (initialValue >= 0)
                     return long.MaxValue;
-                else
-                    return long.MinValue;
+                return long.MinValue;
             }
         }
     }

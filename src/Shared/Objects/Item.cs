@@ -5,6 +5,15 @@ namespace Shared.Objects
 {
     public class IUnit
     {
+        public uint AssistA;
+        public uint AssistB;
+        public uint Belonging;
+        public uint Box;
+
+        public uint ExpireTick;
+
+        public int Random;
+
         /*
         struct XiStrItemUnit
         {
@@ -20,21 +29,14 @@ namespace Shared.Objects
         };
         */
         public int StackNum;
-        public int Random;
-
-        public uint AssistA;
-        public uint AssistB;
-        public uint Box;
-        public uint Belonging;
 
         public int Upgrade;
         public int UpgradePoint;
-
-        public uint ExpireTick;
     }
 
     public class ItemData
     {
+        public ushort Slot;
         /*
         struct $46506E0D494CF120A19388EB37177777
         {
@@ -49,7 +51,6 @@ namespace Shared.Objects
         */
 
         public ushort State;
-        public ushort Slot;
 
         public uint StateVar;
     }
@@ -68,11 +69,12 @@ namespace Shared.Objects
         */
         public uint CarID;
 
+        public uint InvenIdx;
+
         public ItemData Itm;
         public IUnit iunit;
 
         public uint TableIdx;
-        public uint InvenIdx;
 
         public void Serialize(PacketWriter writer)
         {

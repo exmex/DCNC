@@ -4,10 +4,10 @@ using System.IO;
 namespace Shared.Util
 {
     /// <summary>
-    /// All log levels. Also used as bitmask, for hiding.
+    ///     All log levels. Also used as bitmask, for hiding.
     /// </summary>
     [Flags]
-    public enum LogLevel : int
+    public enum LogLevel
     {
         Info = 0x0001,
         Warning = 0x0002,
@@ -16,31 +16,31 @@ namespace Shared.Util
         Status = 0x0010,
         Exception = 0x0020,
         Unimplemented = 0x0040,
-        None = 0x7FFF,
+        None = 0x7FFF
     }
 
     /// <summary>
-    /// Logs messages to command line and file.
+    ///     Logs messages to command line and file.
     /// </summary>
     public static class Log
     {
         private static string _logFile;
 
         /// <summary>
-        /// Specifies the log levels that shouldn't be displayed
-        /// on the command line.
+        ///     Specifies the log levels that shouldn't be displayed
+        ///     on the command line.
         /// </summary>
         public static LogLevel Hide { get; set; }
 
         /// <summary>
-        /// Sets or returns the directory in which the logs are archived.
-        /// If no archive is set, log files will simply be overwritten.
+        ///     Sets or returns the directory in which the logs are archived.
+        ///     If no archive is set, log files will simply be overwritten.
         /// </summary>
         public static string Archive { private get; set; }
 
         /// <summary>
-        /// Sets or returns the file to log to. Upon setting, the file will
-        /// be deleted. If Archive is set, it will be moved to safety first.
+        ///     Sets or returns the file to log to. Upon setting, the file will
+        ///     be deleted. If Archive is set, it will be moved to safety first.
         /// </summary>
         public static string LogFile
         {
@@ -133,10 +133,11 @@ namespace Shared.Util
 
         public static void Progress(int current, int max)
         {
-            var donePerc = (100f / max * current);
-            var done = (int)Math.Min(20, Math.Ceiling(20f / max * current));
+            var donePerc = 100f / max * current;
+            var done = (int) Math.Min(20, Math.Ceiling(20f / max * current));
 
-            Write(LogLevel.Info, false, "[" + ("".PadRight(done, '#') + "".PadLeft(20 - done, '.')) + "] {0,5:0.0}%\r", donePerc);
+            Write(LogLevel.Info, false, "[" + "".PadRight(done, '#') + "".PadLeft(20 - done, '.') + "] {0,5:0.0}%\r",
+                donePerc);
         }
 
         public static void WriteLine(LogLevel level, string format, params object[] args)
@@ -162,13 +163,27 @@ namespace Shared.Util
                 {
                     switch (level)
                     {
-                        case LogLevel.Info: Console.ForegroundColor = ConsoleColor.White; break;
-                        case LogLevel.Warning: Console.ForegroundColor = ConsoleColor.Yellow; break;
-                        case LogLevel.Error: Console.ForegroundColor = ConsoleColor.Red; break;
-                        case LogLevel.Debug: Console.ForegroundColor = ConsoleColor.Cyan; break;
-                        case LogLevel.Status: Console.ForegroundColor = ConsoleColor.Green; break;
-                        case LogLevel.Exception: Console.ForegroundColor = ConsoleColor.DarkRed; break;
-                        case LogLevel.Unimplemented: Console.ForegroundColor = ConsoleColor.DarkGray; break;
+                        case LogLevel.Info:
+                            Console.ForegroundColor = ConsoleColor.White;
+                            break;
+                        case LogLevel.Warning:
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            break;
+                        case LogLevel.Error:
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            break;
+                        case LogLevel.Debug:
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            break;
+                        case LogLevel.Status:
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            break;
+                        case LogLevel.Exception:
+                            Console.ForegroundColor = ConsoleColor.DarkRed;
+                            break;
+                        case LogLevel.Unimplemented:
+                            Console.ForegroundColor = ConsoleColor.DarkGray;
+                            break;
                     }
 
                     if (level != LogLevel.None)
@@ -183,7 +198,6 @@ namespace Shared.Util
                 }
 
                 if (_logFile != null && toFile)
-                {
                     using (var file = new StreamWriter(_logFile, true))
                     {
                         file.Write("{0:yyyy-MM-dd HH:mm} ", DateTime.Now);
@@ -192,7 +206,6 @@ namespace Shared.Util
                         file.Write(format, args);
                         file.Flush();
                     }
-                }
             }
         }
     }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -11,19 +10,17 @@ namespace Shared.Network
 {
     public class Client
     {
-        private readonly TcpClient _tcp;
         private readonly NetworkStream _ns;
         private readonly DefaultServer _parent;
+        private readonly TcpClient _tcp;
 
         private byte[] _buffer;
         private int _bytesToRead;
-        private ushort _packetLength, _packetId;
 
         private bool _connected;
+        private ushort _packetLength, _packetId;
 
         public User User;
-
-        public IPEndPoint EndPoint => _tcp.Client.RemoteEndPoint as IPEndPoint;
 
         public Client(TcpClient tcp, DefaultServer parent, bool exchangeRequired)
         {
@@ -54,6 +51,8 @@ namespace Shared.Network
             }
         }
 
+        public IPEndPoint EndPoint => _tcp.Client.RemoteEndPoint as IPEndPoint;
+
         private void OnExchange(IAsyncResult result)
         {
             try
@@ -71,7 +70,10 @@ namespace Shared.Network
                 _bytesToRead = _buffer.Length;
                 _ns.BeginRead(_buffer, 0, 4, OnHeader, null);
             }
-            catch (Exception ex) { Kill(ex); }
+            catch (Exception ex)
+            {
+                Kill(ex);
+            }
         }
 
         private void OnHeader(IAsyncResult result)
@@ -92,7 +94,10 @@ namespace Shared.Network
                 _buffer = new byte[_bytesToRead];
                 _ns.BeginRead(_buffer, 0, _bytesToRead, OnData, null);
             }
-            catch (Exception ex) { Kill(ex); }
+            catch (Exception ex)
+            {
+                Kill(ex);
+            }
         }
 
         private void OnData(IAsyncResult result)
@@ -113,27 +118,30 @@ namespace Shared.Network
                 _bytesToRead = _buffer.Length;
                 _ns.BeginRead(_buffer, 0, 4, OnHeader, null);
             }
-            catch (Exception ex) { Kill(ex); }
+            catch (Exception ex)
+            {
+                Kill(ex);
+            }
         }
 
         public void Send(Packet packet)
         {
-            byte[] buffer = packet.Writer.GetBuffer();
+            var buffer = packet.Writer.GetBuffer();
 
-            int bufferLength = buffer.Length;
-            ushort length = (ushort)(bufferLength + 2); // Length includes itself
+            var bufferLength = buffer.Length;
+            var length = (ushort) (bufferLength + 2); // Length includes itself
 
-            int bytesPerLine = 16;
-            string hexDump = "";
-            int j = 0;
-            foreach (var g in buffer.Select((c, i) => new { Char = c, Chunk = i / bytesPerLine }).GroupBy(c => c.Chunk))
+            var bytesPerLine = 16;
+            var hexDump = "";
+            var j = 0;
+            foreach (var g in buffer.Select((c, i) => new {Char = c, Chunk = i / bytesPerLine}).GroupBy(c => c.Chunk))
             {
                 var s1 = g.Select(c => $"{c.Char:X2} ").Aggregate((s, i) => s + i);
                 string s2 = null;
-                bool first = true;
+                var first = true;
                 foreach (var c in g)
                 {
-                    var s = $"{(c.Char < 32 || c.Char > 122 ? '·' : (char)c.Char)} ";
+                    var s = $"{(c.Char < 32 || c.Char > 122 ? '·' : (char) c.Char)} ";
                     if (first)
                     {
                         first = false;
@@ -154,7 +162,10 @@ namespace Shared.Network
                 _ns.Write(BitConverter.GetBytes(length), 0, 2);
                 _ns.Write(buffer, 0, bufferLength);
             }
-            catch (Exception ex) { Kill(ex); }
+            catch (Exception ex)
+            {
+                Kill(ex);
+            }
         }
 
         public void Error(string format, params object[] args)

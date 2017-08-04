@@ -4,15 +4,15 @@ namespace AreaServer.Util
 {
     public class AreaConf : BaseConf
     {
-        /// <summary>
-        /// login.conf
-        /// </summary>
-        public AreaConfFile Area { get; protected set; }
-
         public AreaConf()
         {
             Area = new AreaConfFile();
         }
+
+        /// <summary>
+        ///     login.conf
+        /// </summary>
+        public AreaConfFile Area { get; protected set; }
 
         public override void Load()
         {
@@ -22,7 +22,7 @@ namespace AreaServer.Util
     }
 
     /// <summary>
-    /// Represents login.conf
+    ///     Represents login.conf
     /// </summary>
     public class AreaConfFile : ConfFile
     {

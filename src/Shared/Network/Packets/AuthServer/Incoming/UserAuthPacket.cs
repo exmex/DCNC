@@ -3,22 +3,22 @@
     public class UserAuthPacket
     {
         /// <summary>
-        /// The protocol version
+        ///     The password
+        /// </summary>
+        /// <remarks>STRING</remarks>
+        public readonly string Password;
+
+        /// <summary>
+        ///     The protocol version
         /// </summary>
         /// <remarks>INT 4-Bytes</remarks>
         public readonly int ProtocolVersion;
 
         /// <summary>
-        /// The username
+        ///     The username
         /// </summary>
         /// <remarks>CHAR 80-Bytes</remarks>
         public readonly string Username;
-
-        /// <summary>
-        /// The password
-        /// </summary>
-        /// <remarks>STRING</remarks>
-        public readonly string Password;
 
         public UserAuthPacket(Packet packet)
         {

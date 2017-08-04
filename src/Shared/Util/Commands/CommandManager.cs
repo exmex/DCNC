@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Shared.Util.Commands
 {
     /// <summary>
-    /// Generalized command manager
+    ///     Generalized command manager
     /// </summary>
     /// <typeparam name="TCommand"></typeparam>
     /// <typeparam name="TFunc"></typeparam>
@@ -20,7 +20,7 @@ namespace Shared.Util.Commands
         }
 
         /// <summary>
-        /// Adds command to list of command handlers.
+        ///     Adds command to list of command handlers.
         /// </summary>
         /// <param name="command"></param>
         protected void Add(TCommand command)
@@ -29,14 +29,14 @@ namespace Shared.Util.Commands
         }
 
         /// <summary>
-        /// Returns arguments parsed from line.
+        ///     Returns arguments parsed from line.
         /// </summary>
         /// <remarks>
-        /// Matches words and multiple words in quotation.
+        ///     Matches words and multiple words in quotation.
         /// </remarks>
         /// <example>
-        /// arg0 arg1 arg2 -- 3 args: "arg0", "arg1", and "arg2"
-        /// arg0 arg1 "arg2 arg3" -- 3 args: "arg0", "arg1", and "arg2 arg3"
+        ///     arg0 arg1 arg2 -- 3 args: "arg0", "arg1", and "arg2"
+        ///     arg0 arg1 "arg2 arg3" -- 3 args: "arg0", "arg1", and "arg2 arg3"
         /// </example>
         protected IList<string> ParseLine(string line)
         {
@@ -61,7 +61,7 @@ namespace Shared.Util.Commands
         }
 
         /// <summary>
-        /// Returns command or null, if the command doesn't exist.
+        ///     Returns command or null, if the command doesn't exist.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -74,16 +74,11 @@ namespace Shared.Util.Commands
     }
 
     /// <summary>
-    /// Generalized command holder
+    ///     Generalized command holder
     /// </summary>
     /// <typeparam name="TFunc"></typeparam>
     public abstract class Command<TFunc> where TFunc : class
     {
-        public string Name { get; protected set; }
-        public string Usage { get; protected set; }
-        public string Description { get; protected set; }
-        public TFunc Func { get; protected set; }
-
         protected Command(string name, string usage, string description, TFunc func)
         {
             if (!typeof(TFunc).IsSubclassOf(typeof(Delegate)))
@@ -94,7 +89,18 @@ namespace Shared.Util.Commands
             Description = description;
             Func = func;
         }
+
+        public string Name { get; protected set; }
+        public string Usage { get; protected set; }
+        public string Description { get; protected set; }
+        public TFunc Func { get; protected set; }
     }
 
-    public enum CommandResult { Okay, Fail, InvalidArgument, Break }
+    public enum CommandResult
+    {
+        Okay,
+        Fail,
+        InvalidArgument,
+        Break
+    }
 }

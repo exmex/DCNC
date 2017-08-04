@@ -6,7 +6,6 @@ using Shared;
 using Shared.Network;
 using Shared.Objects;
 using Shared.Util;
-using TdfReader = Shared.Util.TdfReader;
 
 namespace GameServer
 {
@@ -14,35 +13,35 @@ namespace GameServer
     {
         public static readonly GameServer Instance = new GameServer();
 
-        private bool _running;
-
-        /// <summary>
-        /// Instance of the actual server component.
-        /// </summary>
-        public DefaultServer Server { get; set; }
-
-        /// <summary>
-        /// Database
-        /// </summary>
-        public GameDatabase Database { get; private set; }
-
-        /// <summary>
-        /// Configuration
-        /// </summary>
-        private GameConf Config { get; set; }
-
         public static Dictionary<uint, XiStrQuest> QuestTable;
         public static Dictionary<long, long> LevelTable;
 
+        private bool _running;
+
         /// <summary>
-        /// Initializes fields and properties
+        ///     Initializes fields and properties
         /// </summary>
         private GameServer()
         {
         }
 
         /// <summary>
-        /// Loads all necessary components and starts the server.
+        ///     Instance of the actual server component.
+        /// </summary>
+        public DefaultServer Server { get; set; }
+
+        /// <summary>
+        ///     Database
+        /// </summary>
+        public GameDatabase Database { get; private set; }
+
+        /// <summary>
+        ///     Configuration
+        /// </summary>
+        private GameConf Config { get; set; }
+
+        /// <summary>
+        ///     Loads all necessary components and starts the server.
         /// </summary>
         public void Run()
         {
@@ -65,14 +64,17 @@ namespace GameServer
             InitDatabase(Database = new GameDatabase(), Config);
 
             // Data
-            TdfReader reader = new TdfReader();
+            var reader = new TdfReader();
             if (reader.Load("system/data/QuestServer.tdf"))
             {
                 Log.Debug("Loading Quest Table");
                 QuestTable = XiStrQuest.LoadFromTdf(reader);
                 Log.Debug("Quest Table Initialized with {0:D} rows.", QuestTable.Count);
-            }else
+            }
+            else
+            {
                 Log.Debug("Quest Table Load failed.");
+            }
 
             reader = new TdfReader();
             if (reader.Load("system/data/LevelServer.tdf"))
@@ -82,7 +84,9 @@ namespace GameServer
                 Log.Debug("Exp Table Initialized with {0:D} rows.", QuestTable.Count);
             }
             else
+            {
                 Log.Debug("Exp Table Load failed.");
+            }
 
             // Start
             Server = new DefaultServer(Config.Game.Port);

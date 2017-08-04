@@ -30,27 +30,27 @@ namespace Shared.Objects
     */
     public class Team : ISerializable
     {
+        public uint BanishDate;
+        public uint ChannelWinCnt;
+        public uint CloseDate;
+        public uint CreateDate;
+        public long LeaderId;
+        public string LeaderName; // 21
+        public uint MemberCnt;
+        public string OwnChannel; // char 24
+        public long OwnerId;
+        public string OwnerName; // 21
+        public string TeamDesc; // unicode 61
         public long TeamId;
         public long TeamMarkId;
         public string TeamName; // unicode 13
-        public string TeamDesc; // unicode 61
-        public string TeamUrl; // char 33
-        public uint CreateDate;
-        public uint CloseDate;
-        public uint BanishDate;
-        public string OwnChannel; // char 24
-        public string TeamState; // char 2
-        public uint TeamRanking;
         public uint TeamPoint;
-        public uint ChannelWinCnt;
-        public uint MemberCnt;
+        public uint TeamRanking;
+        public string TeamState; // char 2
         public long TeamTotalExp;
         public long TeamTotalMoney;
+        public string TeamUrl; // char 33
         public uint Version;
-        public long OwnerId;
-        public long LeaderId;
-        public string OwnerName; // 21
-        public string LeaderName; // 21
 
         // 243 <-- length
 

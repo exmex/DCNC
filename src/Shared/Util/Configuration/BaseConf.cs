@@ -4,16 +4,6 @@ namespace Shared.Util.Configuration
 {
     public abstract class BaseConf : ConfFile
     {
-        /// <summary>
-        /// log.conf
-        /// </summary>
-        public LogConfFile Log { get; protected set; }
-
-        /// <summary>
-        /// database.conf
-        /// </summary>
-        public DatabaseConfFile Database { get; private set; }
-
         protected BaseConf()
         {
             Log = new LogConfFile();
@@ -21,8 +11,18 @@ namespace Shared.Util.Configuration
         }
 
         /// <summary>
-        /// Loads several conf files that are generally required,
-        /// like log, database, etc.
+        ///     log.conf
+        /// </summary>
+        public LogConfFile Log { get; protected set; }
+
+        /// <summary>
+        ///     database.conf
+        /// </summary>
+        public DatabaseConfFile Database { get; }
+
+        /// <summary>
+        ///     Loads several conf files that are generally required,
+        ///     like log, database, etc.
         /// </summary>
         protected void LoadDefault()
         {

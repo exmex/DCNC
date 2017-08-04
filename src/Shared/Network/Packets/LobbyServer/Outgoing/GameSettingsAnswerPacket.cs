@@ -24,13 +24,13 @@
         }
 
         /// <summary>
-        /// Sends the game settings answer packet.
+        ///     Sends the game settings answer packet.
         /// </summary>
         /// <param name="packetId">The packet identifier.</param>
         /// <param name="client">The client to send the packet to.</param>
         public void Send(ushort packetId, Client client)
         {
-            Packet pkt = new Packet(packetId);
+            var pkt = new Packet(packetId);
 
             pkt.Writer.Write(GameSettings);
 

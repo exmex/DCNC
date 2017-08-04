@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Shared.Network.AreaServer
+﻿namespace Shared.Network.AreaServer
 {
     public class AreaStatusAnswerPacket
     {
-        /// <summary>
-        /// The user count for 100 areas
-        /// </summary>
-        public uint[] UserCount = new uint[100];
+	    /// <summary>
+	    ///     The user count for 100 areas
+	    /// </summary>
+	    public uint[] UserCount = new uint[100];
 
         public void Send(Client client)
         {
@@ -27,9 +21,7 @@ namespace Shared.Network.AreaServer
 			*/
             var ack = new Packet(Packets.AreaStatusAck);
             for (var i = 0; i < 100; ++i)
-            {
                 ack.Writer.Write(UserCount[i]);
-            }
             client.Send(ack);
         }
     }

@@ -4,22 +4,22 @@ namespace Shared.Objects
 {
     public class Vehicle : ISerializable
     {
+        public uint AuctionCnt;
+        public bool AuctionOn;
+        public uint BaseColor;
         public uint CarID;
         public uint CarType;
-        public uint BaseColor;
-        public uint Grade;
-        public uint SlotType;
-        public uint AuctionCnt;
-        public float Mitron;
-        public float Kmh;
-
-        public float MitronEfficiency;
         public uint Color;
-        public float MitronCapacity;
 
         public uint Color2;
-        public bool AuctionOn;
+        public uint Grade;
+        public float Kmh;
+        public float Mitron;
+        public float MitronCapacity;
+
+        public float MitronEfficiency;
         public bool SBBOn;
+        public uint SlotType;
 
 
         public void Serialize(PacketWriter writer)

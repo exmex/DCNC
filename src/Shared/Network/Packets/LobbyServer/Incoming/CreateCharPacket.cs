@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Shared.Network.LobbyServer
+﻿namespace Shared.Network.LobbyServer
 {
     public class CreateCharPacket
     {
-        public readonly string CharacterName;
         public readonly short Avatar;
         public readonly uint CarType;
+        public readonly string CharacterName;
         public readonly uint Color;
 
         public CreateCharPacket(Packet packet)

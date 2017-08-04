@@ -5,61 +5,35 @@ namespace Shared.Network.AuthServer
 {
     public class UserAuthAnswerPacket
     {
-        public struct Server
-        {
-            public string ServerName;
-            public uint ServerId;
-            public float PlayerCount;
-            public float MaxPlayers;
-            public int ServerState; // 100 maintenance?
-            public int GameTime;
-            public int LobbyTime;
-            public int Area1Time;
-            public int Area2Time;
-            public int RankingUpdateTime;
-            public byte[] GameServerIp;
-            public byte[] LobbyServerIp;
-            public byte[] AreaServer1Ip;
-            public byte[] AreaServer2Ip;
-            public byte[] RankingServerIp;
-            public ushort GameServerPort;
-            public ushort LobbyServerPort;
-            public ushort AreaServerPort;
-            public ushort AreaServer2Port;
-            public ushort AreaServerUdpPort;
-            public ushort AreaServer2UdpPort;
-            public ushort RankingServerPort;
-        };
-
         /// <summary>
-        /// The new user ticket
-        /// </summary>
-        public uint Ticket;
-
-        /// <summary>
-        /// The result code
+        ///     The result code
         /// </summary>
         public int Result;
 
         /// <summary>
-        /// The current server ticks
-        /// </summary>
-        public int Time;
-
-        /// <summary>
-        /// The server list index
-        /// </summary>
-        public ushort ServerListId;
-
-        /// <summary>
-        /// The total count of servers
+        ///     The total count of servers
         /// </summary>
         public int ServerCount; // Could also be replaces with Servers.Length.
 
         /// <summary>
-        /// An array containting ServerCount servers
+        ///     The server list index
+        /// </summary>
+        public ushort ServerListId;
+
+        /// <summary>
+        ///     An array containting ServerCount servers
         /// </summary>
         public Server[] Servers;
+
+        /// <summary>
+        ///     The new user ticket
+        /// </summary>
+        public uint Ticket;
+
+        /// <summary>
+        ///     The current server ticks
+        /// </summary>
+        public int Time;
 
         public UserAuthAnswerPacket()
         {
@@ -97,13 +71,13 @@ namespace Shared.Network.AuthServer
         }
 
         /// <summary>
-        /// Sends the auth answer packet.
+        ///     Sends the auth answer packet.
         /// </summary>
         /// <param name="packetId">The packet identifier.</param>
         /// <param name="client">The client to send the packet to.</param>
         public void Send(ushort packetId, Client client)
         {
-            Packet pkt = new Packet(packetId);
+            var pkt = new Packet(packetId);
 
             pkt.Writer.Write(Ticket);
             pkt.Writer.Write(Result);
@@ -111,7 +85,7 @@ namespace Shared.Network.AuthServer
             pkt.Writer.Write(new byte[64]); // Filler. Unused?
             pkt.Writer.Write(ServerListId);
             pkt.Writer.Write(ServerCount);
-            for (int i = 0; i < Servers.Length; i++)
+            for (var i = 0; i < Servers.Length; i++)
             {
                 pkt.Writer.WriteUnicodeStatic(Servers[i].ServerName, 32); // 32
                 pkt.Writer.Write(Servers[i].ServerId);
@@ -138,6 +112,32 @@ namespace Shared.Network.AuthServer
             }
 
             client.Send(pkt);
+        }
+
+        public struct Server
+        {
+            public string ServerName;
+            public uint ServerId;
+            public float PlayerCount;
+            public float MaxPlayers;
+            public int ServerState; // 100 maintenance?
+            public int GameTime;
+            public int LobbyTime;
+            public int Area1Time;
+            public int Area2Time;
+            public int RankingUpdateTime;
+            public byte[] GameServerIp;
+            public byte[] LobbyServerIp;
+            public byte[] AreaServer1Ip;
+            public byte[] AreaServer2Ip;
+            public byte[] RankingServerIp;
+            public ushort GameServerPort;
+            public ushort LobbyServerPort;
+            public ushort AreaServerPort;
+            public ushort AreaServer2Port;
+            public ushort AreaServerUdpPort;
+            public ushort AreaServer2UdpPort;
+            public ushort RankingServerPort;
         }
     }
 }

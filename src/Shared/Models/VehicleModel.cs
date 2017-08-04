@@ -10,7 +10,7 @@ namespace Shared.Models
     {
         public static Vehicle Retrieve(MySqlConnection dbconn, string charname)
         {
-            MySqlCommand command = new MySqlCommand("SELECT * FROM Characters WHERE Name = @char", dbconn);
+            var command = new MySqlCommand("SELECT * FROM Characters WHERE Name = @char", dbconn);
 
             command.Parameters.AddWithValue("@char", charname);
 
@@ -41,7 +41,7 @@ namespace Shared.Models
 
         public static Vehicle Retrieve(MySqlConnection dbconn, int carIdx)
         {
-            MySqlCommand command = new MySqlCommand(
+            var command = new MySqlCommand(
                 "SELECT * FROM Vehicles WHERE CID = @car", dbconn);
 
             command.Parameters.AddWithValue("@car", carIdx);
@@ -51,7 +51,6 @@ namespace Shared.Models
             using (DbDataReader reader = command.ExecuteReader())
             {
                 if (reader.Read())
-                {
                     vehicle = new Vehicle
                     {
                         CarID = Convert.ToUInt32(reader["CID"]),
@@ -66,8 +65,6 @@ namespace Shared.Models
                         MitronCapacity = (float) Convert.ToDouble(reader["mitronCapacity"]),
                         MitronEfficiency = (float) Convert.ToDouble(reader["mitronEfficiency"])
                     };
-
-                }
             }
 
             return vehicle;
@@ -75,11 +72,11 @@ namespace Shared.Models
 
         public static List<Vehicle> Retrieve(MySqlConnection dbconn, ulong cid)
         {
-            MySqlCommand command = new MySqlCommand("SELECT * FROM Vehicles WHERE CharID = @cid", dbconn);
+            var command = new MySqlCommand("SELECT * FROM Vehicles WHERE CharID = @cid", dbconn);
 
             command.Parameters.AddWithValue("@cid", cid);
 
-            List<Vehicle> vehicles = new List<Vehicle>();
+            var vehicles = new List<Vehicle>();
 
             using (DbDataReader reader = command.ExecuteReader())
             {

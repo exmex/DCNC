@@ -6,7 +6,7 @@ using System.Threading;
 namespace Shared.Util.Commands
 {
     /// <summary>
-    /// Console command manager
+    ///     Console command manager
     /// </summary>
     public class ConsoleCommands : CommandManager<ConsoleCommand, ConsoleCommandFunc>
     {
@@ -17,11 +17,12 @@ namespace Shared.Util.Commands
             Add("help", "Displays this help", HandleHelp);
             Add("exit", "Closes application/server", HandleExit);
             Add("status", "Displays application status", HandleStatus);
-            Add("sendpkt", "[packetid] [nullbyte count]", "Sends an empty packet with the specified packet id", HandleSendPkt);
+            Add("sendpkt", "[packetid] [nullbyte count]", "Sends an empty packet with the specified packet id",
+                HandleSendPkt);
         }
 
         /// <summary>
-        /// Adds new command handler.
+        ///     Adds new command handler.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="description"></param>
@@ -32,7 +33,7 @@ namespace Shared.Util.Commands
         }
 
         /// <summary>
-        /// Adds new command handler.
+        ///     Adds new command handler.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="usage"></param>
@@ -44,7 +45,7 @@ namespace Shared.Util.Commands
         }
 
         /// <summary>
-        /// Waits and parses commands till "exit" is entered.
+        ///     Waits and parses commands till "exit" is entered.
         /// </summary>
         public void Wait()
         {
@@ -75,17 +76,11 @@ namespace Shared.Util.Commands
 
                 var result = command.Func(line, args);
                 if (result == CommandResult.Break)
-                {
                     break;
-                }
-                else if (result == CommandResult.Fail)
-                {
+                if (result == CommandResult.Fail)
                     Log.Error("Failed to run command '{0}'.", command.Name);
-                }
                 else if (result == CommandResult.InvalidArgument)
-                {
                     Log.Info("Usage: {0} {1}", command.Name, command.Usage);
-                }
             }
         }
 

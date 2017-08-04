@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Shared.Network.AreaServer
 {
     public class EnterAreaAnswerPacket
     {
+        public uint AreaId;
         public uint LocalTime;
 
         public uint SystemTick;
-
-        public uint AreaId;
 
         public void Send(Client client)
         {
@@ -25,10 +20,10 @@ namespace Shared.Network.AreaServer
 			*/
 
             var ack = new Packet(Packets.EnterAreaAck);
-			ack.Writer.Write(AreaId);
-			ack.Writer.Write(LocalTime);
-			ack.Writer.Write(Environment.TickCount);
-			
+            ack.Writer.Write(AreaId);
+            ack.Writer.Write(LocalTime);
+            ack.Writer.Write(Environment.TickCount);
+
             /*ack.Writer.Write(LocalTime); // (Shouldn't this be third?)
             ack.Writer.Write(SystemTick); // System Tick (Shouldn't this be last?)
             ack.Writer.Write(AreaId); // (Shouldn't this be first?)

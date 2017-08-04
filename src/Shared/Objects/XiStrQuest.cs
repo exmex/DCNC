@@ -7,39 +7,40 @@ namespace Shared.Objects
 {
     public class XiStrQuest
     {
-        public string QuestId; // char 56
-        public uint QuestIdN;
-        public uint PrevQuestIdN;
-        public uint Event;
-        public uint NeedLevel;
-        public uint NeedLevelPercent;
-        public string GivePost; // char 56
-        public string Title; // char 128
-        public string EndPost; // char 56
-        public string[] Place; // char 5,56
-        public int[] CrashTime; // 5
-        public int[] TimeLimit; // 5
-        public int[] MinSpeed; // 5
-        public int[] MaxSpeed; // 5
-        public int[] MinLadius; // 5
-        public int[] MaxLadius; // 5
-        public uint QuestPath_01;
-        public uint QuestPath_02;
         public uint Car_01;
         public uint Car_02;
         public uint ClearQuestIdN;
         public int Count;
-        public int RewardExp;
-        public int RewardMoney;
+        public int[] CrashTime; // 5
+        public string EndPost; // char 56
+        public XiStrIcon EndPostPtr;
+        public uint Event;
+        public string GivePost; // char 56
+        public XiStrIcon GivePostPtr;
+        public uint Idx;
         public string Item01; // char 56
         public string Item02; // char 56
         public string Item03; // char 56
-        public uint Idx;
-        public XiStrQuest PrevQuestPtr;
+        public int[] MaxLadius; // 5
+        public int[] MaxSpeed; // 5
+        public int[] MinLadius; // 5
+        public int[] MinSpeed; // 5
+        public uint NeedLevel;
+        public uint NeedLevelPercent;
         public XiStrQuest NextQuestPtr;
-        public XiStrIcon GivePostPtr;
-        public XiStrIcon EndPostPtr;
+        public string[] Place; // char 5,56
+        public uint PrevQuestIdN;
+        public XiStrQuest PrevQuestPtr;
+        public string QuestId; // char 56
+        public uint QuestIdN;
+        public uint QuestPath_01;
+        public uint QuestPath_02;
+        public int RewardExp;
         public uint RewardItemNum;
+        public int RewardMoney;
+        public int[] TimeLimit; // 5
+
+        public string Title; // char 128
         /*public XiStrItem Item01Ptr;
         public XiStrItem Item02Ptr;
         public XiStrItem Item03Ptr;
@@ -76,19 +77,23 @@ namespace Shared.Objects
         }
 
         // TODO: move to XiQuestTable?
-        public static Dictionary<uint, XiStrQuest> LoadFromTdf(Shared.Util.TdfReader tdfReader)
+        public static Dictionary<uint, XiStrQuest> LoadFromTdf(TdfReader tdfReader)
         {
-            Dictionary<uint, XiStrQuest> questList = new Dictionary<uint, XiStrQuest>();
-            using (BinaryReaderExt reader = new BinaryReaderExt(new MemoryStream(tdfReader.ResTable)))
+            var questList = new Dictionary<uint, XiStrQuest>();
+            using (var reader = new BinaryReaderExt(new MemoryStream(tdfReader.ResTable)))
             {
-                for (int row = 0; row < tdfReader.Header.Row; row++)
+                for (var row = 0; row < tdfReader.Header.Row; row++)
                 {
-                    XiStrQuest quest = new XiStrQuest();
+                    var quest = new XiStrQuest();
                     quest.QuestId = reader.ReadUnicode();
                     /*quest.QuestIdN = Convert.ToUInt32(reader.ReadUnicode());
                     quest.PrevQuestIdN = Convert.ToUInt32(reader.ReadUnicode());*/
-                    quest.QuestIdN = Convert.ToUInt32(reader.ReadUnicode())-1;// -1 since the request the client sents us are 0 based
-                    quest.PrevQuestIdN = Convert.ToUInt32(reader.ReadUnicode())-1; // -1 since the request the client sents us are 0 based
+                    quest.QuestIdN =
+                        Convert.ToUInt32(reader.ReadUnicode()) -
+                        1; // -1 since the request the client sents us are 0 based
+                    quest.PrevQuestIdN =
+                        Convert.ToUInt32(reader.ReadUnicode()) -
+                        1; // -1 since the request the client sents us are 0 based
                     quest.Event = (uint) QuestEventStrToVar(reader.ReadUnicode());
                     quest.NeedLevel = Convert.ToUInt32(reader.ReadUnicode());
                     quest.NeedLevelPercent = Convert.ToUInt32(reader.ReadUnicode());
@@ -97,31 +102,31 @@ namespace Shared.Objects
                     quest.EndPost = reader.ReadUnicode();
 
                     quest.Place = new string[5];
-                    for (int i = 0; i < 5; i++)
+                    for (var i = 0; i < 5; i++)
                         quest.Place[i] = reader.ReadUnicode();
 
                     quest.CrashTime = new int[5];
-                    for (int i = 0; i < 5; i++)
+                    for (var i = 0; i < 5; i++)
                         quest.CrashTime[i] = Convert.ToInt32(reader.ReadUnicode());
 
                     quest.TimeLimit = new int[5];
-                    for (int i = 0; i < 5; i++)
+                    for (var i = 0; i < 5; i++)
                         quest.TimeLimit[i] = Convert.ToInt32(reader.ReadUnicode());
 
                     quest.MinSpeed = new int[5];
-                    for (int i = 0; i < 5; i++)
+                    for (var i = 0; i < 5; i++)
                         quest.MinSpeed[i] = Convert.ToInt32(reader.ReadUnicode());
 
                     quest.MaxSpeed = new int[5];
-                    for (int i = 0; i < 5; i++)
+                    for (var i = 0; i < 5; i++)
                         quest.MaxSpeed[i] = Convert.ToInt32(reader.ReadUnicode());
 
                     quest.MinLadius = new int[5];
-                    for (int i = 0; i < 5; i++)
+                    for (var i = 0; i < 5; i++)
                         quest.MinLadius[i] = Convert.ToInt32(reader.ReadUnicode());
 
                     quest.MaxLadius = new int[5];
-                    for (int i = 0; i < 5; i++)
+                    for (var i = 0; i < 5; i++)
                         quest.MaxLadius[i] = Convert.ToInt32(reader.ReadUnicode());
 
                     quest.QuestPath_01 = Convert.ToUInt32(reader.ReadUnicode());

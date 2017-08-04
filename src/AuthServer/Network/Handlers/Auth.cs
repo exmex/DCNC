@@ -4,7 +4,6 @@ using Shared;
 using Shared.Models;
 using Shared.Network;
 using Shared.Network.AuthServer;
-using Shared.Objects;
 using Shared.Util;
 
 namespace AuthServer.Network.Handlers
@@ -16,7 +15,7 @@ namespace AuthServer.Network.Handlers
         {
             // TODO: Send serverlist here
             var pkt = new Packet(23);
-            UserAuthAnswerPacket.Server[] Servers = new UserAuthAnswerPacket.Server[1];
+            var Servers = new UserAuthAnswerPacket.Server[1];
             Servers[0] = new UserAuthAnswerPacket.Server
             {
                 ServerName = "Test",
@@ -45,7 +44,7 @@ namespace AuthServer.Network.Handlers
 
             pkt.Writer.Write(1); // Size
             //for int i = 0; i < size; i++
-            for (int i = 0; i < Servers.Length; i++)
+            for (var i = 0; i < Servers.Length; i++)
             {
                 pkt.Writer.WriteUnicodeStatic(Servers[i].ServerName, 32); // 32
                 pkt.Writer.Write(Servers[i].ServerId);
@@ -84,7 +83,7 @@ namespace AuthServer.Network.Handlers
 
             var serverId = packet.Reader.ReadInt32();
 
-            Packet ack = new Packet(Packets.CmdServerMessage + 1);
+            var ack = new Packet(Packets.CmdServerMessage + 1);
             if (serverId != 0)
             {
                 ack.Writer.Write(serverId);
@@ -101,7 +100,7 @@ namespace AuthServer.Network.Handlers
         [Packet(Packets.CmdUserAuth)]
         public static void UserAuth(Packet packet)
         {
-            UserAuthPacket authPacket = new UserAuthPacket(packet);
+            var authPacket = new UserAuthPacket(packet);
 
             Log.Debug("Login (v{0}) request from {1}", authPacket.ProtocolVersion.ToString(), authPacket.Username);
 
@@ -118,7 +117,7 @@ namespace AuthServer.Network.Handlers
                 return;
             }
 
-            User user = AccountModel.Retrieve(AuthServer.Instance.Database.Connection, authPacket.Username);
+            var user = AccountModel.Retrieve(AuthServer.Instance.Database.Connection, authPacket.Username);
             if (user == null)
             {
                 Log.Debug("Account {0} not found!", authPacket.Username);
@@ -126,14 +125,15 @@ namespace AuthServer.Network.Handlers
                 return;
             }
             var passwordHashed = Password.GenerateSaltedHash(authPacket.Password, user.Salt);
-            if(passwordHashed != user.Password)
+            if (passwordHashed != user.Password)
             {
-                Log.Debug("Account {0} found but invalid password! ({1} ({2}) vs {3})", authPacket.Username, passwordHashed, user.Salt, user.Password);
+                Log.Debug("Account {0} found but invalid password! ({1} ({2}) vs {3})", authPacket.Username,
+                    passwordHashed, user.Salt, user.Password);
                 packet.Sender.Error("Invalid Username or password!");
                 return;
             }
 
-            uint ticket = AccountModel.CreateSession(AuthServer.Instance.Database.Connection, authPacket.Username);
+            var ticket = AccountModel.CreateSession(AuthServer.Instance.Database.Connection, authPacket.Username);
 
             // Wrong protocol -> 20070
 
@@ -150,4 +150,3 @@ namespace AuthServer.Network.Handlers
         }
     }
 }
-

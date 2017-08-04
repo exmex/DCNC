@@ -13,7 +13,7 @@ namespace Shared.Models
 
         public static User Retrieve(MySqlConnection dbconn, string username, string passwordHash)
         {
-            MySqlCommand command = new MySqlCommand(
+            var command = new MySqlCommand(
                 "SELECT * FROM Users WHERE Username = @user AND Password = @pwhash", dbconn);
 
             command.Parameters.AddWithValue("@user", username);
@@ -33,7 +33,7 @@ namespace Shared.Models
                     user.Password = reader["Password"] as string;
                     user.Salt = reader["Salt"] as string;
                     user.Ticket = Convert.ToUInt32(reader["Ticket"]);
-                    user.Status = (UserStatus)Convert.ToByte(reader["Status"]);
+                    user.Status = (UserStatus) Convert.ToByte(reader["Status"]);
                     user.CreateIp = reader["CreateIP"] as string;
                 }
             }
@@ -43,7 +43,7 @@ namespace Shared.Models
 
         public static User Retrieve(MySqlConnection dbconn, string username)
         {
-            MySqlCommand command = new MySqlCommand("SELECT * FROM Users WHERE Username = @user", dbconn);
+            var command = new MySqlCommand("SELECT * FROM Users WHERE Username = @user", dbconn);
 
             command.Parameters.AddWithValue("@user", username);
 
@@ -59,7 +59,7 @@ namespace Shared.Models
                     user.Password = reader["Password"] as string;
                     user.Salt = reader["Salt"] as string;
                     user.Ticket = Convert.ToUInt32(reader["Ticket"]);
-                    user.Status = (UserStatus)Convert.ToByte(reader["Status"]);
+                    user.Status = (UserStatus) Convert.ToByte(reader["Status"]);
                     user.CreateIp = reader["CreateIP"] as string;
                 }
             }
@@ -69,7 +69,7 @@ namespace Shared.Models
 
         public static User Retrieve(MySqlConnection dbconn, ulong uid)
         {
-            MySqlCommand command = new MySqlCommand("SELECT * FROM Users WHERE UID = @uid", dbconn);
+            var command = new MySqlCommand("SELECT * FROM Users WHERE UID = @uid", dbconn);
 
             command.Parameters.AddWithValue("@uid", uid);
 
@@ -78,7 +78,6 @@ namespace Shared.Models
             using (DbDataReader reader = command.ExecuteReader())
             {
                 if (reader.Read())
-                {
                     user = new User
                     {
                         UID = Convert.ToUInt64(reader["UID"]),
@@ -89,14 +88,13 @@ namespace Shared.Models
                         Status = (UserStatus) Convert.ToByte(reader["Status"]),
                         CreateIp = reader["CreateIP"] as string
                     };
-                }
             }
 
             return user;
         }
 
         /// <summary>
-        /// Adds new account to the database.
+        ///     Adds new account to the database.
         /// </summary>
         /// <param name="ip"></param>
         /// <param name="accountId"></param>
@@ -105,7 +103,7 @@ namespace Shared.Models
         {
             var salt = Password.CreateSalt(_saltSize);
             password = Password.GenerateSaltedHash(password, salt);
-            
+
             using (var cmd = new InsertCommand("INSERT INTO `Users` {0}", dbconn))
             {
                 cmd.Set("Username", accountId);
@@ -126,12 +124,16 @@ namespace Shared.Models
             mc.Parameters.AddWithValue("@user", accountName);
 
             using (var reader = mc.ExecuteReader())
+            {
                 return reader.HasRows;
+            }
         }
 
         public static void SetAccountPassword(MySqlConnection dbconn, string accountName, string password)
         {
-            using (var mc = new MySqlCommand("UPDATE `Users` SET `Password` = @password, `Salt` = @salt WHERE `Username` = @user", dbconn))
+            using (var mc =
+                new MySqlCommand("UPDATE `Users` SET `Password` = @password, `Salt` = @salt WHERE `Username` = @user",
+                    dbconn))
             {
                 var salt = Password.CreateSalt(_saltSize);
                 mc.Parameters.AddWithValue("@user", accountName);
@@ -143,13 +145,14 @@ namespace Shared.Models
         }
 
         /// <summary>
-        /// Sets new randomized session key for the account and returns it.
+        ///     Sets new randomized session key for the account and returns it.
         /// </summary>
         /// <param name="accountId"></param>
         /// <returns></returns>
         public static uint CreateSession(MySqlConnection dbconn, string accountId)
         {
-            using (var mc = new MySqlCommand("UPDATE `Users` SET `Ticket` = @ticketKey WHERE `Username` = @user", dbconn))
+            using (var mc = new MySqlCommand("UPDATE `Users` SET `Ticket` = @ticketKey WHERE `Username` = @user",
+                dbconn))
             {
                 var ticketKey = RandomProvider.Get().NextUInt32();
 
@@ -163,14 +166,15 @@ namespace Shared.Models
         }
 
         /// <summary>
-        /// Returns true if sessionKey is correct for account.
+        ///     Returns true if sessionKey is correct for account.
         /// </summary>
         /// <param name="accountId"></param>
         /// <param name="ticketKey"></param>
         /// <returns></returns>
         public static User GetSession(MySqlConnection dbconn, string accountId, uint ticketKey)
         {
-            using (var mc = new MySqlCommand("SELECT * FROM `Users` WHERE `Username` = @user AND `Ticket` = @ticketKey", dbconn))
+            using (var mc = new MySqlCommand("SELECT * FROM `Users` WHERE `Username` = @user AND `Ticket` = @ticketKey",
+                dbconn))
             {
                 mc.Parameters.AddWithValue("@user", accountId);
                 mc.Parameters.AddWithValue("@ticketKey", ticketKey);
@@ -179,7 +183,6 @@ namespace Shared.Models
                 using (DbDataReader reader = mc.ExecuteReader())
                 {
                     if (reader.Read())
-                    {
                         user = new User
                         {
                             UID = Convert.ToUInt64(reader["UID"]),
@@ -190,7 +193,6 @@ namespace Shared.Models
                             Status = (UserStatus) Convert.ToByte(reader["Status"]),
                             CreateIp = reader["CreateIP"] as string
                         };
-                    }
                 }
 
                 return user;

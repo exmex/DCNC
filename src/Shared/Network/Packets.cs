@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+
 // ReSharper disable UnusedMember.Global
 
 namespace Shared.Network
@@ -10,6 +11,7 @@ namespace Shared.Network
 
         //public const ushort AreaListAck = 14;
         public const ushort UserAuthAck = 22;
+
         public const ushort GameSettingsAck = 30;
         public const ushort CheckInLobbyAck = 42;
         public const ushort LobbyTimeAck = 47;
@@ -18,18 +20,18 @@ namespace Shared.Network
         public const ushort CheckCharNameAck = 81;
         public const ushort CreateCharAck = 83;
         public const ushort DeleteCharAck = 84;
-		public const ushort BuyCarAck = 86; // TODO: Wrong Packet Size. CMD(86) CmdLen: : 56, AnalysisSize: 24
+        public const ushort BuyCarAck = 86; // TODO: Wrong Packet Size. CMD(86) CmdLen: : 56, AnalysisSize: 24
         public const ushort CheckInGameAck = 121;
         public const ushort LoadCharThreadAck = 124;
         public const ushort JoinChannelAck = 126;
         public const ushort ChatMsgAck = 147;
         public const ushort ChasePropose = 186;
         public const ushort FriendListAck = 231;
-		public const ushort QuestCompleteAck = 265;
-		public const ushort QuestRewardAck = 267;
+        public const ushort QuestCompleteAck = 265;
+        public const ushort QuestRewardAck = 267;
         public const ushort MyQuestListAck = 273;
-		
-		public const ushort FriendStatus = 274;
+
+        public const ushort FriendStatus = 274;
 
         public const ushort JoinAreaAck = 301;
 
@@ -37,38 +39,43 @@ namespace Shared.Network
         public const ushort ItemModListAck = 402;
         public const ushort BuyItemAck = 406;
         public const ushort SellItemAck = 408;
-		
-		public const ushort RoomNotifyChangeAck = 467;
+
+        public const ushort RoomNotifyChangeAck = 467;
 
         public const ushort UdpTimeSyncAck = 540;
-		public const ushort MoveVehicleAck = 542;
+        public const ushort MoveVehicleAck = 542;
         public const ushort EnterAreaAck = 563;
 
         public const ushort WeatherAck = 640;
-        public const ushort GameCharInfoAck = 661; // TODO: Wrong Packet Size. CMD(661) CmdLen: : 1177, AnalysisSize: 831
+
+        public const ushort GameCharInfoAck = 661
+            ; // TODO: Wrong Packet Size. CMD(661) CmdLen: : 1177, AnalysisSize: 831
+
         public const ushort AreaStatusAck = 683;
-		public const ushort UdpCastTcsSignalAck = 706;
+        public const ushort UdpCastTcsSignalAck = 706;
         public const ushort FuelChargeReqAck = 724;
-		public const ushort StatUpdateAck = 760;
-		public const ushort AreaListAck = 781;
+        public const ushort StatUpdateAck = 760;
+        public const ushort AreaListAck = 781;
         public const ushort FirstPositionAck = 783;
         public const ushort GetDateTimeAck = 785;
         public const ushort MyPositionAck = 789;
         public const ushort MyTeamInfoAck = 841; // TODO: Wrong Packet Size. CMD(841) CmdLen: : 692, AnalysisSize: 393
         public const ushort InstantStartAck = 993;
         public const ushort InstantGiveUpAck = 1000;
-		public const ushort GetMyHancoinAck = 1401; // TODO: Wrong Packet Size. CMD(1401) CmdLen: : 14, AnalysisSize: 12
-		public const ushort VisualItemListAck = 1801;
+        public const ushort GetMyHancoinAck = 1401; // TODO: Wrong Packet Size. CMD(1401) CmdLen: : 14, AnalysisSize: 12
+        public const ushort VisualItemListAck = 1801;
 
         public const ushort CityLeaveCheckAck = 3201;
-		
-		// 4010 -> Ranking Racing Team Info
-		// 4001 -> Ranking Gameplay
-		public const ushort RankingGameplayAck = 4001;
-		public const ushort RankingRacingTeamInfoAck = 4010;
+
+        // 4010 -> Ranking Racing Team Info
+        // 4001 -> Ranking Gameplay
+        public const ushort RankingGameplayAck = 4001;
+
+        public const ushort RankingRacingTeamInfoAck = 4010;
 
         // Client -> Server
         public const ushort CmdPing = 2;
+
         public const ushort CmdGlobalTime = 3;
         public const ushort CmdLatency = 4;
         public const ushort CmdLog = 5;
@@ -93,9 +100,12 @@ namespace Shared.Network
         public const ushort CmdStickerReportAttach = 76;
         public const ushort CmdStickerSearch = 77;
         public const ushort CmdCheckCharName = 80;
+
         public const ushort CmdCreateChar = 82;
+
         //public const ushort CmdDeleteChar = 84;
         public const ushort CmdBuyCar = 85;
+
         public const ushort CmdSellCar = 87;
         public const ushort CmdSelectCar = 89;
         public const ushort CmdUpgradeCarThread = 91;
@@ -381,17 +391,15 @@ namespace Shared.Network
         public const ushort CmdUcBossPatrolStart = 3010;
         public const ushort CmdUcBossPatrolGiveUp = 3012;
         public const ushort CmdUcBossPatrolGoalPlace = 3014;
-		public const ushort CmdCityLeaveCheck = 3200;
+        public const ushort CmdCityLeaveCheck = 3200;
         public const ushort CmdUnknownSync = 3917;
 
         public static string GetName(ushort packetId)
         {
             // Login/Channel
             foreach (var field in typeof(Packets).GetFields(BindingFlags.Public | BindingFlags.Static))
-            {
-                if ((ushort)field.GetValue(null) == packetId)
+                if ((ushort) field.GetValue(null) == packetId)
                     return field.Name;
-            }
 
             return "?";
         }
@@ -399,7 +407,6 @@ namespace Shared.Network
         [Packet(CmdNullPing)]
         public static void NullPing(Packet packet)
         {
-            
         }
     }
 }

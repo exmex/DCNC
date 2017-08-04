@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using Shared.Models;
 using Shared.Network;
 using Shared.Objects;
 
 namespace GameServer.Network.Handlers
 {
-    class Joining
+    internal class Joining
     {
         /*
         02 00 00 00 00 00 00 00 61 00 64 00 6D 00 69 00  · · · · · · · · a · d · m · i · 
@@ -22,7 +21,7 @@ namespace GameServer.Network.Handlers
         public static void CheckInGame(Packet packet)
         {
             var ack = new Packet(Packets.CheckInGameAck);
-            ack.Writer.Write((uint)1); // Result
+            ack.Writer.Write((uint) 1); // Result
             packet.Sender.Send(ack);
         }
 
@@ -33,8 +32,8 @@ namespace GameServer.Network.Handlers
             ack.Writer.WriteUnicodeStatic("speeding", 10); // ChannelName
             ack.Writer.WriteUnicodeStatic("charName", 16); // CharName
 
-            ack.Writer.Write((ushort)123); // Serial
-            ack.Writer.Write((ushort)123); // Session Age
+            ack.Writer.Write((ushort) 123); // Serial
+            ack.Writer.Write((ushort) 123); // Session Age
 
             packet.Sender.Send(ack);
 
@@ -54,7 +53,7 @@ namespace GameServer.Network.Handlers
 
             // Channel Msg
             ack = new Packet(Packets.ChatMsgAck);
-            ack.Writer.Write(System.Array.ConvertAll(new char[16], v => (char)99));
+            ack.Writer.Write(Array.ConvertAll(new char[16], v => (char) 99));
             ack.Writer.Write(new char[32]);
             ack.Writer.WriteUnicode("Server powered by DCNC - GigaToni");
         }
@@ -100,26 +99,26 @@ namespace GameServer.Network.Handlers
             */
 
             var ack = new Packet(Packets.AreaListAck);
-            ack.Writer.Write((uint)10);
+            ack.Writer.Write((uint) 10);
             for (var k = 0; k < 10; ++k)
             {
                 ack.Writer.Write(k); // AreaId
                 ack.Writer.Write(0); // Current?
                 ack.Writer.Write(100); // Max?
                 ack.Writer.Write(1); // ChannelState
-                ack.Writer.Write((float)0); // Tax?
+                ack.Writer.Write((float) 0); // Tax?
 
-                ack.Writer.Write((long)0); // teamID?
-                ack.Writer.Write((long)0); // teamMarkID
+                ack.Writer.Write((long) 0); // teamID?
+                ack.Writer.Write((long) 0); // teamMarkID
                 ack.Writer.WriteUnicodeStatic("Staff", 13); // TeamName
-                ack.Writer.Write((uint)0); // Ranking
-                ack.Writer.Write((uint)0); // Point
-                ack.Writer.Write((uint)0); // WinCnt
+                ack.Writer.Write((uint) 0); // Ranking
+                ack.Writer.Write((uint) 0); // Point
+                ack.Writer.Write((uint) 0); // WinCnt
                 ack.Writer.Write(20); // Membercnt
-                ack.Writer.Write((long)1); // OwnerId
+                ack.Writer.Write((long) 1); // OwnerId
                 ack.Writer.WriteUnicodeStatic("Administrator", 21); // OwnerName
-                ack.Writer.Write((long)0); // TotalExp
-                ack.Writer.Write((long)0); // ????????
+                ack.Writer.Write((long) 0); // TotalExp
+                ack.Writer.Write((long) 0); // ????????
             }
             /*
                 lpAck->AreaNum = 10;
@@ -139,14 +138,14 @@ namespace GameServer.Network.Handlers
               XiCsTeam::Release(result.m_pObj);
           } 
                 */
-				
-			/* Pulled from Rice:
-			// client calls 2 functions (not using any packet data), returns  137 * (*(_DWORD *)(pktBuf + 2) - 1) + 143;
+
+            /* Pulled from Rice:
+            // client calls 2 functions (not using any packet data), returns  137 * (*(_DWORD *)(pktBuf + 2) - 1) + 143;
             var ack = new RicePacket(781);
             ack.Writer.Write(1);
             ack.Writer.Write(new byte[137]);
             packet.Sender.Send(ack);
-			*/
+            */
             packet.Sender.Send(ack);
         }
 
@@ -166,15 +165,15 @@ namespace GameServer.Network.Handlers
               int m_reserve[32];
             };
             */
-            string characterName = packet.Reader.ReadUnicode();
-            uint serial = packet.Reader.ReadUInt32();
+            var characterName = packet.Reader.ReadUnicode();
+            var serial = packet.Reader.ReadUInt32();
 
             var character = CharacterModel.Retrieve(GameServer.Instance.Database.Connection, characterName);
             var team = TeamModel.Retrieve(GameServer.Instance.Database.Connection, character.Tid);
             character.TeamId = team.TeamId;
             character.TeamName = team.TeamName;
             character.TeamMarkId = team.TeamMarkId;
-            character.TeamCloseDate = (int)team.CloseDate;
+            character.TeamCloseDate = (int) team.CloseDate;
             character.TeamRank = 1;
             var user = AccountModel.Retrieve(GameServer.Instance.Database.Connection, character.Uid);
 
@@ -189,13 +188,13 @@ namespace GameServer.Network.Handlers
 
             var ack = new Packet(Packets.LoadCharThreadAck);
 
-            ack.Writer.Write((uint)0); // ServerId
-            ack.Writer.Write((uint)0); // ServerStartTime
+            ack.Writer.Write((uint) 0); // ServerId
+            ack.Writer.Write((uint) 0); // ServerStartTime
 
             // Character
             character.Serialize(ack.Writer);
 
-            ack.Writer.Write((uint)vehicles.Count);
+            ack.Writer.Write((uint) vehicles.Count);
 
             foreach (var vehicle in vehicles)
             {
@@ -240,9 +239,9 @@ namespace GameServer.Network.Handlers
 
             packet.Sender.Send(ack);
             Log.WriteLine("Sent LoadCharAck");*/
-			
-			/* Pulled from Rice:
-			var stat = new RicePacket(760); // StatUpdate
+
+            /* Pulled from Rice:
+            var stat = new RicePacket(760); // StatUpdate
             for (int i = 0; i < 16; ++i)
                 stat.Writer.Write(0);
             stat.Writer.Write(1000);
@@ -251,7 +250,7 @@ namespace GameServer.Network.Handlers
             stat.Writer.Write(9003);
             stat.Writer.Write(new byte[76]);
             packet.Sender.Send(stat);
-			*/
+            */
         }
 
         /*
@@ -263,7 +262,8 @@ namespace GameServer.Network.Handlers
         {
             var ack = new Packet(Packets.MyQuestListAck);
 
-            List<Quest> quests = QuestModel.Retrieve(GameServer.Instance.Database.Connection, 0, packet.Sender.User.ActiveCharacterId);
+            var quests = QuestModel.Retrieve(GameServer.Instance.Database.Connection, 0,
+                packet.Sender.User.ActiveCharacterId);
             ack.Writer.Write(quests.Count);
             foreach (var quest in quests)
             {
@@ -295,33 +295,34 @@ namespace GameServer.Network.Handlers
         public static void ItemList(Packet packet) // TODO: Send actual data
         {
             var ack = new Packet(Packets.ItemListAck);
-            ack.Writer.Write((uint)0x40000); // WHAT THE? unsigned int ListUpdate; <-- Multiple pages -> Multiple packets
+            ack.Writer.Write(
+                (uint) 0x40000); // WHAT THE? unsigned int ListUpdate; <-- Multiple pages -> Multiple packets
             //ack.Writer.Write((uint)0); // Count
-            ack.Writer.Write((uint)1); // Count
+            ack.Writer.Write((uint) 1); // Count
             // 52 bytes of data for each item
-            
-            ack.Writer.Write((uint)4); // CarID
-            ack.Writer.Write((ushort)0); // State // (0 = Inventory, 1 = Equip, 4 = Auction)
-            ack.Writer.Write((ushort)1); // Slot
-            ack.Writer.Write((uint)1); // StateVar
+
+            ack.Writer.Write((uint) 4); // CarID
+            ack.Writer.Write((ushort) 0); // State // (0 = Inventory, 1 = Equip, 4 = Auction)
+            ack.Writer.Write((ushort) 1); // Slot
+            ack.Writer.Write((uint) 1); // StateVar
             ack.Writer.Write(1); // StackNum
             ack.Writer.Write(0); // Random
 
-            ack.Writer.Write((uint)0); // AssistA
-            ack.Writer.Write((uint)0); // AssistB
-            ack.Writer.Write((uint)0); // Box // 255 = drop rate 5.7???
-            ack.Writer.Write((uint)0); // Belonging (0 = , 1 = equip, 2 = get)
+            ack.Writer.Write((uint) 0); // AssistA
+            ack.Writer.Write((uint) 0); // AssistB
+            ack.Writer.Write((uint) 0); // Box // 255 = drop rate 5.7???
+            ack.Writer.Write((uint) 0); // Belonging (0 = , 1 = equip, 2 = get)
             ack.Writer.Write(0); // Upgrade
             ack.Writer.Write(0); // UpgradePoint
-            ack.Writer.Write((uint)0); // ExpireTick
-            ack.Writer.Write((uint)1); // TableIdx
-            ack.Writer.Write((uint)0); // InvenIdx
-            ack.Writer.Write((uint)0); // Is upgrade pack??
-            ack.Writer.Write((uint)0); // Tradeable?
+            ack.Writer.Write((uint) 0); // ExpireTick
+            ack.Writer.Write((uint) 1); // TableIdx
+            ack.Writer.Write((uint) 0); // InvenIdx
+            ack.Writer.Write((uint) 0); // Is upgrade pack??
+            ack.Writer.Write((uint) 0); // Tradeable?
             //ack.Writer.Write(new byte[46]); // 94
-			
-			/* Pulled from Rice:
-			byte[] testItem = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 
+
+            /* Pulled from Rice:
+            byte[] testItem = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -332,12 +333,12 @@ namespace GameServer.Network.Handlers
             ack.Writer.Write(1); // ItemNum
             ack.Writer.Write(testItem); // Null Item (96 bytes per XiStrMyItem)
             packet.Sender.Send(ack);
-			*/
+            */
 
             packet.Sender.Send(ack);
         }
-		
-		[Packet(Packets.CmdVisualItemList)]
+
+        [Packet(Packets.CmdVisualItemList)]
         public static void VisualItemList(Packet packet)
         {
             var ack = new Packet(Packets.VisualItemListAck);
@@ -346,8 +347,8 @@ namespace GameServer.Network.Handlers
             ack.Writer.Write(new byte[120]); // Null VisualItem (120 bytes per XiStrMyVSItem)
             packet.Sender.Send(ack);
         }
-		
-		/* Pulled from Rice:
+
+        /* Pulled from Rice:
 		[RicePacket(801, RiceServer.ServerType.Game)]
         public static void PlayerInfoReq(RicePacket packet)
         {

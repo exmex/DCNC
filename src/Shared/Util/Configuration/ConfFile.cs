@@ -5,11 +5,11 @@ using System.IO;
 namespace Shared.Util.Configuration
 {
     /// <summary>
-    /// Configuration options manager.
+    ///     Configuration options manager.
     /// </summary>
     /// <remarks>
-    /// Uses <see cref="FileReader"/> to read conf files, that are parsed in key:value pairs.
-    /// Separating character is a colon ':'.
+    ///     Uses <see cref="FileReader" /> to read conf files, that are parsed in key:value pairs.
+    ///     Separating character is a colon ':'.
     /// </remarks>
     public class ConfFile
     {
@@ -21,8 +21,8 @@ namespace Shared.Util.Configuration
         }
 
         /// <summary>
-        /// Loads all options in the file, and included files.
-        /// Does nothing if file doesn't exist.
+        ///     Loads all options in the file, and included files.
+        ///     Does nothing if file doesn't exist.
         /// </summary>
         /// <param name="filePath"></param>
         public void Include(string filePath)
@@ -34,8 +34,8 @@ namespace Shared.Util.Configuration
         }
 
         /// <summary>
-        /// Loads all options in the file, and included files.
-        /// Throws FileNotFoundException if file couldn't be found.
+        ///     Loads all options in the file, and included files.
+        ///     Throws FileNotFoundException if file couldn't be found.
         /// </summary>
         /// <param name="filePath"></param>
         protected void Require(string filePath)
@@ -44,7 +44,7 @@ namespace Shared.Util.Configuration
         }
 
         /// <summary>
-        /// Loads all options in the file, and included files.
+        ///     Loads all options in the file, and included files.
         /// </summary>
         /// <param name="filePath"></param>
         private void LoadFile(string filePath)
@@ -53,7 +53,7 @@ namespace Shared.Util.Configuration
             {
                 foreach (var line in fr)
                 {
-                    int pos = -1;
+                    var pos = -1;
 
                     // Check for seperator
                     if ((pos = line.Value.IndexOf(':')) < 0)
@@ -65,8 +65,8 @@ namespace Shared.Util.Configuration
         }
 
         /// <summary>
-        /// Returns the option as bool, or the default value, if the option
-        /// doesn't exist.
+        ///     Returns the option as bool, or the default value, if the option
+        ///     doesn't exist.
         /// </summary>
         /// <param name="option"></param>
         /// <param name="defaultValue"></param>
@@ -79,12 +79,12 @@ namespace Shared.Util.Configuration
 
             value = value.ToLower().Trim();
 
-            return (value == "1" || value == "yes" || value == "true");
+            return value == "1" || value == "yes" || value == "true";
         }
 
         /// <summary>
-        /// Returns the option as byte, or the default value, if the option
-        /// doesn't exist.
+        ///     Returns the option as byte, or the default value, if the option
+        ///     doesn't exist.
         /// </summary>
         /// <param name="option"></param>
         /// <param name="defaultValue"></param>
@@ -104,8 +104,8 @@ namespace Shared.Util.Configuration
         }
 
         /// <summary>
-        /// Returns the option as short, or the default value, if the option
-        /// doesn't exist.
+        ///     Returns the option as short, or the default value, if the option
+        ///     doesn't exist.
         /// </summary>
         /// <param name="option"></param>
         /// <param name="defaultValue"></param>
@@ -125,8 +125,8 @@ namespace Shared.Util.Configuration
         }
 
         /// <summary>
-        /// Returns the option as int, or the default value, if the option
-        /// doesn't exist.
+        ///     Returns the option as int, or the default value, if the option
+        ///     doesn't exist.
         /// </summary>
         /// <param name="option"></param>
         /// <param name="defaultValue"></param>
@@ -146,8 +146,8 @@ namespace Shared.Util.Configuration
         }
 
         /// <summary>
-        /// Returns the option as long, or the default value, if the option
-        /// doesn't exist.
+        ///     Returns the option as long, or the default value, if the option
+        ///     doesn't exist.
         /// </summary>
         /// <param name="option"></param>
         /// <param name="defaultValue"></param>
@@ -167,8 +167,8 @@ namespace Shared.Util.Configuration
         }
 
         /// <summary>
-        /// Returns the option as string, or the default value, if the option
-        /// doesn't exist.
+        ///     Returns the option as string, or the default value, if the option
+        ///     doesn't exist.
         /// </summary>
         /// <param name="option"></param>
         /// <param name="defaultValue"></param>
@@ -180,8 +180,8 @@ namespace Shared.Util.Configuration
         }
 
         /// <summary>
-        /// Returns the option as float, or the default value, if the option
-        /// doesn't exist.
+        ///     Returns the option as float, or the default value, if the option
+        ///     doesn't exist.
         /// </summary>
         /// <param name="option"></param>
         /// <param name="defaultValue"></param>
@@ -198,15 +198,15 @@ namespace Shared.Util.Configuration
 
             Log.Warning("Invalid value for '{0}', defaulting to '{1}'", option, defaultValue);
             return defaultValue;
-
         }
 
         /// <summary>
-        /// Returns the option as a DateTime, or the default value, if the
-        /// option doesn't exist.
+        ///     Returns the option as a DateTime, or the default value, if the
+        ///     option doesn't exist.
         /// </summary>
         /// <remarks>
-        /// For acceptable value formatting, see <see href="http://msdn.microsoft.com/en-us/library/system.datetime.parse(v=vs.110).aspx">MSDN</see>.
+        ///     For acceptable value formatting, see
+        ///     <see href="http://msdn.microsoft.com/en-us/library/system.datetime.parse(v=vs.110).aspx">MSDN</see>.
         /// </remarks>
         /// <param name="option"></param>
         /// <param name="defaultValue"></param>
@@ -223,17 +223,15 @@ namespace Shared.Util.Configuration
 
             Log.Warning("Invalid value for '{0}', defaulting to '{1}'", option, defaultValue);
             return defaultValue;
-
         }
 
         /// <summary>
-        /// Returns the option as a TimeSpan, or the default value, if the
-        /// option doesn't exist.
+        ///     Returns the option as a TimeSpan, or the default value, if the
+        ///     option doesn't exist.
         /// </summary>
         /// <remarks>
-        /// Value must be formatted as [-]{ d | [d.]hh:mm[:ss[.ff]] }
-        /// 
-        /// For more details, see <see href="http://msdn.microsoft.com/en-us/library/se73z7b9(v=vs.110).aspx">MSDN</see>.
+        ///     Value must be formatted as [-]{ d | [d.]hh:mm[:ss[.ff]] }
+        ///     For more details, see <see href="http://msdn.microsoft.com/en-us/library/se73z7b9(v=vs.110).aspx">MSDN</see>.
         /// </remarks>
         /// <param name="option"></param>
         /// <param name="defaultValue"></param>
@@ -253,8 +251,8 @@ namespace Shared.Util.Configuration
         }
 
         /// <summary>
-        /// Returns the option as an enum, or the default value, if the option
-        /// doesn't exist.
+        ///     Returns the option as an enum, or the default value, if the option
+        ///     doesn't exist.
         /// </summary>
         /// <typeparam name="T">The type of the enum</typeparam>
         /// <param name="option"></param>
@@ -271,7 +269,7 @@ namespace Shared.Util.Configuration
 
             T ret;
 
-            if (Enum.TryParse<T>(value, true, out ret))
+            if (Enum.TryParse(value, true, out ret))
                 return ret;
 
             Log.Warning("Invalid value for '{0}', defaulting to '{1}'", option, defaultValue);

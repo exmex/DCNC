@@ -4,15 +4,15 @@ namespace AuthServer.Util
 {
     public class AuthConf : BaseConf
     {
-        /// <summary>
-        /// login.conf
-        /// </summary>
-        public AuthConfFile Auth { get; protected set; }
-
         public AuthConf()
         {
             Auth = new AuthConfFile();
         }
+
+        /// <summary>
+        ///     login.conf
+        /// </summary>
+        public AuthConfFile Auth { get; protected set; }
 
         public override void Load()
         {
@@ -22,7 +22,7 @@ namespace AuthServer.Util
     }
 
     /// <summary>
-    /// Represents login.conf
+    ///     Represents login.conf
     /// </summary>
     public class AuthConfFile : ConfFile
     {

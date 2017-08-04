@@ -11,7 +11,7 @@ namespace Shared.Database
         private Regex _nameCheckRegex = new Regex(@"^[a-zA-Z][a-z0-9]{2,15}$", RegexOptions.Compiled);
 
         /// <summary>
-        /// Returns a valid connection.
+        ///     Returns a valid connection.
         /// </summary>
         public MySqlConnection Connection
         {
@@ -27,7 +27,7 @@ namespace Shared.Database
         }
 
         /// <summary>
-        /// Sets connection string and calls TestConnection.
+        ///     Sets connection string and calls TestConnection.
         /// </summary>
         /// <param name="host"></param>
         /// <param name="port"></param>
@@ -42,7 +42,7 @@ namespace Shared.Database
         }
 
         /// <summary>
-        /// Tests connection, throws on error.
+        ///     Tests connection, throws on error.
         /// </summary>
         public void TestConnection()
         {

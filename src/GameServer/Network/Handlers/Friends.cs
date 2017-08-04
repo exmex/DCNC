@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Shared.Models;
+﻿using Shared.Models;
 using Shared.Network;
 using Shared.Network.GameServer;
 
@@ -10,11 +9,12 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdFriendList)]
         public static void FriendList(Packet packet)
         {
-            List<Friend> friends = FriendModel.Retrieve(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacterId);
-            FriendListAnswerPacket friendListAnswerPacket = new FriendListAnswerPacket
+            var friends = FriendModel.Retrieve(GameServer.Instance.Database.Connection,
+                packet.Sender.User.ActiveCharacterId);
+            var friendListAnswerPacket = new FriendListAnswerPacket
             {
                 TotalItemNum = friends.Count,
-                FriendList = friends.ToArray(), //new Friend[1]
+                FriendList = friends.ToArray() //new Friend[1]
             };
             /*friendListAnswerPacket.FriendList[0] = new Friend()
             {
@@ -60,9 +60,7 @@ namespace GameServer.Network.Handlers
             //TODO: Send friend request instead of instantly adding him.
             if (FriendModel.AddByName(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacterId,
                 charName))
-            {
                 FriendList(packet);
-            }
         }
 
         [Packet(Packets.CmdBlockAddByName)]
@@ -78,11 +76,9 @@ namespace GameServer.Network.Handlers
 
             var charName = packet.Reader.ReadUnicodeStatic(21);
 
-            if(FriendModel.AddByName(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacterId,
+            if (FriendModel.AddByName(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacterId,
                 charName, 'B'))
-            {
                 FriendList(packet);
-            }
         }
 
         [Packet(Packets.CmdBlockDel)]
