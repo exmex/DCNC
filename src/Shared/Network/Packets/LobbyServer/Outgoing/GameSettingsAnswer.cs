@@ -1,13 +1,16 @@
-﻿namespace Shared.Network.LobbyServer
+﻿using System.IO;
+using Shared.Util;
+
+namespace Shared.Network.LobbyServer
 {
-    public class GameSettingsAnswerPacket
+    public class GameSettingsAnswer : OutPacket
     {
         /*
 		 * byte 91 is level cap in short
 		*/
         public static byte[] GameSettings;
 
-        public GameSettingsAnswerPacket()
+        public GameSettingsAnswer()
         {
             GameSettings = new byte[]
             {
@@ -23,26 +26,28 @@
             };
         }
 
-        /// <summary>
-        ///     Sends the game settings answer packet.
-        /// </summary>
-        /// <param name="packetId">The packet identifier.</param>
-        /// <param name="client">The client to send the packet to.</param>
-        public void Send(ushort packetId, Client client)
+        public override Packet CreatePacket()
         {
-            var pkt = new Packet(packetId);
+            return base.CreatePacket(Packets.GameSettingsAck);
+        }
 
-            pkt.Writer.Write(GameSettings);
-
-            /*
-			var ack = new Packet(Packets.GameSettingsAck);
-			ack.Writer.Write(new byte[90]);
-			ack.Writer.Write((short) 50); // Max Level?
-			ack.Writer.Write(new byte[12]);
-            packet.Sender.Send(ack);
-            */
-
-            client.Send(pkt);
+        public override byte[] GetBytes()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var bs = new BinaryWriterExt(ms))
+                {
+                    bs.Write(GameSettings);
+                    /*
+                    var ack = new Packet(Packets.GameSettingsAck);
+                    ack.Writer.Write(new byte[90]);
+                    ack.Writer.Write((short) 50); // Max Level?
+                    ack.Writer.Write(new byte[12]);
+                    packet.Sender.Send(ack);
+                    */
+                }
+                return ms.GetBuffer();
+            }
         }
     }
 }

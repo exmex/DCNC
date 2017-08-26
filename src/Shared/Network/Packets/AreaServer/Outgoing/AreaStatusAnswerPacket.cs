@@ -4,14 +4,14 @@ using Shared.Util;
 
 namespace Shared.Network.AreaServer
 {
-    public class AreaStatusAnswerPacket : IOutPacket
+    public class AreaStatusAnswerPacket : OutPacket
     {
 	    /// <summary>
 	    ///     The user count for 100 areas
 	    /// </summary>
 	    public uint[] UserCount = new uint[100];
 
-	    public Packet CreatePacket()
+	    public override Packet CreatePacket()
 	    {
 		    /*
 			for ( i = 0; i < 100; ++i )
@@ -28,7 +28,7 @@ namespace Shared.Network.AreaServer
 		    return ack;
 	    }
 
-	    public byte[] GetBytes()
+	    public override byte[] GetBytes()
 	    {
 		    using (var ms = new MemoryStream())
 		    {

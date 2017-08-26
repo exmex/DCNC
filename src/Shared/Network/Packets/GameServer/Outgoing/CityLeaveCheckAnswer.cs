@@ -3,7 +3,7 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
-    public class CityLeaveCheckAnswer : IOutPacket
+    public class CityLeaveCheckAnswer : OutPacket
     {
         public uint Result;
         /* 0-Moon Palace, 1=Koinonia, 2=Cras, 3=Oros, 4=Taipei, 5=NeoOros, else szPassword? */
@@ -11,14 +11,12 @@ namespace Shared.Network.GameServer
         public string Post1;
         public string Post2;
         
-        public Packet CreatePacket()
+        public override Packet CreatePacket()
         {
-            var ack = new Packet(Packets.CityLeaveCheckAck);
-            ack.Writer.Write(GetBytes());
-            return ack;
+            return base.CreatePacket(Packets.CityLeaveCheckAck);
         }
 
-        public byte[] GetBytes()
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {

@@ -3,19 +3,17 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
-    public class GetMyHancoinAnswer : IOutPacket
+    public class GetMyHancoinAnswer : OutPacket
     {
         public int Hancoins;
         public int Mileage;
         
-        public Packet CreatePacket()
+        public override Packet CreatePacket()
         {
-            var ack = new Packet(Packets.GetMyHancoinAck);
-            ack.Writer.Write(GetBytes());
-            return ack;
+            return base.CreatePacket(Packets.GetMyHancoinAck);
         }
 
-        public byte[] GetBytes()
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {

@@ -4,7 +4,7 @@ using Shared.Util;
 
 namespace Shared.Network.LobbyServer
 {
-    public class UserInfoAnswerPacket
+    public class UserInfoAnswerPacket : OutPacket
     {
         /// <summary>
         ///     The character count
@@ -36,46 +36,12 @@ namespace Shared.Network.LobbyServer
             Characters = new Character[0];
         }
 
-        /// <summary>
-        ///     Sends the user info answer packet.
-        /// </summary>
-        /// <param name="packetId">The packet identifier.</param>
-        /// <param name="client">The client to send the packet to.</param>
-        public void Send(ushort packetId, Client client)
+        public override Packet CreatePacket()
         {
-            var packet = new Packet(packetId);
-            packet.Writer.Write(GetBytes());
-
-            /*
-            packet.Writer.Write(Permissions);
-            packet.Writer.Write(CharacterCount);
-            packet.Writer.WriteUnicodeStatic(Username, 18);
-            packet.Writer.Write((long) 0);
-            packet.Writer.Write((long) 0);
-            packet.Writer.Write((long) 0);
-            packet.Writer.Write(0);
-
-            foreach (var character in Characters)
-            {
-                packet.Writer.WriteUnicodeStatic(character.Name, 21);
-                packet.Writer.Write(character.Cid);
-                packet.Writer.Write((int) character.Avatar);
-                packet.Writer.Write((int) character.Level);
-                packet.Writer.Write(character.CurrentCarId);
-                packet.Writer.Write(character.ActiveCar.CarType);
-                packet.Writer.Write(character.ActiveCar.BaseColor);
-                packet.Writer.Write(character.CreationDate);
-                packet.Writer.Write(character.Tid);
-                packet.Writer.Write(character.TeamMarkId);
-                packet.Writer.WriteUnicodeStatic(character.TeamName, 13);
-                packet.Writer.Write(0); // GuildType? (unsigned int nGuild;)
-            }
-            */
-
-            client.Send(packet);
+            return base.CreatePacket(Packets.UserInfoAck);
         }
-
-        public byte[] GetBytes()
+        
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {

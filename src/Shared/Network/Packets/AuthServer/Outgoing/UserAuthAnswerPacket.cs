@@ -7,7 +7,7 @@ using Shared.Util;
 
 namespace Shared.Network.AuthServer
 {
-    public class UserAuthAnswerPacket : IOutPacket
+    public class UserAuthAnswerPacket : OutPacket
     {
         /// <summary>
         ///     The result code
@@ -74,14 +74,12 @@ namespace Shared.Network.AuthServer
             };
         }
 
-        public Packet CreatePacket()
+        public override Packet CreatePacket()
         {
-            var ack = new Packet(Packets.UserAuthAck);
-            ack.Writer.Write(GetBytes());
-            return ack;
+            return base.CreatePacket(Packets.UserAuthAck);
         }
 
-        public byte[] GetBytes()
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {

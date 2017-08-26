@@ -4,14 +4,14 @@ using Shared.Util;
 
 namespace Shared.Network.AreaServer
 {
-    public class EnterAreaAnswerOutPacket : IOutPacket
+    public class EnterAreaAnswerOutPacket : OutPacket
     {
         public uint AreaId;
         public uint LocalTime;
 
         //public uint SystemTick;
 
-        public Packet CreatePacket()
+        public override Packet CreatePacket()
         {
             /*
 			 * *(_WORD *)lpAckPkt = 563;
@@ -35,7 +35,7 @@ namespace Shared.Network.AreaServer
 	        return ack;
         }
 
-	    public byte[] GetBytes()
+	    public override byte[] GetBytes()
 	    {
 		    using (var ms = new MemoryStream())
 		    {

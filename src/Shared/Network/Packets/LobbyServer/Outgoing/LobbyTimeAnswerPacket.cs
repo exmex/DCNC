@@ -1,8 +1,10 @@
 ﻿using System;
+using System.IO;
+using Shared.Util;
 
 namespace Shared.Network.LobbyServer
 {
-    public class LobbyTimeAnswerPacket
+    public class LobbyTimeAnswerPacket : OutPacket
     {
         public int LocalTime;
         public int TimeT;
@@ -12,18 +14,23 @@ namespace Shared.Network.LobbyServer
             LocalTime = Environment.TickCount;
             TimeT = Environment.TickCount;
         }
-
-        /// <summary>
-        ///     Sends the answer packet.
-        /// </summary>
-        /// <param name="packetId">The packet identifier.</param>
-        /// <param name="client">The client to send the packet to.</param>
-        public void Send(ushort packetId, Client client)
+        
+        public override Packet CreatePacket()
         {
-            var packet = new Packet(packetId);
-            packet.Writer.Write(LocalTime);
-            packet.Writer.Write(TimeT);
-            client.Send(packet);
+            return base.CreatePacket(Packets.LobbyTimeAck);
+        }
+
+        public override byte[] GetBytes()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var bs = new BinaryWriterExt(ms))
+                {
+                    bs.Write(LocalTime);
+                    bs.Write(TimeT);
+                }
+                return ms.GetBuffer();
+            }
         }
     }
 }

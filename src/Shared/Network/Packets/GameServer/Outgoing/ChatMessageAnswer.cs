@@ -4,20 +4,18 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
-    public class ChatMessageAnswer : IOutPacket
+    public class ChatMessageAnswer : OutPacket
     {
         public string MessageType;
         public string SenderCharacterName;
         public string Message;
         
-        public Packet CreatePacket()
+        public override Packet CreatePacket()
         {
-            var ack = new Packet(Packets.ChatMsgAck);
-            ack.Writer.Write(GetBytes());
-            return ack;
+            return base.CreatePacket(Packets.ChatMsgAck);
         }
 
-        public byte[] GetBytes()
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {

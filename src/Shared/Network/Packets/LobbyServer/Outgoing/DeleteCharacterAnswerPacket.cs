@@ -3,23 +3,16 @@ using Shared.Util;
 
 namespace Shared.Network.LobbyServer
 {
-    public class DeleteCharacterAnswerPacket
+    public class DeleteCharacterAnswerPacket : OutPacket
     {
         public string CharacterName;
 
-        /// <summary>
-        ///     Sends the answer packet.
-        /// </summary>
-        /// <param name="client">The client to send the packet to.</param>
-        public void Send(Client client)
+        public override Packet CreatePacket()
         {
-            var ack = new Packet(Packets.DeleteCharAck);
-            ack.Writer.Write(GetBytes());
-            //ack.Writer.WriteUnicodeStatic(CharacterName, 21);
-            client.Send(ack);
+            return base.CreatePacket(Packets.DeleteCharAck);
         }
 
-        public byte[] GetBytes()
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {

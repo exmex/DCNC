@@ -1,15 +1,15 @@
 ﻿using System.IO;
 using Shared.Util;
 
-namespace Shared.Network.LobbyServer
+namespace Shared.Network.GameServer
 {
-    public class CreateCharAnswerPacket : OutPacket
+    public class CheckInGameAnswer : OutPacket
     {
-        public string CharacterName;
-
+        public uint Result;
+        
         public override Packet CreatePacket()
         {
-            return base.CreatePacket(Packets.CreateCharAck);
+            return base.CreatePacket(Packets.CheckInGameAck);
         }
 
         public override byte[] GetBytes()
@@ -18,7 +18,7 @@ namespace Shared.Network.LobbyServer
             {
                 using (var bs = new BinaryWriterExt(ms))
                 {
-                    bs.WriteUnicodeStatic(CharacterName, 21);
+                    bs.Write(Result);
                 }
                 return ms.GetBuffer();
             }

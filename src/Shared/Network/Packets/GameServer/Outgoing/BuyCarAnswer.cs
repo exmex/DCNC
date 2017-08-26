@@ -7,7 +7,7 @@ namespace Shared.Network.GameServer
 {
 
     // TODO: Buy car still has not the correct structure.
-    public class BuyCarAnswer : IOutPacket
+    public class BuyCarAnswer : OutPacket
     {
         public int Id;
         public uint CarType;
@@ -25,14 +25,12 @@ namespace Shared.Network.GameServer
         public short Unknown2;
         public int Price;
 
-        public Packet CreatePacket()
+        public override Packet CreatePacket()
         {
-            var ack = new Packet(Packets.BuyCarAck);
-            ack.Writer.Write(GetBytes());
-            return ack;
+            return base.CreatePacket(Packets.BuyCarAck);
         }
 
-        public byte[] GetBytes()
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {
@@ -55,8 +53,10 @@ namespace Shared.Network.GameServer
                     bs.Write(Price); // Price
                     //ack.Writer.Write(Bumper);
                 }
+                #if !DEBUG
                 throw new NotImplementedException();
-                //return ms.GetBuffer();
+                #endif
+                return ms.GetBuffer();
             }
         }
     }

@@ -6,7 +6,7 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
-    public class MyTeamInfoAnswer : IOutPacket
+    public class MyTeamInfoAnswer : OutPacket
     {
         public uint Action;
         public ulong CharacterId;
@@ -17,14 +17,12 @@ namespace Shared.Network.GameServer
         // It is not clear if this is the age.
         public ushort Age = 0;
         
-        public Packet CreatePacket()
+        public override Packet CreatePacket()
         {
-            var ack = new Packet(Packets.MyTeamInfoAck);
-            ack.Writer.Write(GetBytes());
-            return ack;
+            return base.CreatePacket(Packets.MyTeamInfoAck);
         }
 
-        public byte[] GetBytes()
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {

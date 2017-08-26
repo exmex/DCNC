@@ -3,7 +3,7 @@ using Shared.Util;
 
 namespace Shared.Network.LobbyServer
 {
-    public class CheckInLobbyAnswerPacket
+    public class CheckInLobbyAnswerPacket : OutPacket
     {
         /// <summary>
         ///     The permission flags
@@ -21,20 +21,12 @@ namespace Shared.Network.LobbyServer
         /// </summary>
         public int Result = 1;
 
-        /// <summary>
-        ///     Sends the answer packet.
-        /// </summary>
-        /// <param name="client">The client to send the packet to.</param>
-        public void Send(Client client)
+        public override Packet CreatePacket()
         {
-            var ack = new Packet(Packets.CheckInLobbyAck);
-            ack.Writer.Write(GetBytes());
-            /*ack.Writer.Write(Result);
-            ack.Writer.Write(Permission);*/
-            client.Send(ack);
+            return base.CreatePacket(Packets.CheckInLobbyAck);
         }
 
-        public byte[] GetBytes()
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {

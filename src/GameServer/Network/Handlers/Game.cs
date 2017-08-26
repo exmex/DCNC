@@ -381,6 +381,9 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdQuestGoalPlace)]
         public static void QuestGoalPlace(Packet packet)
         {
+            #if !DEBUG
+            throw new NotImplementedException();
+            #endif
         }
 
         //000000: 01 00 00 00 14 43 8B 42 4E 9E D0 FE  · · · · · C · B N · · ·
@@ -538,48 +541,40 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdCheckStat)]
         public static void CheckStat(Packet packet)
         {
-            var ack = new Packet(Packets.StatUpdateAck);
-            ack.Writer.Write(0); // Speed (Car) Testvalue:100 -> http://i.imgur.com/AndRGwK.png
-            ack.Writer.Write(0); // Durability (Car) Testvalue:100 -> http://i.imgur.com/zuaxZu5.png
-            ack.Writer.Write(0); // Acceleration (Car) Testvalue:100 -> http://i.imgur.com/97UkLkj.png
-            ack.Writer.Write(0); // Boost (Car) Testvalue:100 -> http://i.imgur.com/FQ9EYVO.png
-            ack.Writer.Write(0); // Speed (Parts) Testvalue:300 -> http://i.imgur.com/FQ9EYVO.png
-            ack.Writer.Write(0); // Durability (Parts) Testvalue:400 -> http://i.imgur.com/FQ9EYVO.png
-            ack.Writer.Write(0); // Acceleration (Parts) Testvalue:500 -> http://i.imgur.com/FQ9EYVO.png
-            ack.Writer.Write(0); // Boost (Parts) Testvalue:600 -> http://i.imgur.com/FQ9EYVO.png
+            var ack = new CheckStatAnswer()
+            {
+                CarSpeed = 0,
+                CarDurability = 0,
+                CarAcceleration = 0,
+                CarBoost = 0,
+        
+                PartSpeed = 0,
+                PartDurability = 0,
+                PartAcceleration = 0,
+                PartBoost = 0,
+        
+                UserSpeed = 0,
+                UserDurability = 0,
+                UserAcceleration = 0,
+                UserBoost = 0,
+        
+                CharSpeed = 0,
+                CharDurability = 0,
+                CharAcceleration = 0,
+                CharBoost = 0,
 
-            ack.Writer.Write(0); // Speed (User)
-            ack.Writer.Write(0); // Durability (User)
-            ack.Writer.Write(0); // Acceleration (User)
-            ack.Writer.Write(0); // Boost (User)
-            ack.Writer.Write(0); // Speed (User) WTF?
-            ack.Writer.Write(0); // Durability (User) WTF?
-            ack.Writer.Write(0); // Acceleration (User) WTF?
-            ack.Writer.Write(0); // Boost (User) WTF?
-            ack.Writer.Write(0); // Char Speed
-            ack.Writer.Write(0); // Char Durability
-            ack.Writer.Write(0); // Char Acceleration
-            ack.Writer.Write(0); // Char Boost
-            ack.Writer.Write(0); // int ItemUseSpeed;
-            ack.Writer.Write(0); // int ItemUseCrash;
-            ack.Writer.Write(0); // int ItemUseAccel;
-            ack.Writer.Write(0); // int ItemUseBoost;
-            ack.Writer.Write(0); // Unknown
-            ack.Writer.Write(0); // Unknown
-            ack.Writer.Write(0); // Unknown
-            ack.Writer.Write(0); // Unknown
-            ack.Writer.Write(0); // Vehicle Speed Testvalue:100 -> http://i.imgur.com/3GV9enQ.png
-            ack.Writer.Write(0); // Vehicle Durability Testvalue:200 -> http://i.imgur.com/3GV9enQ.png
-            ack.Writer.Write(0); // Vehicle Acceleration Testvalue:300 -> http://i.imgur.com/3GV9enQ.png
-            ack.Writer.Write(0); // Vehicle Boost Testvalue:400 -> http://i.imgur.com/3GV9enQ.png
-            ack.Writer.Write(0); // Unknown
-            ack.Writer.Write(0); // Unknown
-            ack.Writer.Write(0); // Unknown
-            ack.Writer.Write(0); // Unknown
-            ack.Writer.Write(0); // Unknown
-            ack.Writer.Write(0); // Unknown
-            ack.Writer.Write((short) 0); // Unknown
-            packet.Sender.Send(ack);
+                ItemUseSpeed = 0,
+                ItemUseCrash = 0,
+                ItemUseAcceleration = 0,
+                ItemUseBoost = 0,
+        
+                VehicleSpeed = 0,
+                VehicleDurability = 0,
+                VehicleAcceleration = 0,
+                VehicleBoost = 0,
+            };
+            
+            packet.Sender.Send(ack.CreatePacket());
             /*
             Send_StatUpdate:
                 XiStrStatInfo StatInfo;
@@ -630,39 +625,55 @@ struct XiStrStatInfo
         [Packet(Packets.CmdBuyItem)]
         public static void BuyItem(Packet packet)
         {
-            int itemID = packet.Reader.ReadInt16();
-            int unknown = packet.Reader.ReadInt16();
-            int quantity = packet.Reader.ReadInt16();
+            var buyItemPacket = new BuyItemPacket(packet);
 
-            var ack = new Packet(Packets.BuyItemAck);
-            ack.Writer.Write(itemID);
-            ack.Writer.Write(quantity);
-            ack.Writer.Write(0);
+            var ack = new BuyItemAnswer()
+            {
+                ItemId = buyItemPacket.ItemId,
+                Quantity = buyItemPacket.Quantity,
+                Gold = 200,
+            };
+            packet.Sender.Send(ack.CreatePacket());
 
-            packet.Sender.Send(ack);
-
-            ack = new Packet(Packets.ItemModListAck);
-            ack.Writer.Write(1);
-
-            ack.Writer.Write((uint) 4); // CarID
-            ack.Writer.Write((ushort) 1); // State
-            ack.Writer.Write((ushort) 1); // Slot
-            ack.Writer.Write((uint) 1); // StateVar
-            ack.Writer.Write(quantity); // StackNum
-            ack.Writer.Write(0); // Random
-
-            ack.Writer.Write((uint) 0); // AssistA
-            ack.Writer.Write((uint) 0); // AssistB
-            ack.Writer.Write((uint) 0); // Box
-            ack.Writer.Write((uint) 0); // Belonging
-            ack.Writer.Write(0); // Upgrade
-            ack.Writer.Write(0); // UpgradePoint
-            ack.Writer.Write((uint) 0); // ExpireTick
-            ack.Writer.Write((uint) itemID); // TableIdx
-            ack.Writer.Write((uint) 0); // InvenIdx
-
-            ack.Writer.Write(0); // State
-            packet.Sender.Send(ack);
+            var modListAnswer = new ItemModListAnswer()
+            {
+                Items = new []
+                {
+                    new XiStrMyItemMod()
+                    {
+                        MyItem = new Item()
+                        {
+                            CarID = 4,
+                            Itm = new ItemData()
+                            {
+                                Slot = 1,
+                                State = 1,
+                                StateVar = 1,
+                            },
+                            iunit = new IUnit()
+                            {
+                                StackNum = buyItemPacket.Quantity,
+                                Random = 0,
+                                AssistA = 0,
+                                AssistB = 0,
+                                Box = 0,
+                                Belonging = 0,
+                                Upgrade = 0,
+                                UpgradePoint = 0,
+                                ExpireTick = 0,
+                            },
+                            TableIdx = (uint)buyItemPacket.ItemId,
+                            InvenIdx = 0,
+                        },
+                        State = 0,
+                    },
+                }
+            };
+            packet.Sender.Send(modListAnswer.CreatePacket());
+            
+            #if !DEBUG
+            throw new NotImplementedException();
+            #endif
 
             //BS_PktItemDataList
 
@@ -670,102 +681,59 @@ struct XiStrStatInfo
         }
 
         [Packet(Packets.CmdBuyVisualItemThread)]
-        public static void BuyItemVisual(Packet packet)
+        public static void BuyVisualItemThread(Packet packet)
         {
-            var tableIdx = packet.Reader.ReadUInt32();
-            var carId = packet.Reader.ReadUInt32();
-            var plateName = packet.Reader.ReadUnicodeStatic(10);
-            packet.Reader.ReadInt32(); // Unknown
-            packet.Reader.ReadInt32(); // Unknown
-            packet.Reader.ReadInt32(); // Unknown
-            packet.Reader.ReadInt32(); // Unknown
-            packet.Reader.ReadInt32(); // Unknown
-            // 20 bytes
+            var buyVisualItemPacket = new BuyVisualItemThreadPacket(packet);
 
-            var periodIdx = packet.Reader.ReadUInt32();
+            var ack = new BuyVisualItemThreadAnswer()
+            {
+                Type = 0,
+                TableIndex = buyVisualItemPacket.TableIndex,
+                CarId = buyVisualItemPacket.CarId,
+                InventoryId = 0,
+                Period = 5,
+                Mito = 0,
+                Hancoin = 0,
+                BonusMito = 0,
+                Mileage = 0
+            };
+            packet.Sender.Send(ack.CreatePacket());
 
-            packet.Reader.ReadInt16(); // Unknown / 2 bytes
-            packet.Reader.ReadInt64(); // curCash
-
-            packet.Reader.ReadInt32(); // Unknown
-
-            var ack = new Packet(Packets.CmdBuyVisualItemThread + 1);
-            ack.Writer.Write(0); // Type?
-            ack.Writer.Write(tableIdx);
-            ack.Writer.Write(carId);
-            ack.Writer.Write(0); // Inventory Id (Slot?)
-            ack.Writer.Write(0); // Period (1 = 7d, 2 = 30d, 4 = 00?, 5 = infinite)
-            ack.Writer.Write(0); // Mito
-            ack.Writer.Write(0); // Hancoin
-            ack.Writer.Write(0); // BonusMito
-            ack.Writer.Write(0); // Mileage
-
-            packet.Sender.Send(ack);
-
-            var ack2 = new Packet(Packets
-                .RoomNotifyChangeAck); // TODO: Wrong Packet Size. CMD(467) CmdLen: : 240, AnalysisSize: 62
-            ack2.Writer.Write((ushort) 0); // Serial?
-            ack2.Writer.Write((ushort) 0); // Age?
-
-            ack2.Writer.Write((ushort) 0); // CarAttr Sort
-            ack2.Writer.Write((ushort) 0); // CarAttr Body
-            ack2.Writer.Write(new char[4]); // CarAttr Color
-            ack2.Writer.Write(0); // CarAttr lvalSortBody
-            ack2.Writer.Write(0); // CarAttr lvalColor
-            ack2.Writer.Write((long) 0); // CarAttr llval
-
-            ack2.Writer.WriteUnicodeStatic("Gigatoni", 21); // PlayerInfo Cname
-            ack2.Writer.Write((ushort) 5); // PlayerInfo serial
-            ack2.Writer.Write((ushort) 0); // PlayerInfo age
-            ack2.Writer.Write((long) 4); // PlayerInfo Cid
-            ack2.Writer.Write((ushort) 1); // PlayerInfo Level
-            ack2.Writer.Write((uint) 0); // PlayerInfo Exp
-            ack2.Writer.Write((long) 0); // PlayerInfo TeamId
-            ack2.Writer.Write((long) 0); // PlayerInfo TeamMarkId
-            ack2.Writer.WriteUnicodeStatic("Staff", 14); // PlayerInfo TeamName
-            ack2.Writer.Write((ushort) 1); // PlayerInfo teamNLevel
-
-            ack2.Writer.Write((ushort) 1); // VisualItem Neon
-            ack2.Writer.Write((ushort) 1); // VisualItem Plate
-            ack2.Writer.Write((ushort) 1); // VisualItem Decal
-            ack2.Writer.Write((ushort) 1); // VisualItem DecalColor
-            ack2.Writer.Write((ushort) 1); // VisualItem AeroBumper
-            ack2.Writer.Write((ushort) 1); // VisualItem AeroIntercooler
-            ack2.Writer.Write((ushort) 1); // VisualItem AeroSet
-            ack2.Writer.Write((ushort) 1); // VisualItem MufflerFlame
-            ack2.Writer.Write((ushort) 1); // VisualItem Wheel
-            ack2.Writer.Write((ushort) 1); // VisualItem Spoiler
-
-            ack2.Writer.Write((ushort) 0); // VisualItem Reserved?
-            ack2.Writer.Write((ushort) 0); // VisualItem Reserved?
-            ack2.Writer.Write((ushort) 0); // VisualItem Reserved?
-            ack2.Writer.Write((ushort) 0); // VisualItem Reserved?
-            ack2.Writer.Write((ushort) 0); // VisualItem Reserved?
-            ack2.Writer.Write((ushort) 0); // VisualItem Reserved?
-
-            ack2.Writer.WriteUnicodeStatic("HELLO", 9); // VisualItem PlateString
-
-            ack2.Writer.Write(100.0f); // PlayerInfo UseItem
-
-            /*
-struct XiVisualItem
-{
-  __int16 Neon;
-  __int16 Plate;
-  __int16 Decal;
-  __int16 DecalColor;
-  __int16 AeroBumper;
-  __int16 AeroIntercooler;
-  __int16 AeroSet;
-  __int16 MufflerFlame;
-  __int16 Wheel;
-  __int16 Spoiler;
-  __int16 Reserve[6];
-  wchar_t PlateString[9];
-};
-            */
-
-            packet.Sender.Send(ack2);
+            var ack2 = new RoomNotifyChangeAnswer()
+            {
+                Serial = 0,
+                Age = 0,
+                CarAttr = new XiCarAttr(),
+                PlayerInfo = new XiPlayerInfo()
+                {
+                    CharacterName = packet.Sender.User.ActiveCharacter.Name,
+                    Serial = 0,
+                    Age = 4,
+                    Level = packet.Sender.User.ActiveCharacter.Level,
+                    Exp = 0, // ??
+                    TeamId = packet.Sender.User.ActiveCharacter.TeamId,
+                    TeamMarkId = packet.Sender.User.ActiveCharacter.TeamMarkId,
+                    TeamName = packet.Sender.User.ActiveCharacter.TeamName,
+                    TeamNLevel = 0,
+                    VisualItem = new XiVisualItem()
+                    {
+                        Neon = 1,
+                        Plate = 1,
+                        Decal = 1,
+                        DecalColor = 1,
+                        AeroBumper = 1,
+                        AeroIntercooler = 1,
+                        AeroSet = 1,
+                        MufflerFlame = 1,
+                        Wheel = 1,
+                        Spoiler = 1,
+                        Reserve = new short[]{0,0,0,0,0,0},
+                        PlateString = "HELLO",
+                    },
+                    UseTime = 100.0f,
+                }
+            };
+            packet.Sender.Send(ack2.CreatePacket());
 
             // TODO: Send visual update aka BS_PktRoomNotifyChange
 /* BS_PktRoomNotifyChange

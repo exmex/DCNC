@@ -3,18 +3,16 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
-    public class QuestCompleteAnswer : IOutPacket
+    public class QuestCompleteAnswer : OutPacket
     {
         public uint TableIndex;
         
-        public Packet CreatePacket()
+        public override Packet CreatePacket()
         {
-            var ack = new Packet(Packets.QuestCompleteAck);
-            ack.Writer.Write(GetBytes());
-            return ack;
+            return base.CreatePacket(Packets.QuestCompleteAck);
         }
 
-        public byte[] GetBytes()
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {

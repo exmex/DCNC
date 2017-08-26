@@ -4,20 +4,18 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
-    public class FriendListAnswer : IOutPacket
+    public class FriendListAnswer : OutPacket
     {
         public Friend[] FriendList;
         public int TotalItemNum;
 
-        public Packet CreatePacket()
+        public override Packet CreatePacket()
         {
-            var ack = new Packet(Packets.FriendListAck);
-            ack.Writer.Write(GetBytes());
-            return ack;
+            return base.CreatePacket(Packets.FriendListAck);
         }
 
         // TODO: Serious logic mistake here. Telling the client to wait for another batch of friends, but never sending this
-        public byte[] GetBytes()
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {

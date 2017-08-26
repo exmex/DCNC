@@ -5,7 +5,7 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
-    public class GetDateTimePacketAnswer : IOutPacket
+    public class GetDateTimePacketAnswer : OutPacket
     {
         public uint Action;
         public uint GlobalTime;
@@ -27,14 +27,12 @@ namespace Shared.Network.GameServer
             ServerTick = 0;
         }
 
-        public Packet CreatePacket()
+        public override Packet CreatePacket()
         {
-            var ack = new Packet(Packets.GetDateTimeAck);
-            ack.Writer.Write(GetBytes());
-            return ack;
+            return base.CreatePacket(Packets.GetDateTimeAck);
         }
 
-        public byte[] GetBytes()
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {

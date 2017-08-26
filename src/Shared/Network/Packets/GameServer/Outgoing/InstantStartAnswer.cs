@@ -4,18 +4,16 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
-    public class InstantStartAnswer : IOutPacket
+    public class InstantStartAnswer : OutPacket
     {
         public uint TableIndex;
         
-        public Packet CreatePacket()
+        public override Packet CreatePacket()
         {
-            var ack = new Packet(Packets.InstantStartAck);
-            ack.Writer.Write(GetBytes());
-            return ack;
+            return base.CreatePacket(Packets.InstantStartAck);
         }
 
-        public byte[] GetBytes()
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {

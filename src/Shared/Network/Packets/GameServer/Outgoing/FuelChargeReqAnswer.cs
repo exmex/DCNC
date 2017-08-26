@@ -4,7 +4,7 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
-    public class FuelChargeReqAnswer : IOutPacket
+    public class FuelChargeReqAnswer : OutPacket
     {
         /*
         unsigned int CarId;
@@ -30,14 +30,14 @@ namespace Shared.Network.GameServer
         public int SaleFlag;
         public float SaleUnitPrice;
 
-        public Packet CreatePacket()
+        public override Packet CreatePacket()
         {
             var packet = new Packet(Packets.FuelChargeReqAck);
             packet.Writer.Write(GetBytes());
             return packet;
         }
 
-        public byte[] GetBytes()
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {

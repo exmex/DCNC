@@ -5,7 +5,7 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
-    public class ChaseRequestAnswer : IOutPacket
+    public class ChaseRequestAnswer : OutPacket
     {
         /*
         unsigned __int16 m_Serial;
@@ -35,14 +35,12 @@ namespace Shared.Network.GameServer
         public int FirstHuvId = 10001;
         public byte[] Unknown2 = new byte[2];
         
-        public Packet CreatePacket()
+        public override Packet CreatePacket()
         {
-            var ack = new Packet(Packets.ChasePropose);
-            ack.Writer.Write(GetBytes());
-            return ack;
+            return base.CreatePacket(Packets.ChasePropose);
         }
 
-        public byte[] GetBytes()
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {

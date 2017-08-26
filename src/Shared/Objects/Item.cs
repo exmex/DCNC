@@ -76,6 +76,12 @@ namespace Shared.Objects
 
         public uint TableIdx;
 
+        public Item()
+        {
+            Itm = new ItemData();
+            iunit = new IUnit();
+        }
+
         public void Serialize(BinaryWriterExt writer)
         {
             writer.Write(CarID);

@@ -3,7 +3,7 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
-    public class QuestRewardAnswer
+    public class QuestRewardAnswer : OutPacket
     {
         public uint TableIndex;
         public uint GetExp;
@@ -17,14 +17,12 @@ namespace Shared.Network.GameServer
         public uint RewardItem2;
         public uint RewardItem3;
         
-        public Packet CreatePacket()
+        public override Packet CreatePacket()
         {
-            var ack = new Packet(Packets.QuestRewardAck);
-            ack.Writer.Write(GetBytes());
-            return ack;
+            return base.CreatePacket(Packets.QuestRewardAck);
         }
 
-        public byte[] GetBytes()
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {

@@ -37,19 +37,17 @@ namespace LobbyServer.Network.Handlers
 #endif
             }
 
-            new GameSettingsAnswerPacket().Send(Packets.GameSettingsAck, packet.Sender);
-
+            packet.Sender.Send(new GameSettingsAnswer().CreatePacket());
+            
             packet.Sender.User.Characters = CharacterModel.Retrieve(LobbyServer.Instance.Database.Connection,
                 packet.Sender.User.UID);
 
-            var userInfoAnswerPacket = new UserInfoAnswerPacket
+            packet.Sender.Send(new UserInfoAnswerPacket
             {
                 CharacterCount = packet.Sender.User.Characters.Count,
                 Username = packet.Sender.User.Name,
                 Characters = packet.Sender.User.Characters.ToArray()
-            };
-
-            userInfoAnswerPacket.Send(Packets.UserInfoAck, packet.Sender);
+            }.CreatePacket());
         }
 
         [Packet(Packets.CmdCheckInLobby)]
@@ -61,7 +59,7 @@ namespace LobbyServer.Network.Handlers
 #if DEBUG
                 packet.Sender.Error("Invalid protocol.");
 #else
-                packet.Sender.Kill("Too old client");
+                packet.Sender.Kill("Client outdated!");
 #endif
                 return;
             }
@@ -102,11 +100,10 @@ namespace LobbyServer.Network.Handlers
             // Send check in lobby answer.
             checkInLobbyAnswerPacket.Result = 0;
             checkInLobbyAnswerPacket.Permission = 0x8000; // TODO: Use account model instead.
-            checkInLobbyAnswerPacket.Send(packet.Sender);
+            packet.Sender.Send(checkInLobbyAnswerPacket.CreatePacket());
 
             // Send current lobby time.
-            var lobbyTimeAnswerPacket = new LobbyTimeAnswerPacket();
-            lobbyTimeAnswerPacket.Send(Packets.LobbyTimeAck, packet.Sender);
+            packet.Sender.Send(new LobbyTimeAnswerPacket().CreatePacket());
         }
 
         [Packet(Packets.CmdCheckCharName)]
@@ -121,7 +118,7 @@ namespace LobbyServer.Network.Handlers
                     !CharacterModel.Exists(LobbyServer.Instance.Database.Connection,
                         checkCharacterNamePacket.CharacterName)
             };
-            checkCharacterNameAnswerPacket.Send(packet.Sender);
+            packet.Sender.Send(checkCharacterNameAnswerPacket.CreatePacket());
         }
 
         [Packet(Packets.CmdCreateChar)]
@@ -138,11 +135,10 @@ namespace LobbyServer.Network.Handlers
                 createCharPacket.CharacterName, createCharPacket.Avatar, createCharPacket.CarType,
                 createCharPacket.Color);
 
-            var createCharAnswerPacket = new CreateCharAnswerPacket
+            packet.Sender.Send(new CreateCharAnswerPacket
             {
                 CharacterName = createCharPacket.CharacterName
-            };
-            createCharAnswerPacket.Send(Packets.CreateCharAck, packet.Sender);
+            }.CreatePacket());
         }
 
         [Packet(Packets.CmdDeleteChar)]
@@ -157,10 +153,10 @@ namespace LobbyServer.Network.Handlers
                 CharacterModel.DeleteCharacter(LobbyServer.Instance.Database.Connection,
                     deleteCharacterPacket.CharacterId, packet.Sender.User.UID);
 
-                new DeleteCharacterAnswerPacket
+                packet.Sender.Send(new DeleteCharacterAnswerPacket
                 {
                     CharacterName = deleteCharacterPacket.CharacterName
-                }.Send(packet.Sender);
+                }.CreatePacket());
 
                 return;
             }

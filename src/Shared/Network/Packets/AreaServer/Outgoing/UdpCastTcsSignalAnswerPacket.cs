@@ -4,13 +4,13 @@ using Shared.Util;
 
 namespace Shared.Network.AreaServer
 {
-    public class UdpCastTcsSignalAnswerPacket : IOutPacket
+    public class UdpCastTcsSignalAnswerPacket : OutPacket
     {
         public int Signal;
         public int State;
         public int Time;
 
-        public Packet CreatePacket()
+        public override Packet CreatePacket()
         {
             var ack = new Packet(Packets.UdpCastTcsSignalAck);
             ack.Writer.Write(GetBytes());
@@ -20,7 +20,7 @@ namespace Shared.Network.AreaServer
             return ack;
         }
 
-        public byte[] GetBytes()
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {

@@ -3,28 +3,25 @@ using Shared.Util;
 
 namespace Shared.Network.LobbyServer
 {
-    public class CheckCharacterNameAnswerPacket
+    public class CheckCharacterNameAnswerPacket : OutPacket
     {
         // Availability. true = Available, false = Unavailable.
         public bool Availability;
 
         public string CharacterName;
 
-        /// <summary>
-        ///     Sends the answer packet.
-        /// </summary>
-        /// <param name="client">The client to send the packet to.</param>
-        public void Send(Client client)
+        public CheckCharacterNameAnswerPacket()
         {
-            var ack = new Packet(Packets.CheckCharNameAck);
-            ack.Writer.Write(GetBytes());
-            /*
-            ack.Writer.WriteUnicodeStatic(CharacterName, 21);
-            ack.Writer.Write(Availability);*/
-            client.Send(ack);
+            Availability = false;
+            CharacterName = "";
         }
 
-        public byte[] GetBytes()
+        public override Packet CreatePacket()
+        {
+            return base.CreatePacket(Packets.CheckCharNameAck);
+        }
+
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {

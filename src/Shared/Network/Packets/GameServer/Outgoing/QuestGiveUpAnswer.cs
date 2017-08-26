@@ -4,19 +4,17 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
-    public class QuestGiveUpAnswer : IOutPacket
+    public class QuestGiveUpAnswer : OutPacket
     {
         public uint TableIndex;
         public byte Unknown1;
         
-        public Packet CreatePacket()
+        public override Packet CreatePacket()
         {
-            var ack = new Packet(Packets.QuestGiveUpAck);
-            ack.Writer.Write(GetBytes());
-            return ack;
+            return base.CreatePacket(Packets.QuestGiveUpAck);
         }
 
-        public byte[] GetBytes()
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {

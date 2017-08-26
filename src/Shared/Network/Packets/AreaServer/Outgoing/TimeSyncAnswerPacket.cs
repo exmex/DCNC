@@ -3,12 +3,12 @@ using Shared.Util;
 
 namespace Shared.Network.AreaServer
 {
-    public class TimeSyncAnswerPacket : IOutPacket
+    public class TimeSyncAnswerPacket : OutPacket
     {
         public uint GlobalTime;
         public uint SystemTick = 0;
 
-        public Packet CreatePacket()
+        public override Packet CreatePacket()
         {
             var ack = new Packet(Packets.UdpTimeSyncAck);
             ack.Writer.Write(GetBytes());
@@ -19,7 +19,7 @@ namespace Shared.Network.AreaServer
             return ack;
         }
 
-        public byte[] GetBytes()
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {

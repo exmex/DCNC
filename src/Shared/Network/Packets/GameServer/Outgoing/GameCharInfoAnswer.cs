@@ -5,7 +5,7 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
-    public class GameCharInfoAnswer : IOutPacket
+    public class GameCharInfoAnswer : OutPacket
     {
         public Character Character;
         public Vehicle Vehicle;
@@ -16,14 +16,12 @@ namespace Shared.Network.GameServer
         public char ChId;
         public ushort LocId = 1;
             
-        public Packet CreatePacket()
+        public override Packet CreatePacket()
         {
-            var ack = new Packet(Packets.GameCharInfoAck);
-            ack.Writer.Write(GetBytes());
-            return ack;
+            return base.CreatePacket(Packets.GameCharInfoAck);
         }
 
-        public byte[] GetBytes()
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {

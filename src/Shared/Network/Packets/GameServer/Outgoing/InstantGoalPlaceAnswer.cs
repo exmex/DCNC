@@ -4,7 +4,7 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
-    public class InstantGoalPlaceAnswer : IOutPacket
+    public class InstantGoalPlaceAnswer : OutPacket
     {
         /*
         struct XiStrExpInfo
@@ -25,14 +25,12 @@ namespace Shared.Network.GameServer
         public int EXP;
         public byte[] Unknown1 = new byte[28];
 
-        public Packet CreatePacket()
+        public override Packet CreatePacket()
         {
-            var ack = new Packet(Packets.InstantGoalPlaceAck);
-            ack.Writer.Write(GetBytes());
-            return ack;
+            return base.CreatePacket(Packets.InstantGoalPlaceAck);
         }
 
-        public byte[] GetBytes()
+        public override byte[] GetBytes()
         {
             using (var ms = new MemoryStream())
             {
