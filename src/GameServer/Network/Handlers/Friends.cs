@@ -1,4 +1,5 @@
-﻿using Shared.Models;
+﻿using System;
+using Shared.Models;
 using Shared.Network;
 using Shared.Network.GameServer;
 
@@ -92,7 +93,7 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdSendMail)]
         public static void SendMail(Packet packet)
         {
-            // TODO:
+            throw new NotImplementedException();
         }
 
         /*

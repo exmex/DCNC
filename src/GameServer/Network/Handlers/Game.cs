@@ -264,20 +264,22 @@ namespace GameServer.Network.Handlers
 
             var chaseRequestPacket = new ChaseRequestPacket(packet);
 
-            var ack = new ChaseRequestAnswer();
-            ack.StartPosX = chaseRequestPacket.PosX;
-            ack.StartPosY = chaseRequestPacket.PosY;
-            ack.StartPosZ = chaseRequestPacket.PosZ;
-            ack.StartRot = chaseRequestPacket.Rot;
-            ack.EndPosX = chaseRequestPacket.PosX;
-            ack.EndPosY = chaseRequestPacket.PosY;
-            ack.EndPosZ = chaseRequestPacket.PosZ;
-            ack.EndRot = chaseRequestPacket.Rot;
-            ack.CourseId = 0;
-            ack.Type = 2 - (chaseRequestPacket.BNow ? 1 : 0);
-            ack.PosName = "test";
-            ack.FirstHuvLevel = 1;
-            ack.FirstHuvId = 10001;
+            var ack = new ChaseRequestAnswer
+            {
+                StartPosX = chaseRequestPacket.PosX,
+                StartPosY = chaseRequestPacket.PosY,
+                StartPosZ = chaseRequestPacket.PosZ,
+                StartRot = chaseRequestPacket.Rot,
+                EndPosX = chaseRequestPacket.PosX,
+                EndPosY = chaseRequestPacket.PosY,
+                EndPosZ = chaseRequestPacket.PosZ,
+                EndRot = chaseRequestPacket.Rot,
+                CourseId = 0,
+                Type = 2 - (chaseRequestPacket.BNow ? 1 : 0),
+                PosName = "test",
+                FirstHuvLevel = 1,
+                FirstHuvId = 10001
+            };
 
             //Wrong Packet Size. CMD(186) CmdLen: : 252, AnalysisSize: 250
             /*var ack = new Packet(Packets.ChasePropose);
@@ -426,18 +428,20 @@ namespace GameServer.Network.Handlers
 
             // TODO: Load quest reward information here, and send it.
 
-            var ack = new QuestRewardAnswer();
-            ack.TableIndex = questReward.QuestIdN;
-            ack.GetExp = (uint)questReward.RewardExp;
-            ack.GetMoney = (uint)questReward.RewardMoney;
-            ack.CurrentExp = (ulong)packet.Sender.User.ActiveCharacter.CurExp;
-            ack.NextExp = (ulong)packet.Sender.User.ActiveCharacter.NextExp;
-            ack.BaseExp = (ulong)packet.Sender.User.ActiveCharacter.BaseExp;
-            ack.Level = packet.Sender.User.ActiveCharacter.Level;
-            ack.ItemNum = 0;
-            ack.RewardItem1 = 0;
-            ack.RewardItem2 = 0;
-            ack.RewardItem3 = 0;
+            var ack = new QuestRewardAnswer
+            {
+                TableIndex = questReward.QuestIdN,
+                GetExp = (uint) questReward.RewardExp,
+                GetMoney = (uint) questReward.RewardMoney,
+                CurrentExp = (ulong) packet.Sender.User.ActiveCharacter.CurExp,
+                NextExp = (ulong) packet.Sender.User.ActiveCharacter.NextExp,
+                BaseExp = (ulong) packet.Sender.User.ActiveCharacter.BaseExp,
+                Level = packet.Sender.User.ActiveCharacter.Level,
+                ItemNum = 0,
+                RewardItem1 = 0,
+                RewardItem2 = 0,
+                RewardItem3 = 0
+            };
             packet.Sender.Send(ack.CreatePacket());
 
             /*
