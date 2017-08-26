@@ -1,4 +1,5 @@
 ﻿using Shared.Network;
+using Shared.Util;
 
 namespace Shared.Objects
 {
@@ -49,7 +50,7 @@ namespace Shared.Objects
         public long TeamMarkId;
         public string TeamName; // 0xD / 13
         public int TeamRank;
-        public long Tid;
+        public long Tid; // TODO/FIXME: Same as teamId?
         public float TotalDistance, PositionX, PositionY, PositionZ, Rotation;
         public uint TPvpCnt;
         public uint TPvpPoint;
@@ -57,7 +58,7 @@ namespace Shared.Objects
         public ulong Uid;
         public User User;
 
-        public void Serialize(PacketWriter writer)
+        public void Serialize(BinaryWriterExt writer)
         {
             writer.Write(Cid);
             writer.WriteUnicodeStatic(Name, 21);

@@ -2,15 +2,10 @@
 using System.IO;
 using System.Text;
 
-namespace Shared.Network
+namespace Shared.Util
 {
-    public interface ISerializable
-    {
-        void Serialize(PacketWriter writer);
-    }
-
     /// <summary>
-    ///     Class PacketWriter.
+    ///     Extension to the BinaryWriterClass.
     ///     Size reference:
     ///     sizeof(sbyte)	1
     ///     sizeof(byte)	1
@@ -27,16 +22,30 @@ namespace Shared.Network
     ///     sizeof(bool)	1
     /// </summary>
     /// <seealso cref="System.IO.BinaryWriter" />
-    public class PacketWriter : BinaryWriter
+    public class BinaryWriterExt : BinaryWriter
     {
-        public PacketWriter(MemoryStream stream)
+        public interface ISerializable
+        {
+            void Serialize(BinaryWriterExt writer);
+        }
+        
+        public BinaryWriterExt(Stream stream)
             : base(stream, Encoding.Unicode)
+        {
+        }
+
+        public BinaryWriterExt(Stream output, Encoding encoding) : base(output, encoding)
         {
         }
 
         public byte[] GetBuffer()
         {
             return (BaseStream as MemoryStream)?.ToArray();
+        }
+
+        public void Write(ISerializable structure)
+        {
+            structure.Serialize(this);
         }
 
         public void WriteUnicode(string str, bool lengthPrefix = true)
@@ -82,72 +91,6 @@ namespace Shared.Network
             Array.Copy(stringBuf, 0, buf, 0, stringBuf.Length);
 
             Write(buf);
-        }
-
-        public void Write(ISerializable structure)
-        {
-            structure.Serialize(this);
-        }
-    }
-
-    public class PacketReader : BinaryReader
-    {
-        public PacketReader(MemoryStream stream)
-            : base(stream, Encoding.Unicode)
-        {
-        }
-
-        public string ReadUnicode()
-        {
-            var sb = new StringBuilder();
-            short val;
-            do
-            {
-                val = ReadInt16();
-                if (val > 0)
-                    sb.Append((char) val);
-            } while (val > 0);
-            return sb.ToString();
-        }
-
-        public string ReadUnicodeStatic(int maxLength)
-        {
-            var buf = ReadBytes(maxLength * 2);
-            var str = Encoding.Unicode.GetString(buf);
-
-            if (str.Contains("\0"))
-                str = str.Substring(0, str.IndexOf('\0'));
-
-            return str;
-        }
-
-        public string ReadUnicodePrefixed()
-        {
-            var length = ReadUInt16();
-            return ReadUnicodeStatic(length);
-        }
-
-        public string ReadAscii()
-        {
-            var sb = new StringBuilder();
-            byte val;
-            do
-            {
-                val = ReadByte();
-                sb.Append((char) val);
-            } while (val > 0);
-            return sb.ToString();
-        }
-
-        public string ReadAsciiStatic(int maxLength)
-        {
-            var buf = ReadBytes(maxLength);
-            var str = Encoding.ASCII.GetString(buf);
-
-            if (str.Contains("\0"))
-                str = str.Substring(0, str.IndexOf('\0'));
-
-            return str;
         }
     }
 }

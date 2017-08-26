@@ -15,8 +15,8 @@ namespace AuthServer.Network.Handlers
         {
             // TODO: Send serverlist here
             var pkt = new Packet(23);
-            var Servers = new UserAuthAnswerPacket.Server[1];
-            Servers[0] = new UserAuthAnswerPacket.Server
+            var servers = new UserAuthAnswerPacket.Server[1];
+            servers[0] = new UserAuthAnswerPacket.Server
             {
                 ServerName = "Test",
                 ServerId = 1,
@@ -44,14 +44,14 @@ namespace AuthServer.Network.Handlers
 
             pkt.Writer.Write(1); // Size
             //for int i = 0; i < size; i++
-            for (var i = 0; i < Servers.Length; i++)
+            for (var i = 0; i < servers.Length; i++)
             {
-                pkt.Writer.WriteUnicodeStatic(Servers[i].ServerName, 32); // 32
-                pkt.Writer.Write(Servers[i].ServerId);
-                pkt.Writer.Write(Servers[i].PlayerCount);
-                pkt.Writer.Write(Servers[i].MaxPlayers);
-                pkt.Writer.Write(Servers[i].ServerState);
-                if (Servers[i].ServerState == 100)
+                pkt.Writer.WriteUnicodeStatic(servers[i].ServerName, 32); // 32
+                pkt.Writer.Write(servers[i].ServerId);
+                pkt.Writer.Write(servers[i].PlayerCount);
+                pkt.Writer.Write(servers[i].MaxPlayers);
+                pkt.Writer.Write(servers[i].ServerState);
+                if (servers[i].ServerState == 100)
                 {
                     pkt.Writer.Write(0);
                     pkt.Writer.Write(0);
@@ -60,24 +60,24 @@ namespace AuthServer.Network.Handlers
                 }
                 else
                 {
-                    pkt.Writer.Write(Servers[i].GameTime);
-                    pkt.Writer.Write(Servers[i].LobbyTime);
-                    pkt.Writer.Write(Servers[i].Area1Time);
-                    pkt.Writer.Write(Servers[i].Area2Time);
+                    pkt.Writer.Write(servers[i].GameTime);
+                    pkt.Writer.Write(servers[i].LobbyTime);
+                    pkt.Writer.Write(servers[i].Area1Time);
+                    pkt.Writer.Write(servers[i].Area2Time);
                 }
-                pkt.Writer.Write(Servers[i].RankingUpdateTime);
-                pkt.Writer.Write(Servers[i].GameServerIp);
-                pkt.Writer.Write(Servers[i].LobbyServerIp);
-                pkt.Writer.Write(Servers[i].AreaServer1Ip);
-                pkt.Writer.Write(Servers[i].AreaServer2Ip);
-                pkt.Writer.Write(Servers[i].RankingServerIp);
-                pkt.Writer.Write(Servers[i].GameServerPort);
-                pkt.Writer.Write(Servers[i].LobbyServerPort);
-                pkt.Writer.Write(Servers[i].AreaServerPort);
-                pkt.Writer.Write(Servers[i].AreaServer2Port);
-                pkt.Writer.Write(Servers[i].AreaServerUdpPort);
-                pkt.Writer.Write(Servers[i].AreaServer2UdpPort);
-                pkt.Writer.Write(Servers[i].RankingServerPort);
+                pkt.Writer.Write(servers[i].RankingUpdateTime);
+                pkt.Writer.Write(servers[i].GameServerIp);
+                pkt.Writer.Write(servers[i].LobbyServerIp);
+                pkt.Writer.Write(servers[i].AreaServer1Ip);
+                pkt.Writer.Write(servers[i].AreaServer2Ip);
+                pkt.Writer.Write(servers[i].RankingServerIp);
+                pkt.Writer.Write(servers[i].GameServerPort);
+                pkt.Writer.Write(servers[i].LobbyServerPort);
+                pkt.Writer.Write(servers[i].AreaServerPort);
+                pkt.Writer.Write(servers[i].AreaServer2Port);
+                pkt.Writer.Write(servers[i].AreaServerUdpPort);
+                pkt.Writer.Write(servers[i].AreaServer2UdpPort);
+                pkt.Writer.Write(servers[i].RankingServerPort);
             }
             packet.Sender.Send(pkt);
 
@@ -146,7 +146,7 @@ namespace AuthServer.Network.Handlers
                 Servers = ServerModel.Retrieve(AuthServer.Instance.Database.Connection).ToArray()
             };
 
-            ack.Send(Packets.UserAuthAck, packet.Sender);
+            packet.Sender.Send(ack.CreatePacket());
         }
     }
 }

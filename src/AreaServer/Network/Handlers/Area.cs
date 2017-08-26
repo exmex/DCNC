@@ -10,30 +10,29 @@ namespace AreaServer.Network.Handlers
         public static void TimeSync(Packet packet)
         {
             var timeSyncPacket = new TimeSyncPacket(packet);
-            new TimeSyncAnswerPacket
+            packet.Sender.Send(new TimeSyncAnswerPacket
             {
                 GlobalTime = timeSyncPacket.LocalTime,
                 SystemTick = 0
-            }.Send(packet.Sender);
+            }.CreatePacket());
         }
 
         [Packet(Packets.CmdAreaStatus)]
         public static void AreaStatus(Packet packet)
         {
-            new AreaStatusAnswerPacket().Send(packet.Sender);
+            packet.Sender.Send(new AreaStatusAnswerPacket().CreatePacket());
         }
 
         [Packet(Packets.CmdEnterArea)]
         public static void EnterArea(Packet packet)
         {
             var enterAreaPacket = new EnterAreaPacket(packet);
-
-            new EnterAreaAnswerPacket
+            
+            packet.Sender.Send(new EnterAreaAnswerOutPacket
             {
                 LocalTime = enterAreaPacket.LocalTime,
-                SystemTick = 0,
                 AreaId = enterAreaPacket.AreaId
-            }.Send(packet.Sender);
+            }.CreatePacket());
 
             //Log.WriteLine("Name: " + name);
             Log.Debug("Sessid: " + enterAreaPacket.SessionId);

@@ -1,4 +1,6 @@
-﻿using Shared.Objects;
+﻿using System.IO;
+using Shared.Objects;
+using Shared.Util;
 
 namespace Shared.Network.LobbyServer
 {
@@ -42,7 +44,9 @@ namespace Shared.Network.LobbyServer
         public void Send(ushort packetId, Client client)
         {
             var packet = new Packet(packetId);
+            packet.Writer.Write(GetBytes());
 
+            /*
             packet.Writer.Write(Permissions);
             packet.Writer.Write(CharacterCount);
             packet.Writer.WriteUnicodeStatic(Username, 18);
@@ -66,8 +70,43 @@ namespace Shared.Network.LobbyServer
                 packet.Writer.WriteUnicodeStatic(character.TeamName, 13);
                 packet.Writer.Write(0); // GuildType? (unsigned int nGuild;)
             }
+            */
 
             client.Send(packet);
+        }
+
+        public byte[] GetBytes()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var bs = new BinaryWriterExt(ms))
+                {
+                    bs.Write(Permissions);
+                    bs.Write(CharacterCount);
+                    bs.WriteUnicodeStatic(Username, 18);
+                    bs.Write((long) 0);
+                    bs.Write((long) 0);
+                    bs.Write((long) 0);
+                    bs.Write(0);
+
+                    foreach (var character in Characters)
+                    {
+                        bs.WriteUnicodeStatic(character.Name, 21);
+                        bs.Write(character.Cid);
+                        bs.Write((int) character.Avatar);
+                        bs.Write((int) character.Level);
+                        bs.Write(character.CurrentCarId);
+                        bs.Write(character.ActiveCar.CarType);
+                        bs.Write(character.ActiveCar.BaseColor);
+                        bs.Write(character.CreationDate);
+                        bs.Write(character.Tid);
+                        bs.Write(character.TeamMarkId);
+                        bs.WriteUnicodeStatic(character.TeamName, 13);
+                        bs.Write(0); // GuildType? (unsigned int nGuild;)
+                    }
+                }
+                return ms.GetBuffer();
+            }
         }
     }
 }

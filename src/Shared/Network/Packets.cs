@@ -27,8 +27,10 @@ namespace Shared.Network
         public const ushort ChatMsgAck = 147;
         public const ushort ChasePropose = 186;
         public const ushort FriendListAck = 231;
+        public const ushort QuestStartAck = 263;
         public const ushort QuestCompleteAck = 265;
         public const ushort QuestRewardAck = 267;
+        public const ushort QuestGiveUpAck = 271;
         public const ushort MyQuestListAck = 273;
 
         public const ushort FriendStatus = 274;
@@ -62,10 +64,13 @@ namespace Shared.Network
         public const ushort MyTeamInfoAck = 841; // TODO: Wrong Packet Size. CMD(841) CmdLen: : 692, AnalysisSize: 393
         public const ushort InstantStartAck = 993;
         public const ushort InstantGiveUpAck = 1000;
+        public const ushort InstantGoalPlaceAck = 1002;
         public const ushort GetMyHancoinAck = 1401; // TODO: Wrong Packet Size. CMD(1401) CmdLen: : 14, AnalysisSize: 12
         public const ushort VisualItemListAck = 1801;
 
         public const ushort CityLeaveCheckAck = 3201;
+        
+        public const ushort UnknownSyncAck = 3918;
 
         // 4010 -> Ranking Racing Team Info
         // 4001 -> Ranking Gameplay

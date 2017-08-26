@@ -10,14 +10,12 @@ namespace AreaServer.Network.Handlers
         {
             var udpCastTcsSignalPacket = new UdpCastTcsSignalPacket(packet);
 
-            var ack = new UdpCastTcsSignalAnswerPacket // Weird hack because Class doesn't have access to broadcast.
+            AreaServer.Instance.Server.Broadcast(new UdpCastTcsSignalAnswerPacket
             {
                 Signal = udpCastTcsSignalPacket.Signal,
                 Time = udpCastTcsSignalPacket.Time,
                 State = udpCastTcsSignalPacket.State
-            }.Send(packet.Sender);
-
-            AreaServer.Instance.Server.Broadcast(ack);
+            }.CreatePacket());
         }
 
         [Packet(Packets.CmdUdpCastTcs)]

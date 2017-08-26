@@ -1,18 +1,37 @@
-﻿namespace Shared.Network.AreaServer
+﻿using System.IO;
+using Microsoft.SqlServer.Server;
+using Shared.Util;
+
+namespace Shared.Network.AreaServer
 {
-    public class UdpCastTcsSignalAnswerPacket
+    public class UdpCastTcsSignalAnswerPacket : IOutPacket
     {
         public int Signal;
         public int State;
         public int Time;
 
-        public Packet Send(Client client)
+        public Packet CreatePacket()
         {
             var ack = new Packet(Packets.UdpCastTcsSignalAck);
-            ack.Writer.Write(Time);
+            ack.Writer.Write(GetBytes());
+            /*ack.Writer.Write(Time);
             ack.Writer.Write(Signal);
-            ack.Writer.Write(State);
-            return ack; // <-- Weird hack since we don't have access to broadcast here.
+            ack.Writer.Write(State);*/
+            return ack;
+        }
+
+        public byte[] GetBytes()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var bs = new BinaryWriterExt(ms))
+                {
+                    bs.Write(Time);
+                    bs.Write(Signal);
+                    bs.Write(State);
+                }
+                return ms.GetBuffer();
+            }
         }
     }
 }

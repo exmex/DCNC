@@ -15,8 +15,10 @@
         {
             SessionId = packet.Reader.ReadInt16();
 
-            Username = packet.Reader.ReadUnicode();
+            Username = packet.Reader.ReadUnicodeStatic(21);
+            /*Username = packet.Reader.ReadUnicode();
             Username = Username.Substring(Username.Length - 1); // Strip trailing nullbyte
+            */
 
             AreaId = packet.Reader.ReadUInt32();
             LocalTime = packet.Reader.ReadUInt32();

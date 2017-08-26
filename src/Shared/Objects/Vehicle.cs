@@ -1,8 +1,8 @@
-﻿using Shared.Network;
+﻿using Shared.Util;
 
 namespace Shared.Objects
 {
-    public class Vehicle : ISerializable
+    public class Vehicle : BinaryWriterExt.ISerializable
     {
         public uint AuctionCnt;
         public bool AuctionOn;
@@ -20,9 +20,8 @@ namespace Shared.Objects
         public float MitronEfficiency;
         public bool SBBOn;
         public uint SlotType;
-
-
-        public void Serialize(PacketWriter writer)
+        
+        public void Serialize(BinaryWriterExt writer)
         {
             writer.Write(CarID);
             writer.Write(CarType);

@@ -1,4 +1,5 @@
 ﻿using Shared.Network;
+using Shared.Util;
 
 namespace Shared.Objects
 {
@@ -28,7 +29,7 @@ namespace Shared.Objects
       XiStrCharName LeaderName;
     };
     */
-    public class Team : ISerializable
+    public class Team : BinaryWriterExt.ISerializable
     {
         public uint BanishDate;
         public uint ChannelWinCnt;
@@ -56,7 +57,7 @@ namespace Shared.Objects
 
         //Wrong Packet Size. CMD(841) CmdLen: : 692, AnalysisSize: 393
         // We're still missing ~209 bytes of data
-        public void Serialize(PacketWriter writer)
+        public void Serialize(BinaryWriterExt writer)
         {
             writer.Write(TeamId);
             writer.Write(TeamMarkId);

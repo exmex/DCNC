@@ -1,8 +1,9 @@
 ﻿using Shared.Network;
+using Shared.Util;
 
 namespace Shared.Objects
 {
-    public class StatInfo : ISerializable
+    public class StatInfo : BinaryWriterExt.ISerializable
     {
         private int BasedAccel;
         private int BasedBoost;
@@ -26,7 +27,7 @@ namespace Shared.Objects
         private int TotalSpeed;
 
 
-        public void Serialize(PacketWriter writer)
+        public void Serialize(BinaryWriterExt writer)
         {
             writer.Write(BasedSpeed);
             writer.Write(BasedCrash);

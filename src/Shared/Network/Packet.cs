@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Shared.Util;
 
 namespace Shared.Network
 {
@@ -7,14 +8,14 @@ namespace Shared.Network
     {
         public readonly byte[] Buffer;
         public readonly ushort Id;
-        public readonly PacketReader Reader;
+        public readonly BinaryReaderExt Reader;
 
-        public readonly PacketWriter Writer;
+        public readonly BinaryWriterExt Writer;
         public Client Sender;
 
         public Packet(ushort id)
         {
-            Writer = new PacketWriter(new MemoryStream());
+            Writer = new BinaryWriterExt(new MemoryStream());
             Id = id;
 
             Writer.Write(id);
@@ -25,7 +26,7 @@ namespace Shared.Network
             Sender = sender;
             Buffer = buffer;
             Id = id;
-            Reader = new PacketReader(new MemoryStream(Buffer));
+            Reader = new BinaryReaderExt(new MemoryStream(Buffer));
         }
     }
 

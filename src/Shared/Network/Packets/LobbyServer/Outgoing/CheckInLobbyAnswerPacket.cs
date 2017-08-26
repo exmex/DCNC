@@ -1,4 +1,7 @@
-﻿namespace Shared.Network.LobbyServer
+﻿using System.IO;
+using Shared.Util;
+
+namespace Shared.Network.LobbyServer
 {
     public class CheckInLobbyAnswerPacket
     {
@@ -25,9 +28,23 @@
         public void Send(Client client)
         {
             var ack = new Packet(Packets.CheckInLobbyAck);
-            ack.Writer.Write(Result);
-            ack.Writer.Write(Permission);
+            ack.Writer.Write(GetBytes());
+            /*ack.Writer.Write(Result);
+            ack.Writer.Write(Permission);*/
             client.Send(ack);
+        }
+
+        public byte[] GetBytes()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var bs = new BinaryWriterExt(ms))
+                {
+                    bs.Write(Result);
+                    bs.Write(Permission);
+                }
+                return ms.GetBuffer();
+            }
         }
     }
 }

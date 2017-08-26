@@ -1,4 +1,7 @@
-﻿namespace Shared.Network.LobbyServer
+﻿using System.IO;
+using Shared.Util;
+
+namespace Shared.Network.LobbyServer
 {
     public class CheckCharacterNameAnswerPacket
     {
@@ -14,9 +17,24 @@
         public void Send(Client client)
         {
             var ack = new Packet(Packets.CheckCharNameAck);
+            ack.Writer.Write(GetBytes());
+            /*
             ack.Writer.WriteUnicodeStatic(CharacterName, 21);
-            ack.Writer.Write(Availability);
+            ack.Writer.Write(Availability);*/
             client.Send(ack);
+        }
+
+        public byte[] GetBytes()
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var bs = new BinaryWriterExt(ms))
+                {
+                    bs.WriteUnicodeStatic(CharacterName, 21);
+                    bs.Write(Availability);
+                }
+                return ms.GetBuffer();
+            }
         }
     }
 }

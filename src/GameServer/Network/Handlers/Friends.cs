@@ -11,7 +11,7 @@ namespace GameServer.Network.Handlers
         {
             var friends = FriendModel.Retrieve(GameServer.Instance.Database.Connection,
                 packet.Sender.User.ActiveCharacterId);
-            var friendListAnswerPacket = new FriendListAnswerPacket
+            var friendListAnswerPacket = new FriendListAnswer
             {
                 TotalItemNum = friends.Count,
                 FriendList = friends.ToArray() //new Friend[1]
@@ -32,7 +32,7 @@ namespace GameServer.Network.Handlers
                 Level = 1,
                 CurCarGrade = 1
             };*/
-            friendListAnswerPacket.Send(packet.Sender);
+            packet.Sender.Send(friendListAnswerPacket.CreatePacket());
         }
 
         [Packet(Packets.CmdFriendDel)]

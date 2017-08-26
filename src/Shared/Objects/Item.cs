@@ -55,7 +55,7 @@ namespace Shared.Objects
         public uint StateVar;
     }
 
-    public class Item : ISerializable
+    public class Item : BinaryWriterExt.ISerializable
     {
         /*
         struct XiStrMyItem
@@ -76,7 +76,7 @@ namespace Shared.Objects
 
         public uint TableIdx;
 
-        public void Serialize(PacketWriter writer)
+        public void Serialize(BinaryWriterExt writer)
         {
             writer.Write(CarID);
 

@@ -1,6 +1,9 @@
 ﻿using System;
 using Shared.Models;
 using Shared.Network;
+using Shared.Network.AreaServer.GameServer.Incoming;
+using Shared.Network.AuthServer;
+using Shared.Network.GameServer;
 using Shared.Objects;
 using Shared.Util;
 
@@ -20,11 +23,11 @@ namespace GameServer.Network.Handlers
             packet.Reader.ReadInt32(); // always the same in session
             // hide sync packets for now
 
-            var ack = new Packet(Packets.CmdUnknownSync + 1);
+            var ack = new Packet(Packets.UnknownSyncAck);
             ack.Writer.Write((short) 0);
         }
 
-        [Packet(Packets.CmdMyCityPosition)] // TODO: Actual position and not just dummies
+        [Packet(Packets.CmdMyCityPosition)]
         public static void MyCityPosition(Packet packet)
         {
             //Console.WriteLine(packet.Reader.ReadUInt32());
@@ -51,7 +54,6 @@ namespace GameServer.Network.Handlers
             packet.Sender.Send(ack);
         }
 
-
         /*
         000000: 00 00 00 00 00 00 00 00 00 00 00 00 4A 70 AB 42  · · · · · · · · · · · · J p · B
         000016: 00 00 00 00 01 00 00 00 01 00 00 00  · · · · · · · · · · · ·
@@ -59,16 +61,10 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdSaveCarPos)]
         public static void SaveCarPos(Packet packet)
         {
-            var channelId = packet.Reader.ReadInt32();
-            var x = packet.Reader.ReadSingle();
-            var y = packet.Reader.ReadSingle();
-            var z = packet.Reader.ReadSingle();
-            var w = packet.Reader.ReadSingle();
-            var cityId = packet.Reader.ReadInt32();
-            var posState = packet.Reader.ReadInt32();
+            var saveCar = new SaveCarPosPacket(packet);
 
             CharacterModel.UpdatePosition(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacterId,
-                channelId, x, y, z, w, cityId, posState);
+                saveCar.ChannelId, saveCar.X, saveCar.Y, saveCar.Z, saveCar.W, saveCar.CityId, saveCar.PosState);
         }
 
         [Packet(Packets.CmdUpdateQuickSlot)]
@@ -85,26 +81,26 @@ namespace GameServer.Network.Handlers
             var unixTimeNow = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1, 0, 0, 0));
             var now = DateTime.UtcNow.ToLocalTime();
 
-            var globalTime = packet.Reader.ReadUInt32(); // GlobalTime
-            var localTime = packet.Reader.ReadUInt32(); // LocalTime
-            var action = packet.Reader.ReadUInt32(); // Action
+            var getDateTimePacket = new GetDateTimePacket(packet);
 
-            var ack = new Packet(Packets.GetDateTimeAck);
-            ack.Writer.Write(action);
-            ack.Writer.Write(globalTime);
-            ack.Writer.Write(localTime);
-            ack.Writer.Write((int) unixTimeNow.TotalSeconds);
-            ack.Writer.Write(0); // ServerTickTime
-            ack.Writer.Write(0); // ServerTick
-            ack.Writer.Write((short) now.DayOfYear);
-            ack.Writer.Write((short) now.Month);
-            ack.Writer.Write((short) now.Day);
-            ack.Writer.Write((short) now.DayOfWeek);
-            ack.Writer.Write((byte) now.Hour);
-            ack.Writer.Write((byte) now.Minute);
-            ack.Writer.Write((byte) now.Second);
+            var ack = new GetDateTimePacketAnswer
+            {
+                Action = getDateTimePacket.Action,
+                GlobalTime = getDateTimePacket.GlobalTime,
+                LocalTime = getDateTimePacket.LocalTime,
+                TotalSeconds = (int) unixTimeNow.TotalSeconds,
+                ServerTickTime = 0,
+                ServerTick = 0,
+                DayOfYear = (short) now.DayOfYear,
+                Month = (short) now.Month,
+                Day = (short) now.Day,
+                DayOfWeek = (short) now.DayOfWeek,
+                Hour = (byte) now.Hour,
+                Minute = (byte) now.Minute,
+                Second = (byte) now.Second
+            };
 
-            packet.Sender.Send(ack);
+            packet.Sender.Send(ack.CreatePacket());
 
             /*
               *(_DWORD *)(msg + 2) = lpMsg->Action;
@@ -131,37 +127,23 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdFuelChargeReq)]
         public static void FuelChargeReq(Packet packet) // TODO: Send actual data
         {
-            var CarId = packet.Reader.ReadUInt32();
-            var Pay = packet.Reader.ReadInt64();
-            var fuel = packet.Reader.ReadSingle();
+            var fuelChargeReqPacket = new FuelChargeReqPacket(packet);
 
-            /*
-              unsigned int CarId;
-              __unaligned __declspec(align(1)) __int64 Pay;
-              float DeltaFuel;
-              __int64 Gold;
-              float Fuel;
-              float UnitPrice;
-              float SaleUnitPrice;
-              float FuelCapacity;
-              float FuelEfficiency;
-              int SaleFlag;
-            */
+            var ack = new FuelChargeReqAnswer
+            {
+                CarId = fuelChargeReqPacket.CarId,
+                Pay = fuelChargeReqPacket.Pay,
+                Fuel = fuelChargeReqPacket.Fuel,
+                Gold = packet.Sender.User.ActiveCharacter.MitoMoney - fuelChargeReqPacket.Pay,
+                DeltaFuel = packet.Sender.User.ActiveCar.Mitron + fuelChargeReqPacket.Fuel,
+                SaleUnitPrice = 20.0f,
+                DiscountedSaleUnitPrice = 15.0f,
+                FuelCapacity = packet.Sender.User.ActiveCar.MitronCapacity,
+                FuelEfficiency = packet.Sender.User.ActiveCar.MitronEfficiency,
+                SaleFlag = 0
+            };
 
-            var ack = new Packet(Packets.FuelChargeReqAck);
-            ack.Writer.Write(CarId);
-            ack.Writer.Write(Pay);
-            ack.Writer.Write(fuel);
-            ack.Writer.Write(packet.Sender.User.ActiveCharacter.MitoMoney - Pay);
-            ack.Writer.Write(packet.Sender.User.ActiveCar.Mitron + fuel);
-            ack.Writer.Write(20.0f); // Mito Price per liter
-            ack.Writer.Write(15.0f); // Discounted Price per liter (Normal channel, major channel is free?)
-            ack.Writer.Write(packet.Sender.User.ActiveCar.MitronCapacity);
-            ack.Writer.Write(packet.Sender.User.ActiveCar.MitronEfficiency);
-
-            ack.Writer.Write(0); // 1 = Item Discount 50%
-            ack.Writer.Write(new byte[2]); // Not sure.
-            packet.Sender.Send(ack);
+            packet.Sender.Send(ack.CreatePacket());
             /*
             SaleFlag = 0;
             if ( pGame->m_pCharInfo->m_bHalfMitronCharge )
@@ -177,35 +159,37 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdChatMsg)]
         public static void ChatMessage(Packet packet)
         {
-            var type = packet.Reader.ReadUnicodeStatic(10);
-            var green = packet.Reader.ReadUInt32() == 0xFF00FF00; // ignore this, use packet.Sender.Player.User.Status
-            var message = packet.Reader.ReadUnicodePrefixed();
+            var chatMsgPacket = new ChatMessagePacket(packet);
 
             var sender = packet.Sender.User.ActiveCharacter.Name;
 
-            Log.Debug($"({type}) <{sender}> {message}");
+            Log.Debug($"({chatMsgPacket.MessageType}) <{sender}> {chatMsgPacket.Message}");
 
-            var ack = new Packet(Packets.ChatMsgAck);
-            ack.Writer.WriteUnicodeStatic(type, 10);
-            ack.Writer.WriteUnicodeStatic(sender, 18);
-            ack.Writer.WriteUnicode(message);
+            var ack = new ChatMessageAnswer
+            {
+                MessageType = chatMsgPacket.MessageType,
+                SenderCharacterName = sender,
+                Message = chatMsgPacket.Message
+            };
 
-            switch (type)
+            var ackPkt = ack.CreatePacket();
+
+            switch (chatMsgPacket.MessageType)
             {
                 case "room":
-                    GameServer.Instance.Server.Broadcast(ack); // TODO: broadcast only to users in same area
+                    GameServer.Instance.Server.Broadcast(ackPkt); // TODO: broadcast only to users in same area
                     break;
 
                 case "channel":
-                    GameServer.Instance.Server.Broadcast(ack);
+                    GameServer.Instance.Server.Broadcast(ackPkt);
                     break;
 
                 case "party":
-                    GameServer.Instance.Server.Broadcast(ack); // TODO: broadcast only to users in same party
+                    GameServer.Instance.Server.Broadcast(ackPkt); // TODO: broadcast only to users in same party
                     break;
 
                 case "team":
-                    GameServer.Instance.Server.Broadcast(ack); // TODO: broadcast only to users in same crew
+                    GameServer.Instance.Server.Broadcast(ackPkt); // TODO: broadcast only to users in same crew
                     break;
 
                 default:
@@ -217,21 +201,18 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdMyTeamInfo)]
         public static void MyTeamInfo(Packet packet)
         {
-            var act = packet.Reader.ReadUInt32(); // nAct?
+            var myTeamInfoPacket = new MyTeamInfoPacket(packet);
+            
+            var ack = new MyTeamInfoAnswer
+            {
+                Action = myTeamInfoPacket.Action,
+                CharacterId = packet.Sender.User.ActiveCharacterId,
+                Rank = 0,
+                Team = packet.Sender.User.ActiveTeam,
+                Age = 0
+            };
 
-            var ack = new Packet(Packets.MyTeamInfoAck);
-
-            ack.Writer.Write(act); // Action (1003, 1004, 1031, 1034)
-
-            /* After the action id, it seems the rest until byte 16 is ignored? */
-            ack.Writer.Write(packet.Sender.User.ActiveCharacterId); // Char ID
-            ack.Writer.Write(0); // Rank
-            /* After the action id, it seems the rest above is ignored*/
-
-            // This must be 664 bytes long starting at byte 18
-            packet.Sender.User.ActiveTeam.Serialize(ack.Writer);
-            ack.Writer.Write((ushort) 0); // Age?
-            packet.Sender.Send(ack);
+            packet.Sender.Send(ack.CreatePacket());
             /*
               unsigned int m_Act;
               __int64 m_Cid;
@@ -254,20 +235,21 @@ namespace GameServer.Network.Handlers
             Wrong Packet Size. CMD(661) CmdLen: : 1177, AnalysisSize: 831
             // We're missing 346 bytes of data.
             */
-            var charName = packet.Reader.ReadUnicodeStatic(21);
-            var ack = new Packet(Packets.GameCharInfoAck);
-            packet.Sender.User.ActiveCharacter.Serialize(ack.Writer);
-            packet.Sender.User.ActiveCar.Serialize(ack.Writer);
-            var sinfo = new StatInfo();
-            sinfo.Serialize(ack.Writer);
-            packet.Sender.User.ActiveTeam.Serialize(ack.Writer);
+            var gameCharInfoPacket = new GameCharInfoPacket(packet);
+            //gameCharInfoPacket.CharacterName <-- Unused for now!
 
-            ack.Writer.Write((uint) 0); // Serial
-            ack.Writer.Write('A'); // LocType
-            ack.Writer.Write('A'); // ChId
-            ack.Writer.Write((ushort) 1); // LocId
-
-            packet.Sender.Send(ack);
+            var ack = new GameCharInfoAnswer
+            {
+                Character = packet.Sender.User.ActiveCharacter,
+                Vehicle = packet.Sender.User.ActiveCar,
+                StatisticInfo = new StatInfo(),
+                Team = packet.Sender.User.ActiveTeam,
+                Serial = 0,
+                LocType = 'A',
+                ChId = 'A',
+                LocId = 1
+            };
+            packet.Sender.Send(ack.CreatePacket());
         }
 
         [Packet(Packets.CmdChaseRequest)]
@@ -280,74 +262,86 @@ namespace GameServer.Network.Handlers
             [Info] - Received ChaseRequest (id 189, 0xBD) on 11021.
             */
 
-            var bNow = packet.Reader.ReadBoolean();
-            var posX = packet.Reader.ReadSingle(); // X
-            var posY = packet.Reader.ReadSingle(); // Y
-            var posZ = packet.Reader.ReadSingle(); // Z
-            var rot = packet.Reader.ReadSingle(); // W
+            var chaseRequestPacket = new ChaseRequestPacket(packet);
+
+            var ack = new ChaseRequestAnswer();
+            ack.StartPosX = chaseRequestPacket.PosX;
+            ack.StartPosY = chaseRequestPacket.PosY;
+            ack.StartPosZ = chaseRequestPacket.PosZ;
+            ack.StartRot = chaseRequestPacket.Rot;
+            ack.EndPosX = chaseRequestPacket.PosX;
+            ack.EndPosY = chaseRequestPacket.PosY;
+            ack.EndPosZ = chaseRequestPacket.PosZ;
+            ack.EndRot = chaseRequestPacket.Rot;
+            ack.CourseId = 0;
+            ack.Type = 2 - (chaseRequestPacket.BNow ? 1 : 0);
+            ack.PosName = "test";
+            ack.FirstHuvLevel = 1;
+            ack.FirstHuvId = 10001;
 
             //Wrong Packet Size. CMD(186) CmdLen: : 252, AnalysisSize: 250
-            var ack = new Packet(Packets.ChasePropose);
+            /*var ack = new Packet(Packets.ChasePropose);
             ack.Writer.Write((ushort) 0);
-            ack.Writer.Write(posX); // Start X
-            ack.Writer.Write(posY); // Start Y
-            ack.Writer.Write(posZ); // Start Z
-            ack.Writer.Write(rot); // Start W
+            ack.Writer.Write(chaseRequestPacket.PosX); // Start X
+            ack.Writer.Write(chaseRequestPacket.PosY); // Start Y
+            ack.Writer.Write(chaseRequestPacket.PosZ); // Start Z
+            ack.Writer.Write(chaseRequestPacket.Rot); // Start W
 
-            ack.Writer.Write(posX); // End X
-            ack.Writer.Write(posY); // End Y
-            ack.Writer.Write(posZ); // End Z
+            ack.Writer.Write(chaseRequestPacket.PosX); // End X
+            ack.Writer.Write(chaseRequestPacket.PosY); // End Y
+            ack.Writer.Write(chaseRequestPacket.PosZ); // End Z
 
             ack.Writer.Write(0); // CourseId
-            ack.Writer.Write(2 - (bNow ? 1 : 0)); // Type?
+            ack.Writer.Write(2 - (chaseRequestPacket.BNow ? 1 : 0)); // Type?
             ack.Writer.WriteUnicodeStatic("test", 100);
 
             ack.Writer.Write(1); // HUV first level
             ack.Writer.Write(10001); // HUV first Id
             ack.Writer.Write(new byte[2]); // Not sure.
-            packet.Sender.Send(ack);
+            */
+            packet.Sender.Send(ack.CreatePacket());
         }
 
         [Packet(Packets.CmdInstantStart)]
         public static void InstantStart(Packet packet)
         {
-            var tableIdx = packet.Reader.ReadUInt32();
+            var instantStartPacket = new InstantStartPacket(packet);
 
-            var ack = new Packet(Packets.InstantStartAck);
-            ack.Writer.Write(tableIdx);
-            ack.Writer.Write(new byte[3]); // Missing?
-            packet.Sender.Send(ack);
+            var ack = new InstantStartAnswer {TableIndex = instantStartPacket.TableIndex};
+
+            packet.Sender.Send(ack.CreatePacket());
         }
 
         [Packet(Packets.CmdInstantGoalPlace)]
         public static void InstantGoalPlace(Packet packet)
         {
-            var tableIdx = packet.Reader.ReadUInt32();
-            var placeIdx = packet.Reader.ReadUInt32();
+            var instantGoalPlacePacket = new InstantGoalPlacePacket(packet);
 
-            var ack = new Packet(Packets.CmdInstantGoalPlace + 1);
-            ack.Writer.Write(tableIdx);
-            ack.Writer.Write(placeIdx);
-            ack.Writer.Write(0); // EXP??
-            ack.Writer.Write(new byte[28]);
-            packet.Sender.Send(ack);
+            var ack = new InstantGoalPlaceAnswer
+            {
+                TableIndex = instantGoalPlacePacket.TableIndex,
+                PlaceIndex = instantGoalPlacePacket.PlaceIndex,
+                EXP = 0
+            };
+
+            packet.Sender.Send(ack.CreatePacket());
         }
 
         [Packet(Packets.CmdInstantGiveUp)]
         public static void InstantGiveUp(Packet packet)
         {
-            var tableIdx = packet.Reader.ReadUInt32();
+            var instantGiveUpPacket = new InstantGiveUpPacket(packet);
 
-            var ack = new Packet(Packets.InstantGiveUpAck);
-            ack.Writer.Write(tableIdx);
-            packet.Sender.Send(ack);
+            var ack = new InstantGiveUpAnswer {TableIndex = instantGiveUpPacket.TableIndex};
+
+            packet.Sender.Send(ack.CreatePacket());
         }
 
         //000000: 01 00 00 00  · · · ·
         [Packet(Packets.CmdQuestStart)]
         public static void QuestStart(Packet packet)
         {
-            var tableIdx = packet.Reader.ReadUInt32();
+            var questStartPacket = new QuestStartPacket(packet);
 
             QuestModel.Add(GameServer.Instance.Database.Connection, new Quest
             {
@@ -355,29 +349,30 @@ namespace GameServer.Network.Handlers
                 CharacterName = packet.Sender.User.ActiveCharacter.Name,
                 FailNum = 0,
                 PlaceIdx = 0,
-                QuestId = tableIdx,
+                QuestId = questStartPacket.TableIndex,
                 ServerId = 0,
                 State = 0
             });
 
-            var ack = new Packet(Packets.CmdQuestStart + 1);
-            ack.Writer.Write(tableIdx);
-            ack.Writer.Write(0); // Fail num maybe?
-            packet.Sender.Send(ack);
+            var ack = new QuestStartAnswer
+            {
+                TableIndex = questStartPacket.TableIndex,
+                FailNum = 0
+            };
+            packet.Sender.Send(ack.CreatePacket());
         }
 
         [Packet(Packets.CmdQuestGiveUp)]
         public static void QuestGiveup(Packet packet)
         {
-            var tableIdx = packet.Reader.ReadUInt32();
+            var questGiveUpPacket = new QuestGiveUpPacket(packet);
 
             QuestModel.Update(GameServer.Instance.Database.Connection, 0, packet.Sender.User.ActiveCharacterId,
-                tableIdx, 4);
+                questGiveUpPacket.TableIndex, 4);
 
-            var ack = new Packet(Packets.CmdQuestGiveUp + 1);
-            ack.Writer.Write(tableIdx);
-            ack.Writer.Write((byte) 0);
-            packet.Sender.Send(ack);
+            var ack = new QuestGiveUpAnswer {TableIndex = questGiveUpPacket.TableIndex};
+
+            packet.Sender.Send(ack.CreatePacket());
         }
 
         //000000: 01 00 00 00  · · · ·
@@ -390,26 +385,25 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdQuestComplete)]
         public static void QuestComplete(Packet packet)
         {
-            var tableIdx = packet.Reader.ReadUInt32();
-
+            var questCompletePacket = new QuestCompletePacket(packet);
+            
             QuestModel.Update(GameServer.Instance.Database.Connection, 0, packet.Sender.User.ActiveCharacterId,
-                tableIdx, 1);
+                questCompletePacket.TableIndex, 1);
 
-            var ack = new Packet(Packets.QuestCompleteAck);
-            ack.Writer.Write(tableIdx);
-            packet.Sender.Send(ack);
+            var ack = new QuestCompleteAnswer {TableIndex = questCompletePacket.TableIndex};
+            packet.Sender.Send(ack.CreatePacket());
         }
 
         [Packet(Packets.CmdQuestReward)]
         public static void QuestReward(Packet packet)
         {
-            var tableIdx = packet.Reader.ReadUInt32();
+            var questRewardPacket = new QuestRewardPacket(packet);
 
             var quest = QuestModel.RetrieveOne(GameServer.Instance.Database.Connection, 0,
                 packet.Sender.User.ActiveCharacterId,
-                tableIdx);
+                questRewardPacket.TableIndex);
             QuestModel.Update(GameServer.Instance.Database.Connection, 0, packet.Sender.User.ActiveCharacterId,
-                tableIdx, 2);
+                questRewardPacket.TableIndex, 2);
             if (quest == null)
             {
                 packet.Sender.Error("Quest was not started!");
@@ -421,31 +415,30 @@ namespace GameServer.Network.Handlers
                 return;
             }
 
-            if (!GameServer.QuestTable.ContainsKey(tableIdx))
+            if (!GameServer.QuestTable.ContainsKey(questRewardPacket.TableIndex))
             {
                 packet.Sender.Error("Quest reward not found.");
                 return;
             }
-            var questReward = GameServer.QuestTable[tableIdx];
+            var questReward = GameServer.QuestTable[questRewardPacket.TableIndex];
             packet.Sender.User.ActiveCharacter.CurExp += questReward.RewardExp;
             // TODO: Check if user has leveled up.
 
             // TODO: Load quest reward information here, and send it.
 
-            var ack = new Packet(Packets.QuestRewardAck);
-            ack.Writer.Write(questReward.QuestIdN); // TableIdx
-            ack.Writer.Write((uint) questReward.RewardExp); // GetExp
-            ack.Writer.Write((uint) questReward.RewardMoney); // GetMoney
-            ack.Writer.Write((ulong) packet.Sender.User.ActiveCharacter.CurExp); // ExpInfo Current
-            ack.Writer.Write((ulong) packet.Sender.User.ActiveCharacter.NextExp); // ExpInfo Next
-            ack.Writer.Write((ulong) packet.Sender.User.ActiveCharacter.BaseExp); // ExpInfo Base
-            ack.Writer.Write(packet.Sender.User.ActiveCharacter.Level); // Level
-            ack.Writer.Write((ushort) 0); // ItemNum
-            ack.Writer.Write((uint) 0); // RewardItem
-            ack.Writer.Write((uint) 0); // RewardItem
-            ack.Writer.Write((uint) 0); // RewardItem
-
-            packet.Sender.Send(ack);
+            var ack = new QuestRewardAnswer();
+            ack.TableIndex = questReward.QuestIdN;
+            ack.GetExp = (uint)questReward.RewardExp;
+            ack.GetMoney = (uint)questReward.RewardMoney;
+            ack.CurrentExp = (ulong)packet.Sender.User.ActiveCharacter.CurExp;
+            ack.NextExp = (ulong)packet.Sender.User.ActiveCharacter.NextExp;
+            ack.BaseExp = (ulong)packet.Sender.User.ActiveCharacter.BaseExp;
+            ack.Level = packet.Sender.User.ActiveCharacter.Level;
+            ack.ItemNum = 0;
+            ack.RewardItem1 = 0;
+            ack.RewardItem2 = 0;
+            ack.RewardItem3 = 0;
+            packet.Sender.Send(ack.CreatePacket());
 
             /*
             if ( pStrQuest->Item01Ptr || pStrQuest->Item02Ptr || pStrQuest->Item03Ptr )
@@ -459,20 +452,18 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdCityLeaveCheck)]
         public static void CityLeaveCheck(Packet packet)
         {
-            var cityId = packet.Reader.ReadInt32(); // CityId?
-            var post1 = packet.Reader.ReadAsciiStatic(255); // Gate?
-            var post2 = packet.Reader.ReadAsciiStatic(255); // Gate?
+            var cityLeaveCheckPacket = new CityLeaveCheckPacket(packet);
 
-            Console.WriteLine(post2);
+            Console.WriteLine(cityLeaveCheckPacket.Post2);
 
-
-            var ack = new Packet(Packets.CityLeaveCheckAck);
-            ack.Writer.Write(1); // Result???
-            ack.Writer.Write(cityId);
-            /* 0-Moon Palace, 1=Koinonia, 2=Cras, 3=Oros, 4=Taipei, 5=NeoOros, else szPassword? */
-            ack.Writer.WriteAsciiStatic(post1, 255);
-            ack.Writer.WriteAsciiStatic(post2, 255);
-            packet.Sender.Send(ack);
+            var ack = new CityLeaveCheckAnswer
+            {
+                Result = 1,
+                CityId = cityLeaveCheckPacket.CityId,
+                Post1 = cityLeaveCheckPacket.Post1,
+                Post2 = cityLeaveCheckPacket.Post2
+            };
+            packet.Sender.Send(ack.CreatePacket());
 
             /* Pulled from Rice:
             var ack = new RicePacket(3201);
@@ -493,35 +484,29 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdBuyCar)]
         public static void BuyCar(Packet packet)
         {
-            var charName = packet.Reader.ReadUnicodeStatic(21); // Possibly 21?
-            Console.WriteLine(charName);
+            var buyCarPacket = new BuyCarPacket(packet);
 
-            var CarType = packet.Reader.ReadUInt32();
-            Console.WriteLine(CarType);
-            uint Bumper = packet.Reader.ReadUInt16();
-            Console.WriteLine(Bumper);
-            uint Color = packet.Reader.ReadUInt16();
-            Console.WriteLine(Color);
-
-            // TODO: Buy car still has not the correct structure.
-            var ack = new Packet(Packets.BuyCarAck);
-            ack.Writer.Write(1); // ID
-            ack.Writer.Write(CarType);
-            ack.Writer.Write(0); // BaseColor?
-            ack.Writer.Write(0); // Grade?
-            ack.Writer.Write(0); // SlotType?
-            ack.Writer.Write(0); // AuctionCnt?
-            ack.Writer.Write(100.0f); // Mitron?
-            ack.Writer.Write(0.0f); // Kmh?
-            ack.Writer.Write(Color);
-            ack.Writer.Write(0.0f); // Mitron cap?
-            ack.Writer.Write(0.0f); // Mitron eff?
-            ack.Writer.Write(false); // AuctionOn
-            ack.Writer.Write(0); // ?????
-            ack.Writer.Write((short) 0); // ?????
-            ack.Writer.Write(10000); // Price
-            //ack.Writer.Write(Bumper);
-            packet.Sender.Send(ack);
+            var ack = new BuyCarAnswer
+            {
+                Id = 1,
+                CarType = buyCarPacket.CarType,
+                BaseColor = 0,
+                Grade = 0,
+                SlotType = 0,
+                AuctionCount = 0,
+                Fuel = 100.0f,
+                Kilometer = 0.0f,
+                Color = buyCarPacket.Color,
+                FuelCapacity = 0.0f,
+                FuelEfficiency = 0.0f,
+                AuctionOn = false,
+                Unknown1 = 0,
+                Unknown2 = 0,
+                Price = 10000
+            };
+            // Per hour!?
+            packet.Sender.Send(ack.CreatePacket());
+            
             /*PacketSend::Send_StatUpdate((BS_PacketDispatch *)&pGameDispatch->vfptr);
               PacketSend::Send_PartyEnChantUpdateAll((BS_PacketDispatch *)&pGameDispatch->vfptr);
               PacketSend::Send_ItemModList((BS_PacketDispatch *)&pGameDispatch->vfptr);
@@ -537,10 +522,13 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdGetMyHancoinThread)]
         public static void GetMyHancoin(Packet packet)
         {
-            var ack = new Packet(Packets.GetMyHancoinAck);
-            ack.Writer.Write(10000); // Hancoins?
-            ack.Writer.Write(100); // Mileage?
-            packet.Sender.Send(ack);
+            var ack = new GetMyHancoinAnswer
+            {
+                Hancoins = 10000,
+                Mileage = 100
+            };
+
+            packet.Sender.Send(ack.CreatePacket());
         }
 
         [Packet(Packets.CmdCheckStat)]

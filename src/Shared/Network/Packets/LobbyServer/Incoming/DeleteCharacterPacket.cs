@@ -2,6 +2,7 @@
 {
     public class DeleteCharacterPacket
     {
+        // TODO: Check if this is really sent.
         public readonly ulong CharacterId;
         /*
         000000: 41 00 64 00 6D 00 69 00 6E 00 00 00 00 01 00 00  A · d · m · i · n · · · · · · ·
@@ -21,9 +22,11 @@
         {
             CharacterName = packet.Reader.ReadUnicodeStatic(21);
 
-            CharacterId = packet.Reader.ReadUInt64();
+            // TODO: Check if this is really sent.
+            /*CharacterId = packet.Reader.ReadUInt64();
             packet.Reader.ReadInt32(); // 82?
             packet.Reader.ReadInt32(); // 3?
+            */
         }
     }
 }

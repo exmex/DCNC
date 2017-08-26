@@ -1,9 +1,13 @@
 ﻿using System;
+using System.IO;
 using System.Net;
+using Microsoft.SqlServer.Server;
+using Shared.Network.AreaServer;
+using Shared.Util;
 
 namespace Shared.Network.AuthServer
 {
-    public class UserAuthAnswerPacket
+    public class UserAuthAnswerPacket : IOutPacket
     {
         /// <summary>
         ///     The result code
@@ -70,48 +74,53 @@ namespace Shared.Network.AuthServer
             };
         }
 
-        /// <summary>
-        ///     Sends the auth answer packet.
-        /// </summary>
-        /// <param name="packetId">The packet identifier.</param>
-        /// <param name="client">The client to send the packet to.</param>
-        public void Send(ushort packetId, Client client)
+        public Packet CreatePacket()
         {
-            var pkt = new Packet(packetId);
+            var ack = new Packet(Packets.UserAuthAck);
+            ack.Writer.Write(GetBytes());
+            return ack;
+        }
 
-            pkt.Writer.Write(Ticket);
-            pkt.Writer.Write(Result);
-            pkt.Writer.Write(Time);
-            pkt.Writer.Write(new byte[64]); // Filler. Unused?
-            pkt.Writer.Write(ServerListId);
-            pkt.Writer.Write(ServerCount);
-            for (var i = 0; i < Servers.Length; i++)
+        public byte[] GetBytes()
+        {
+            using (var ms = new MemoryStream())
             {
-                pkt.Writer.WriteUnicodeStatic(Servers[i].ServerName, 32); // 32
-                pkt.Writer.Write(Servers[i].ServerId);
-                pkt.Writer.Write(Servers[i].PlayerCount);
-                pkt.Writer.Write(Servers[i].MaxPlayers);
-                pkt.Writer.Write(Servers[i].ServerState);
-                pkt.Writer.Write(Servers[i].GameTime);
-                pkt.Writer.Write(Servers[i].LobbyTime);
-                pkt.Writer.Write(Servers[i].Area1Time);
-                pkt.Writer.Write(Servers[i].Area2Time);
-                pkt.Writer.Write(Servers[i].RankingUpdateTime);
-                pkt.Writer.Write(Servers[i].GameServerIp);
-                pkt.Writer.Write(Servers[i].LobbyServerIp);
-                pkt.Writer.Write(Servers[i].AreaServer1Ip);
-                pkt.Writer.Write(Servers[i].AreaServer2Ip);
-                pkt.Writer.Write(Servers[i].RankingServerIp);
-                pkt.Writer.Write(Servers[i].GameServerPort);
-                pkt.Writer.Write(Servers[i].LobbyServerPort);
-                pkt.Writer.Write(Servers[i].AreaServerPort);
-                pkt.Writer.Write(Servers[i].AreaServer2Port);
-                pkt.Writer.Write(Servers[i].AreaServerUdpPort);
-                pkt.Writer.Write(Servers[i].AreaServer2UdpPort);
-                pkt.Writer.Write(Servers[i].RankingServerPort);
+                using (var bs = new BinaryWriterExt(ms))
+                {
+                    bs.Write(Ticket);
+                    bs.Write(Result);
+                    bs.Write(Time);
+                    bs.Write(new byte[64]); // Filler. Unused?
+                    bs.Write(ServerListId);
+                    bs.Write(ServerCount);
+                    for (var i = 0; i < Servers.Length; i++)
+                    {
+                        bs.WriteUnicodeStatic(Servers[i].ServerName, 32); // 32
+                        bs.Write(Servers[i].ServerId);
+                        bs.Write(Servers[i].PlayerCount);
+                        bs.Write(Servers[i].MaxPlayers);
+                        bs.Write(Servers[i].ServerState);
+                        bs.Write(Servers[i].GameTime);
+                        bs.Write(Servers[i].LobbyTime);
+                        bs.Write(Servers[i].Area1Time);
+                        bs.Write(Servers[i].Area2Time);
+                        bs.Write(Servers[i].RankingUpdateTime);
+                        bs.Write(Servers[i].GameServerIp);
+                        bs.Write(Servers[i].LobbyServerIp);
+                        bs.Write(Servers[i].AreaServer1Ip);
+                        bs.Write(Servers[i].AreaServer2Ip);
+                        bs.Write(Servers[i].RankingServerIp);
+                        bs.Write(Servers[i].GameServerPort);
+                        bs.Write(Servers[i].LobbyServerPort);
+                        bs.Write(Servers[i].AreaServerPort);
+                        bs.Write(Servers[i].AreaServer2Port);
+                        bs.Write(Servers[i].AreaServerUdpPort);
+                        bs.Write(Servers[i].AreaServer2UdpPort);
+                        bs.Write(Servers[i].RankingServerPort);
+                    }
+                }
+                return ms.GetBuffer();
             }
-
-            client.Send(pkt);
         }
 
         public struct Server
