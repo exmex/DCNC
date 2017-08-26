@@ -28,7 +28,7 @@ namespace AreaServer.Network.Handlers
         {
             var enterAreaPacket = new EnterAreaPacket(packet);
             
-            packet.Sender.Send(new EnterAreaAnswerOutPacket
+            packet.Sender.Send(new EnterAreaAnswer
             {
                 LocalTime = enterAreaPacket.LocalTime,
                 AreaId = enterAreaPacket.AreaId

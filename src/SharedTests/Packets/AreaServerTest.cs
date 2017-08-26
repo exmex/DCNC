@@ -25,7 +25,7 @@ namespace SharedTests.Packets
         [Test]
         public void EnterAreaPacketAnswerTest()
         {
-            var packet = new EnterAreaAnswerOutPacket()
+            var packet = new EnterAreaAnswer()
             {
                 AreaId = Utilities.Rand.NextUInt32(),
                 LocalTime = Utilities.Rand.NextUInt32()

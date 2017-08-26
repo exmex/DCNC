@@ -1,30 +1,29 @@
-﻿using Shared.Network;
-using Shared.Util;
+﻿using Shared.Util;
 
 namespace Shared.Objects
 {
     public class StatInfo : BinaryWriterExt.ISerializable
     {
-        private int BasedAccel;
-        private int BasedBoost;
-        private int BasedCrash;
-        private int BasedSpeed;
-        private int CharAccel;
-        private int CharBoost;
-        private int CharCrash;
-        private int CharSpeed;
-        private int EquipAccel;
-        private int EquipBoost;
-        private int EquipCrash;
-        private int EquipSpeed;
-        private int ItemUseAccel;
-        private int ItemUseBoost;
-        private int ItemUseCrash;
-        private int ItemUseSpeed;
-        private int TotalAccel;
-        private int TotalBoost;
-        private int TotalCrash;
-        private int TotalSpeed;
+        public int BasedAccel;
+        public int BasedBoost;
+        public int BasedCrash;
+        public int BasedSpeed;
+        public int CharAccel;
+        public int CharBoost;
+        public int CharCrash;
+        public int CharSpeed;
+        public int EquipAccel;
+        public int EquipBoost;
+        public int EquipCrash;
+        public int EquipSpeed;
+        public int ItemUseAccel;
+        public int ItemUseBoost;
+        public int ItemUseCrash;
+        public int ItemUseSpeed;
+        public int TotalAccel;
+        public int TotalBoost;
+        public int TotalCrash;
+        public int TotalSpeed;
 
 
         public void Serialize(BinaryWriterExt writer)

@@ -4,7 +4,7 @@ using Shared.Util;
 
 namespace Shared.Network.AreaServer
 {
-    public class EnterAreaAnswerOutPacket : OutPacket
+    public class EnterAreaAnswer : OutPacket
     {
         public uint AreaId;
         public uint LocalTime;
