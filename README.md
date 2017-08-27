@@ -2,6 +2,10 @@
 =================
 Compatible with the v0.77a Client.
 
+Connect
+-----------------
+Connect with people who are using DCNC! Join our discord server: https://discord.gg/GnW6xxf
+
 Download
 -----------------
 
