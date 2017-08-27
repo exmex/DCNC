@@ -55,8 +55,9 @@ namespace Shared.Network.GameServer
                 }
                 #if !DEBUG
                 throw new NotImplementedException();
-                #endif
+                #else
                 return ms.GetBuffer();
+                #endif
             }
         }
     }

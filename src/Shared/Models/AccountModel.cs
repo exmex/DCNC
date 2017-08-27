@@ -7,10 +7,20 @@ using Shared.Util;
 
 namespace Shared.Models
 {
-    public class AccountModel
+    /// <summary>
+    /// TODO: Move this to the User class?
+    /// </summary>
+    public static class AccountModel
     {
-        private const int _saltSize = 32;
+        private const int SaltSize = 32;
 
+        /// <summary>
+        /// Retrieves a user from it's username and password
+        /// </summary>
+        /// <param name="dbconn">The mysql connection</param>
+        /// <param name="username">The username</param>
+        /// <param name="passwordHash">The already hashed-password</param>
+        /// <returns>A new User class, null if no user was found</returns>
         public static User Retrieve(MySqlConnection dbconn, string username, string passwordHash)
         {
             var command = new MySqlCommand(
@@ -27,20 +37,28 @@ namespace Shared.Models
             {
                 if (reader.Read())
                 {
-                    user = new User();
-                    user.UID = Convert.ToUInt64(reader["UID"]);
-                    user.Name = reader["Username"] as string;
-                    user.Password = reader["Password"] as string;
-                    user.Salt = reader["Salt"] as string;
-                    user.Ticket = Convert.ToUInt32(reader["Ticket"]);
-                    user.Status = (UserStatus) Convert.ToByte(reader["Status"]);
-                    user.CreateIp = reader["CreateIP"] as string;
+                    user = new User
+                    {
+                        UID = Convert.ToUInt64(reader["UID"]),
+                        Name = reader["Username"] as string,
+                        Password = reader["Password"] as string,
+                        Salt = reader["Salt"] as string,
+                        Ticket = Convert.ToUInt32(reader["Ticket"]),
+                        Status = (UserStatus) Convert.ToByte(reader["Status"]),
+                        CreateIp = reader["CreateIP"] as string
+                    };
                 }
             }
 
             return user;
         }
 
+        /// <summary>
+        /// Retrieves a user from username
+        /// </summary>
+        /// <param name="dbconn">The mysql connection</param>
+        /// <param name="username">The username to find</param>
+        /// <returns>A new User class, null if no user was found</returns>
         public static User Retrieve(MySqlConnection dbconn, string username)
         {
             var command = new MySqlCommand("SELECT * FROM Users WHERE Username = @user", dbconn);
@@ -53,20 +71,28 @@ namespace Shared.Models
             {
                 if (reader.Read())
                 {
-                    user = new User();
-                    user.UID = Convert.ToUInt64(reader["UID"]);
-                    user.Name = reader["Username"] as string;
-                    user.Password = reader["Password"] as string;
-                    user.Salt = reader["Salt"] as string;
-                    user.Ticket = Convert.ToUInt32(reader["Ticket"]);
-                    user.Status = (UserStatus) Convert.ToByte(reader["Status"]);
-                    user.CreateIp = reader["CreateIP"] as string;
+                    user = new User
+                    {
+                        UID = Convert.ToUInt64(reader["UID"]),
+                        Name = reader["Username"] as string,
+                        Password = reader["Password"] as string,
+                        Salt = reader["Salt"] as string,
+                        Ticket = Convert.ToUInt32(reader["Ticket"]),
+                        Status = (UserStatus) Convert.ToByte(reader["Status"]),
+                        CreateIp = reader["CreateIP"] as string
+                    };
                 }
             }
 
             return user;
         }
 
+        /// <summary>
+        /// Retrives a user from userid
+        /// </summary>
+        /// <param name="dbconn">The mysql connection</param>
+        /// <param name="uid">The userid</param>
+        /// <returns>A new User class, null if no user was found</returns>
         public static User Retrieve(MySqlConnection dbconn, ulong uid)
         {
             var command = new MySqlCommand("SELECT * FROM Users WHERE UID = @uid", dbconn);
@@ -96,17 +122,18 @@ namespace Shared.Models
         /// <summary>
         ///     Adds new account to the database.
         /// </summary>
-        /// <param name="ip"></param>
-        /// <param name="accountId"></param>
-        /// <param name="password"></param>
-        public static void CreateAccount(MySqlConnection dbconn, string ip, string accountId, string password)
+        /// <param name="dbconn">The mysql connection</param>
+        /// <param name="ip">The ip of the user</param>
+        /// <param name="username">The username</param>
+        /// <param name="password">The password in plain-text</param>
+        public static void CreateAccount(MySqlConnection dbconn, string ip, string username, string password)
         {
-            var salt = Password.CreateSalt(_saltSize);
+            var salt = Password.CreateSalt(SaltSize);
             password = Password.GenerateSaltedHash(password, salt);
 
             using (var cmd = new InsertCommand("INSERT INTO `Users` {0}", dbconn))
             {
-                cmd.Set("Username", accountId);
+                cmd.Set("Username", username);
                 cmd.Set("Password", password);
                 cmd.Set("Salt", salt);
                 cmd.Set("Status", 1);
@@ -118,25 +145,38 @@ namespace Shared.Models
             }
         }
 
-        public static bool AccountExists(MySqlConnection dbconn, string accountName)
+        /// <summary>
+        /// Checks if the specified account exists
+        /// </summary>
+        /// <param name="dbconn">The mysql connection</param>
+        /// <param name="username">The username</param>
+        /// <returns>true if an account was found, false otherwise</returns>
+        public static bool AccountExists(MySqlConnection dbconn, string username)
         {
             var mc = new MySqlCommand("SELECT `UID` FROM `Users` WHERE `Username` = @user", dbconn);
-            mc.Parameters.AddWithValue("@user", accountName);
+            mc.Parameters.AddWithValue("@user", username);
 
             using (var reader = mc.ExecuteReader())
             {
                 return reader.HasRows;
             }
         }
-
-        public static void SetAccountPassword(MySqlConnection dbconn, string accountName, string password)
+        
+        /// <summary>
+        ///     Sets the account password to the specified password
+        ///     Handles hashing!
+        /// </summary>
+        /// <param name="dbconn">The mysql connection</param>
+        /// <param name="username">The username</param>
+        /// <param name="password">The password in plain-text</param>
+        public static void SetAccountPassword(MySqlConnection dbconn, string username, string password)
         {
             using (var mc =
                 new MySqlCommand("UPDATE `Users` SET `Password` = @password, `Salt` = @salt WHERE `Username` = @user",
                     dbconn))
             {
-                var salt = Password.CreateSalt(_saltSize);
-                mc.Parameters.AddWithValue("@user", accountName);
+                var salt = Password.CreateSalt(SaltSize);
+                mc.Parameters.AddWithValue("@user", username);
                 mc.Parameters.AddWithValue("@password", Password.GenerateSaltedHash(password, salt));
                 mc.Parameters.AddWithValue("@salt", salt);
 
@@ -146,17 +186,19 @@ namespace Shared.Models
 
         /// <summary>
         ///     Sets new randomized session key for the account and returns it.
+        ///     FIXME: Possible collision issue! Two users with same sessionkeys would be bad!
         /// </summary>
-        /// <param name="accountId"></param>
-        /// <returns></returns>
-        public static uint CreateSession(MySqlConnection dbconn, string accountId)
+        /// <param name="dbconn">The mysql connection</param>
+        /// <param name="username">The account username</param>
+        /// <returns>A new sessionkey</returns>
+        public static uint CreateSession(MySqlConnection dbconn, string username)
         {
             using (var mc = new MySqlCommand("UPDATE `Users` SET `Ticket` = @ticketKey WHERE `Username` = @user",
                 dbconn))
             {
                 var ticketKey = RandomProvider.Get().NextUInt32();
 
-                mc.Parameters.AddWithValue("@user", accountId);
+                mc.Parameters.AddWithValue("@user", username);
                 mc.Parameters.AddWithValue("@ticketKey", ticketKey);
 
                 mc.ExecuteNonQuery();
@@ -168,9 +210,10 @@ namespace Shared.Models
         /// <summary>
         ///     Returns true if sessionKey is correct for account.
         /// </summary>
+        /// <param name="dbconn">The mysql connection</param>
         /// <param name="accountId"></param>
         /// <param name="ticketKey"></param>
-        /// <returns></returns>
+        /// <returns>A new User class if the session was found, null if no session was found</returns>
         public static User GetSession(MySqlConnection dbconn, string accountId, uint ticketKey)
         {
             using (var mc = new MySqlCommand("SELECT * FROM `Users` WHERE `Username` = @user AND `Ticket` = @ticketKey",

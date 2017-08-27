@@ -3,22 +3,30 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Net;
 using MySql.Data.MySqlClient;
-using Shared.Network.AuthServer;
+using Shared.Objects;
 
 namespace Shared.Models
 {
+    /// <summary>
+    /// TODO: No need to refetch this! We could cache this since we're never changing this when the server is running! 
+    /// </summary>
     public static class ServerModel
     {
-        public static List<UserAuthAnswerPacket.Server> Retrieve(MySqlConnection dbconn)
+        /// <summary>
+        /// Retrieves the serverlist from DB
+        /// </summary>
+        /// <param name="dbconn">The mysql connection</param>
+        /// <returns>List containing all servers</returns>
+        public static List<Server> Retrieve(MySqlConnection dbconn)
         {
             var command = new MySqlCommand("SELECT * FROM servers", dbconn);
 
-            var servers = new List<UserAuthAnswerPacket.Server>();
+            var servers = new List<Server>();
             using (DbDataReader reader = command.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    var server = new UserAuthAnswerPacket.Server
+                    var server = new Server
                     {
                         ServerName = reader["Name"] as string,
                         ServerId = (uint) servers.Count,

@@ -24,7 +24,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -64,8 +64,8 @@
     <Compile Include="Network\Packets\AreaServer\Outgoing\EnterAreaAnswer.cs" />
     <Compile Include="Network\Packets\AreaServer\Outgoing\TimeSyncAnswerPacket.cs" />
     <Compile Include="Network\Packets\AreaServer\Outgoing\UdpCastTcsSignalAnswerPacket.cs" />
-    <Compile Include="Network\Packets\AuthServer\Incoming\UserAuthPacket.cs" />
-    <Compile Include="Network\Packets\AuthServer\Outgoing\UserAuthAnswerPacket.cs" />
+    <Compile Include="Network\Packets\AuthServer\UserAuthAnswerPacket.cs" />
+    <Compile Include="Network\Packets\AuthServer\UserAuthPacket.cs" />
     <Compile Include="Network\Packets\GameServer\Buy\BuyCarAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Buy\BuyCarPacket.cs" />
     <Compile Include="Network\Packets\GameServer\Buy\BuyItemAnswer.cs" />
@@ -136,6 +136,7 @@
     <Compile Include="Objects\Character.cs" />
     <Compile Include="Objects\Item.cs" />
     <Compile Include="Models\TeamModel.cs" />
+    <Compile Include="Objects\Server.cs" />
     <Compile Include="Objects\XiCarAttr.cs" />
     <Compile Include="Objects\XiPlayerInfo.cs" />
     <Compile Include="Objects\XiStrMyItemMod.cs" />

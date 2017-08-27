@@ -12,6 +12,8 @@ namespace Shared.Network
         //public const ushort AreaListAck = 14;
         public const ushort UserAuthAck = 22;
 
+        public const ushort ServerMessageAck = 25;
+
         public const ushort GameSettingsAck = 30;
         public const ushort CheckInLobbyAck = 42;
         public const ushort LobbyTimeAck = 47;

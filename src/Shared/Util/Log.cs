@@ -197,15 +197,16 @@ namespace Shared.Util
                     Console.Write(format, args);
                 }
 
-                if (_logFile != null && toFile)
-                    using (var file = new StreamWriter(_logFile, true))
-                    {
-                        file.Write("{0:yyyy-MM-dd HH:mm} ", DateTime.Now);
-                        if (level != LogLevel.None)
-                            file.Write("[{0}] - ", level);
-                        file.Write(format, args);
-                        file.Flush();
-                    }
+                if (_logFile == null || !toFile) return;
+                
+                using (var file = new StreamWriter(_logFile, true))
+                {
+                    file.Write("{0:yyyy-MM-dd HH:mm} ", DateTime.Now);
+                    if (level != LogLevel.None)
+                        file.Write("[{0}] - ", level);
+                    file.Write(format, args);
+                    file.Flush();
+                }
             }
         }
     }

@@ -30,11 +30,9 @@ namespace LobbyServer.Network.Handlers
                     packet.Sender.User.Ticket);
 
 #if DEBUG
-                packet.Sender.Error("Invalid ticket-user combination.");
-                packet.Sender.Kill();
-#else
-                packet.Sender.Kill();
+                packet.Sender.SendError("Invalid ticket-user combination.");
 #endif
+                packet.Sender.KillConnection();
             }
 
             packet.Sender.Send(new GameSettingsAnswer().CreatePacket());
@@ -57,9 +55,9 @@ namespace LobbyServer.Network.Handlers
             if (checkInLobbyPacket.ProtocolVersion != ServerMain.ProtocolVersion)
             {
 #if DEBUG
-                packet.Sender.Error("Invalid protocol.");
+                packet.Sender.SendError("Invalid protocol.");
 #else
-                packet.Sender.Kill("Client outdated!");
+                packet.Sender.KillConnection("Client outdated!");
 #endif
                 return;
             }
@@ -88,10 +86,10 @@ namespace LobbyServer.Network.Handlers
                     checkInLobbyPacket.Ticket,
                     packet.Sender.User.Ticket);
 #if DEBUG
-                packet.Sender.Error("Invalid ticket-user combination.");
+                packet.Sender.SendError("Invalid ticket-user combination.");
 #else
-                checkInLobbyAnswerPacket.Send(packet.Sender);
-                packet.Sender.Kill("");
+                packet.Sender.Send(checkInLobbyAnswerPacket.CreatePacket());
+                packet.Sender.KillConnection("");
 #endif
                 return;
             }
@@ -162,9 +160,9 @@ namespace LobbyServer.Network.Handlers
             }
 
 #if DEBUG
-            packet.Sender.Error("This character doesn't belong to you!");
+            packet.Sender.SendError("This character doesn't belong to you!");
 #else
-            packet.Sender.Kill("Suspected hack.");
+            packet.Sender.KillConnection("Suspected hack.");
 #endif
         }
     }

@@ -23,7 +23,7 @@ namespace Shared.Util
                 Encoding.UTF8.GetBytes(salt)));
         }
 
-        public static byte[] GenerateSaltedHash(byte[] plainText, byte[] salt)
+        private static byte[] GenerateSaltedHash(byte[] plainText, byte[] salt)
         {
             HashAlgorithm algorithm = new SHA256Managed();
 

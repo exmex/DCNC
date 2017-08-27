@@ -20,7 +20,10 @@ namespace AreaServer.Network.Handlers
         [Packet(Packets.CmdAreaStatus)]
         public static void AreaStatus(Packet packet)
         {
-            packet.Sender.Send(new AreaStatusAnswerPacket().CreatePacket());
+            packet.Sender.Send(new AreaStatusAnswerPacket()
+            {
+                UserCount = new uint[100],
+            }.CreatePacket());
         }
 
         [Packet(Packets.CmdEnterArea)]

@@ -11,7 +11,7 @@ namespace Shared.Network
         public readonly BinaryReaderExt Reader;
 
         public readonly BinaryWriterExt Writer;
-        public Client Sender;
+        public readonly Client Sender;
 
         public Packet(ushort id)
         {

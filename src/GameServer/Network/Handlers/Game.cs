@@ -411,18 +411,18 @@ namespace GameServer.Network.Handlers
                 questRewardPacket.TableIndex, 2);
             if (quest == null)
             {
-                packet.Sender.Error("Quest was not started!");
+                packet.Sender.SendError("Quest was not started!");
                 return;
             }
             if (quest.State != 1)
             {
-                packet.Sender.Error("Quest not finished!");
+                packet.Sender.SendError("Quest not finished!");
                 return;
             }
 
             if (!GameServer.QuestTable.ContainsKey(questRewardPacket.TableIndex))
             {
-                packet.Sender.Error("Quest reward not found.");
+                packet.Sender.SendError("Quest reward not found.");
                 return;
             }
             var questReward = GameServer.QuestTable[questRewardPacket.TableIndex];

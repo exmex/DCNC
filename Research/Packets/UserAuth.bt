@@ -1,9 +1,11 @@
 typedef struct 
 {
-	DWORD protocolVersion;
-	CHAR username[80];
-	string password;
-    BYTE unknown1[62] <comment="Unknown", bgcolor=cRed>;
+	unsigned int protocolVersion <comment="ProtocolVersion", bgcolor=cYellow>;
+	wchar_t username[40] <comment="Username", bgcolor=cBlue>;
+    CHAR password[64] <comment="Password", bgcolor=cGreen>;
+    int unknown <comment="Unknown", bgcolor=cRed>;
+	//string password;
+    //BYTE unknown1[62] <comment="Unknown", bgcolor=cRed>;
 } UserAuth;
 
 UserAuth pkt;

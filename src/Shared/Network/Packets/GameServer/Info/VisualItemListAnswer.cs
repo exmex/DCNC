@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Shared.Util;
 
@@ -22,9 +23,9 @@ namespace Shared.Network.GameServer
                 }
                 #if !DEBUG
                 throw new NotImplementedException();
-                #endif
+                #else
                 return ms.GetBuffer();
-                
+                #endif
             }
             /*
             var ack = new Packet(Packets.VisualItemListAck);

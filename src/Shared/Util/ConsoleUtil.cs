@@ -22,8 +22,10 @@ namespace Shared.Util
 
         private static readonly string[] Credits =
         {
-            @"Made possible by GigaToni",
-            @"Thanks amPerl for Rice!"
+            @"Copyright (c) 2017 GigaToni",
+            @"For problems & support: https://github.com/exmex/DCNC/issues",
+            @"Also visit our discord channel: https://discord.gg/GnW6xxf",
+            @"Special Thanks to amPearl"
         };
 
         /// <summary>
@@ -52,6 +54,7 @@ namespace Shared.Util
         /// <summary>
         ///     Writes logo and credits to Console.
         /// </summary>
+        /// <param name="consoleTitle">The title of the console window</param>
         /// <param name="color">Color of the logo.</param>
         public static void WriteHeader(string consoleTitle, ConsoleColor color)
         {

@@ -9,7 +9,7 @@ namespace Shared.Network.AreaServer
 	    /// <summary>
 	    ///     The user count for 100 areas
 	    /// </summary>
-	    public uint[] UserCount = new uint[100];
+	    public uint[] UserCount;
 
 	    public override Packet CreatePacket()
 	    {
@@ -34,8 +34,8 @@ namespace Shared.Network.AreaServer
 		    {
 			    using (var bs = new BinaryWriterExt(ms))
 			    {
-				    for (var i = 0; i < 100; ++i)
-					    bs.Write(UserCount[i]);
+				    foreach (var count in UserCount)
+					    bs.Write(count);
 			    }
 			    return ms.GetBuffer();
 		    }

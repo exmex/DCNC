@@ -47,7 +47,7 @@ namespace Shared.Network
             }
             catch (Exception ex)
             {
-                Kill(ex);
+                KillConnection(ex);
             }
         }
 
@@ -72,7 +72,7 @@ namespace Shared.Network
             }
             catch (Exception ex)
             {
-                Kill(ex);
+                KillConnection(ex);
             }
         }
 
@@ -96,7 +96,7 @@ namespace Shared.Network
             }
             catch (Exception ex)
             {
-                Kill(ex);
+                KillConnection(ex);
             }
         }
 
@@ -120,7 +120,7 @@ namespace Shared.Network
             }
             catch (Exception ex)
             {
-                Kill(ex);
+                KillConnection(ex);
             }
         }
 
@@ -164,29 +164,29 @@ namespace Shared.Network
             }
             catch (Exception ex)
             {
-                Kill(ex);
+                KillConnection(ex);
             }
         }
 
-        public void Error(string format, params object[] args)
+        public void SendError(string format, params object[] args)
         {
             var err = new Packet(1);
             err.Writer.WriteUnicode(string.Format(format, args));
             Send(err);
         }
 
-        private void Kill(Exception ex)
+        private void KillConnection(Exception ex)
         {
             if (ex is SocketException || ex is IOException)
             {
-                Kill("Socket or IO Exception");
+                KillConnection("Socket or IO Exception");
                 return;
             }
 
-            Kill(ex.Message + ": " + ex.StackTrace);
+            KillConnection(ex.Message + ": " + ex.StackTrace);
         }
 
-        public void Kill(string reason = "")
+        public void KillConnection(string reason = "")
         {
             if (!_connected) return;
             _connected = false;

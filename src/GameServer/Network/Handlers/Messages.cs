@@ -1,4 +1,5 @@
-﻿using Shared.Network;
+﻿using System;
+using Shared.Network;
 using Shared.Network.GameServer;
 
 namespace GameServer.Network.Handlers

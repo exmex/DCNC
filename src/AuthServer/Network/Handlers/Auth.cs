@@ -1,22 +1,33 @@
-﻿using System;
-using System.Net;
-using Shared;
-using Shared.Models;
-using Shared.Network;
+﻿using Shared.Network;
 using Shared.Network.AuthServer;
-using Shared.Util;
 
 namespace AuthServer.Network.Handlers
 {
     public static class Authentication
     {
+        /// <summary>
+        /// Handles the CmdServerMessage packet
+        /// TODO: It would be better to ignore this packet, since the client discards the answer regardless.
+        /// </summary>
+        /// <param name="packet">The packet</param>
+        [Packet(Packets.CmdServerMessage)]
+        public static void ServerMessage(Packet packet){ /*Ignored*/ }
+
+        /// <summary>
+        /// Packet when a user tries to login
+        /// </summary>
+        /// <param name="packet">The packet</param>
+        [Packet(Packets.CmdUserAuth)]
+        public static void UserAuth(Packet packet) => UserAuthPacket.OnPacket(packet, AuthServer.Instance.Database.Connection);
+        
+        /*
         [Packet(Packets.CmdServerMessage)]
         public static void ServerMessage(Packet packet)
         {
             // TODO: Send serverlist here
             var pkt = new Packet(23);
-            var servers = new UserAuthAnswerPacket.Server[1];
-            servers[0] = new UserAuthAnswerPacket.Server
+            var servers = new Server[1];
+            servers[0] = new Server
             {
                 ServerName = "Test",
                 ServerId = 1,
@@ -42,7 +53,7 @@ namespace AuthServer.Network.Handlers
                 RankingServerPort = 11078
             };
 
-            pkt.Writer.Write(1); // Size
+            pkt.Writer.Write(servers.Length); // Size
             //for int i = 0; i < size; i++
             for (var i = 0; i < servers.Length; i++)
             {
@@ -83,7 +94,7 @@ namespace AuthServer.Network.Handlers
 
             var serverId = packet.Reader.ReadInt32();
 
-            var ack = new Packet(Packets.CmdServerMessage + 1);
+            var ack = new Packet(Packets.ServerMessageAck);
             if (serverId != 0)
             {
                 ack.Writer.Write(serverId);
@@ -96,7 +107,7 @@ namespace AuthServer.Network.Handlers
             }
             packet.Sender.Send(ack);
         }
-
+        
         [Packet(Packets.CmdUserAuth)]
         public static void UserAuth(Packet packet)
         {
@@ -137,8 +148,8 @@ namespace AuthServer.Network.Handlers
 
             // Wrong protocol -> 20070
 
-            /*var ack = new Packet(Packets.UserAuthAck);
-            packet.Sender.Error("Invalid Username or password!");*/
+            *var ack = new Packet(Packets.UserAuthAck);
+            packet.Sender.Error("Invalid Username or password!");*
 
             var ack = new UserAuthAnswerPacket
             {
@@ -147,6 +158,6 @@ namespace AuthServer.Network.Handlers
             };
 
             packet.Sender.Send(ack.CreatePacket());
-        }
+        }*/
     }
 }
