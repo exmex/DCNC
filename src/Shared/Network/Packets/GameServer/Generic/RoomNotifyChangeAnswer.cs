@@ -62,7 +62,7 @@ namespace Shared.Network.GameServer
                     bs.WriteUnicodeStatic(PlayerInfo.VisualItem.PlateString, 9);
                     bs.Write(PlayerInfo.UseTime);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
             
             /*

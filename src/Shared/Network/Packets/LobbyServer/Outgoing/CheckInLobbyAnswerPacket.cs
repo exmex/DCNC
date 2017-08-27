@@ -35,7 +35,7 @@ namespace Shared.Network.LobbyServer
                     bs.Write(Result);
                     bs.Write(Permission);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

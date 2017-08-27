@@ -30,7 +30,7 @@ namespace Shared.Network.AreaServer
                     bs.Write(Signal);
                     bs.Write(State);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

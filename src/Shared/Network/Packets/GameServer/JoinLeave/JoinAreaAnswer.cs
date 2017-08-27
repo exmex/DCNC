@@ -22,7 +22,7 @@ namespace Shared.Network.GameServer
                     bs.Write(AreaId);
                     bs.Write(Result);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
 

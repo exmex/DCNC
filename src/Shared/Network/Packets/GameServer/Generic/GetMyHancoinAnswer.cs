@@ -22,7 +22,7 @@ namespace Shared.Network.GameServer
                     bs.Write(Hancoins); // Hancoins?
                     bs.Write(Mileage); // Mileage?
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

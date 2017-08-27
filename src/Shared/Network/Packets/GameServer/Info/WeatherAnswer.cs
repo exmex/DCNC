@@ -39,7 +39,7 @@ namespace Shared.Network.GameServer
                 {
                     bs.Write((int)CurrentWeather);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
             /*
             ack = new Packet(Packets.WeatherAck);

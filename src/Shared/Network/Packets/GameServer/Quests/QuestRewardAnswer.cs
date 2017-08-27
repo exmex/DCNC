@@ -40,7 +40,7 @@ namespace Shared.Network.GameServer
                     bs.Write(RewardItem2);
                     bs.Write(RewardItem3);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

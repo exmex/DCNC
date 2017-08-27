@@ -24,7 +24,7 @@ namespace Shared.Network
                 using (var bs = new BinaryWriterExt(ms))
                 {
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

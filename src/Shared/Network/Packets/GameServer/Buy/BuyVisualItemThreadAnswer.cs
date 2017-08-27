@@ -39,7 +39,7 @@ namespace Shared.Network.GameServer
                     bs.Write(BonusMito);
                     bs.Write(Mileage);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

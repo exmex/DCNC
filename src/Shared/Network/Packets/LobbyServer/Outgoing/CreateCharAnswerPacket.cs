@@ -20,7 +20,7 @@ namespace Shared.Network.LobbyServer
                 {
                     bs.WriteUnicodeStatic(CharacterName, 21);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

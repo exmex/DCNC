@@ -28,7 +28,7 @@ namespace Shared.Network.AreaServer
                     bs.Write(GlobalTime);
                     bs.Write(SystemTick);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

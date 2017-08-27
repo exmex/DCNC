@@ -53,7 +53,7 @@ namespace Shared.Network.GameServer
                         }
                     }
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
 
             /*ack.Writer.Write(1); // Friendlist size

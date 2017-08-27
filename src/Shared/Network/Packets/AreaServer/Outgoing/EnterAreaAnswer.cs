@@ -45,7 +45,7 @@ namespace Shared.Network.AreaServer
 				    bs.Write(LocalTime);
 				    bs.Write(Environment.TickCount);
 			    }
-			    return ms.GetBuffer();
+			    return ms.ToArray();
 		    }
 	    }
     }

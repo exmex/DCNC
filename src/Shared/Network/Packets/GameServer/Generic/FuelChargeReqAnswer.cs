@@ -57,7 +57,7 @@ namespace Shared.Network.GameServer
                     bs.Write(SaleFlag); // 1 = Item Discount 50%
                     bs.Write(new byte[2]); // Not sure.
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

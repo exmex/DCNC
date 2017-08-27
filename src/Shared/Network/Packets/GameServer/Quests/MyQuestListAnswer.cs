@@ -29,7 +29,7 @@ namespace Shared.Network.GameServer
                         bs.Write(quest.FailNum);
                     }
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
             
             /*

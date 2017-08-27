@@ -38,6 +38,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PacketIOTest.cs" />
     <Compile Include="Packets\AreaServerTest.cs" />
     <Compile Include="Packets\AuthServerTest.cs" />
     <Compile Include="Packets\GameServerTest.cs" />

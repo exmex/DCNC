@@ -12,23 +12,53 @@ namespace Shared.Network
     public class DefaultServer
     {
 #if DEBUG
-        private static Dictionary<ushort, string> _debugNameDatabase;
+        /// <summary>
+        /// A Dictionary containing packets and their friendly name
+        /// </summary>
+        public static Dictionary<ushort, string> PacketNameDatabase;
 #endif
         
+        /// <summary>
+        /// A list of all connected clients
+        /// </summary>
         private readonly List<Client> _clients;
+        
+        /// <summary>
+        /// Does this server require an exchange?
+        /// </summary>
         private readonly bool _exchangeRequired;
+        
+        /// <summary>
+        /// The underlaying TCP Listener
+        /// </summary>
         private readonly TcpListener _listener;
 
+        /// <summary>
+        /// Contains all parsers and their function
+        /// </summary>
         private readonly Dictionary<ushort, Action<Packet>> _parsers;
 
+        /// <summary>
+        /// The port the server runs on
+        /// </summary>
         private readonly int _port;
+        
+        /// <summary>
+        /// Specifies wether or not we should dump incoming packets to a file!
+        /// </summary>
+        public static bool DumpIncoming { get; set; }
+        
+        /// <summary>
+        /// Specifies wether or not we should dump outgoing packets to a file!
+        /// </summary>
+        public static bool DumpOutgoing { get; set; }
 
         public DefaultServer(int port, bool exchangeRequired = true)
         {
 #if DEBUG
-            if (_debugNameDatabase == null)
+            if (PacketNameDatabase == null)
             {
-                _debugNameDatabase = new Dictionary<ushort, string>();
+                PacketNameDatabase = new Dictionary<ushort, string>();
                 if (File.Exists("system/parsers.txt"))
                 {
                     //string src = new WebClient().DownloadString("http://u.rtag.me/p/parsers.txt");
@@ -41,7 +71,7 @@ namespace Shared.Network
 
                         var id = ushort.Parse(lineSplit[0]);
 
-                        _debugNameDatabase[id] = lineSplit[1].Trim().Split('_')[1];
+                        PacketNameDatabase[id] = lineSplit[1].Trim().Split('_')[1];
                     }
                 }
             }
@@ -53,7 +83,9 @@ namespace Shared.Network
             _listener = new TcpListener(IPAddress.Any, port);
             _exchangeRequired = exchangeRequired;
 
+#if DEBUG
             var i = 0;
+#endif
             foreach (var type in Assembly.GetEntryAssembly().GetTypes())
             foreach (var method in type.GetMethods())
             foreach (var boxedAttrib in method.GetCustomAttributes(typeof(PacketAttribute), false))
@@ -65,7 +97,10 @@ namespace Shared.Network
                 var parser = (Action<Packet>) Delegate.CreateDelegate(typeof(Action<Packet>), method);
 
                 SetParser(id, parser);
+                
+#if DEBUG
                 i++;
+#endif
             }
             
 #if DEBUG
@@ -75,7 +110,7 @@ namespace Shared.Network
 
         public void Start()
         {
-            Log.Info("Starting server on port {0}", _port);
+            Log.Info("Starting server", _port);
 
             _listener.Start();
             _listener.BeginAcceptTcpClient(OnAccept, _listener);
@@ -98,84 +133,73 @@ namespace Shared.Network
 
         private void SetParser(ushort id, Action<Packet> parser)
         {
-            Packets.GetName(id);
-
 #if DEBUG
-            Log.Debug("Added parser for packet {0} ({1} : 0x{1:X}).", Packets.GetName(id), id);
+            if(PacketNameDatabase.ContainsKey(id))
+                Log.Debug("Added parser for packet {0} ({1} {2} : 0x{2:X}).", PacketNameDatabase[id], Packets.GetName(id), id);
+            else
+                Log.Debug("Added parser for packet ({0} {1} : 0x{1:X}).", Packets.GetName(id), id);
 #endif
             _parsers[id] = parser;
         }
 
         public void Parse(Packet packet)
         {
-            const int bytesPerLine = 16;
-            var hexDump = "";
-            var j = 0;
-            foreach (var g in packet.Buffer.Select((c, i) => new {Char = c, Chunk = i / bytesPerLine})
-                .GroupBy(c => c.Chunk))
-            {
-                var s1 = g.Select(c => $"{c.Char:X2} ").Aggregate((s, i) => s + i);
-                string s2 = null;
-                var first = true;
-                foreach (var c in g)
-                {
-                    var s = $"{(c.Char < 32 || c.Char > 122 ? '·' : (char) c.Char)} ";
-                    if (first)
-                    {
-                        first = false;
-                        s2 = s;
-                        continue;
-                    }
-                    s2 = s2 + s;
-                }
-                var s3 = $"{j++ * bytesPerLine:d6}: {s1} {s2}";
-                hexDump = hexDump + s3 + Environment.NewLine;
-            }
 #if DEBUG
+            var hexDump = BinaryWriterExt.HexDump(packet.Buffer);
+            
             // Hide frequent sync packets from console log.
             /*if (packet.Id != Packets.CmdUnknownSync && packet.Id != Packets.CmdNullPing &&
                 packet.Id != Packets.UdpCastTcsSignalAck && packet.Id != Packets.CmdUdpCastTcsSignal &&
                 packet.Id != Packets.CmdUdpCastTcs)
             {
-                if (!_debugNameDatabase.ContainsKey(packet.Id))
+                if (!_packetNameDatabase.ContainsKey(packet.Id))
                     Log.Debug("{0}: {1}", packet.Id, hexDump);
                 else
-                    Log.Debug("{0}: {1}", _debugNameDatabase[packet.Id], hexDump);
+                    Log.Debug("{0}: {1}", _packetNameDatabase[packet.Id], hexDump);
             }*/
 
-            // Make sure the packetcaptures directory exists.
-            Directory.CreateDirectory("packetcaptures\\");
-            
-            // Dump the received data in hex
-            if (_debugNameDatabase.ContainsKey(packet.Id))
+            if (DumpIncoming)
             {
-                if (!File.Exists("packetcaptures\\" + _debugNameDatabase[packet.Id] + ".txt"))
-                    File.WriteAllText("packetcaptures\\" + _debugNameDatabase[packet.Id] + ".txt", hexDump);
-            }
-            else if (!File.Exists("packetcaptures\\" + packet.Id + ".txt"))
-                File.WriteAllText("packetcaptures\\" + packet.Id + ".txt", hexDump);
+                // Make sure the packetcaptures directory exists.
+                Directory.CreateDirectory("packetcaptures\\incoming\\");
 
-            // Dump the received data into a binary file
-            if (_debugNameDatabase.ContainsKey(packet.Id))
-            {
-                if (!File.Exists("packetcaptures\\" + _debugNameDatabase[packet.Id] + ".bin"))
-                    File.WriteAllBytes("packetcaptures\\" + _debugNameDatabase[packet.Id] + ".bin", packet.Buffer);
+                // Dump the received data in hex
+                if (PacketNameDatabase.ContainsKey(packet.Id))
+                {
+                    if (!File.Exists("packetcaptures\\incoming\\" + PacketNameDatabase[packet.Id] + ".txt"))
+                        File.WriteAllText("packetcaptures\\incoming\\" + PacketNameDatabase[packet.Id] + ".txt", hexDump);
+                }
+                else if (!File.Exists("packetcaptures\\incoming\\" + packet.Id + ".txt"))
+                    File.WriteAllText("packetcaptures\\incoming\\" + packet.Id + ".txt", hexDump);
+
+                // Dump the received data into a binary file
+                if (PacketNameDatabase.ContainsKey(packet.Id))
+                {
+                    if (!File.Exists("packetcaptures\\incoming\\" + PacketNameDatabase[packet.Id] + ".bin"))
+                        File.WriteAllBytes("packetcaptures\\incoming\\" + PacketNameDatabase[packet.Id] + ".bin", packet.Buffer);
+                }
+                else if (!File.Exists("packetcaptures\\incoming\\" + packet.Id + ".bin"))
+                    File.WriteAllBytes("packetcaptures\\incoming\\" + packet.Id + ".bin", packet.Buffer);
             }
-            else if (!File.Exists("packetcaptures\\" + packet.Id + ".bin"))
-                File.WriteAllBytes("packetcaptures\\" + packet.Id + ".bin", packet.Buffer);
 #endif
             
             // Handle the packet.
             if (_parsers.ContainsKey(packet.Id))
             {
 #if DEBUG
-                if (_debugNameDatabase.ContainsKey(packet.Id))
+                // Stop frequent packets from spamming the console.
+                if (packet.Id != Packets.CmdUnknownSync && packet.Id != Packets.CmdNullPing &&
+                    packet.Id != Packets.CmdUdpCastTcsSignal)
                 {
-                    // Stop frequent packets from spamming the console.
-                    if (packet.Id != Packets.CmdUnknownSync || packet.Id != Packets.CmdNullPing ||
-                        packet.Id != Packets.UdpCastTcsSignalAck || packet.Id != Packets.CmdUdpCastTcsSignal)
-                        Log.Info("Handling packet {2} (id {0}, 0x{0:X}) on {1}.", packet.Id, _port,
-                            _debugNameDatabase[packet.Id]);
+                    if (PacketNameDatabase.ContainsKey(packet.Id))
+                    {
+                        Log.Info("Handling packet {0} ({1} id {2}, 0x{2:X}) on {3}.", PacketNameDatabase[packet.Id],
+                            Packets.GetName(packet.Id), packet.Id, _port);
+                    }
+                    else
+                    {
+                        Log.Info("Handling unnamed packet ({0} id {1}, 0x{1:X}) on {2}.", Packets.GetName(packet.Id), packet.Id, _port);
+                    }
                 }
 #endif
                 _parsers[packet.Id](packet);
@@ -183,15 +207,15 @@ namespace Shared.Network
             else
             {
 #if DEBUG
-                if (_debugNameDatabase.ContainsKey(packet.Id))
+                if (PacketNameDatabase.ContainsKey(packet.Id))
                 {
-                    Log.Info("Received unhandled packet {2} (id {0}, 0x{0:X}) on {1}.", packet.Id, _port,
-                        _debugNameDatabase[packet.Id]);
+                    Log.Info("Received unhandled packet {0} ({1} id {2}, 0x{2:X}) on {3}.", PacketNameDatabase[packet.Id],
+                        Packets.GetName(packet.Id), packet.Id, _port);
                     Log.Debug("HexDump:{0}{1}", Environment.NewLine, hexDump);
                     return;
                 }
 #endif
-                    Log.Error("Received unhandled packet (id {0}, 0x{0:X}) on {1}.", packet.Id, _port);
+                Log.Warning("Received unhandled packet {0} (id {1}, 0x{1:X}) on {2}.", Packets.GetName(packet.Id), packet.Id, _port);
             }
         }
 

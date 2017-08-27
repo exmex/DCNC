@@ -61,7 +61,7 @@ namespace Shared.Network.GameServer
                     ack.Writer.Write(0); // State
                     */
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

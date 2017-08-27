@@ -39,7 +39,7 @@ namespace Shared.Network.GameServer
 
                     bs.Write(Age);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

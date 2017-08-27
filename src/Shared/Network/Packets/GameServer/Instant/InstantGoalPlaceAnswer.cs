@@ -41,7 +41,7 @@ namespace Shared.Network.GameServer
                     bs.Write(EXP);
                     bs.Write(Unknown1);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

@@ -49,7 +49,7 @@ namespace Shared.Network.GameServer
                         bs.Write(vehicle.SBBOn);
                     }
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
             
             /*

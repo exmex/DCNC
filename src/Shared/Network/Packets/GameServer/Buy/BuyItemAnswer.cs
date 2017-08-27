@@ -24,7 +24,7 @@ namespace Shared.Network.GameServer
                     bs.Write(Quantity);
                     bs.Write(Gold);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

@@ -56,7 +56,7 @@ namespace Shared.Network.GameServer
                         bs.Write((long)0); // ??????
                     }
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
             /*
             var ack = new Packet(Packets.AreaListAck);

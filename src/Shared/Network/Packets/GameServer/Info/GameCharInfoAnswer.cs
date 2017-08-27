@@ -15,7 +15,15 @@ namespace Shared.Network.GameServer
         public char LocType;
         public char ChId;
         public ushort LocId = 1;
-            
+
+        public GameCharInfoAnswer()
+        {
+            Character = new Character();
+            Vehicle = new Vehicle();
+            StatisticInfo = new StatInfo();
+            Team = new Team();
+        }
+
         public override Packet CreatePacket()
         {
             return base.CreatePacket(Packets.GameCharInfoAck);
@@ -36,7 +44,7 @@ namespace Shared.Network.GameServer
                     bs.Write(ChId);
                     bs.Write(LocId);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

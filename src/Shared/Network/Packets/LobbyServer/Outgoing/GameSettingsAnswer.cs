@@ -46,7 +46,7 @@ namespace Shared.Network.LobbyServer
                     packet.Sender.Send(ack);
                     */
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

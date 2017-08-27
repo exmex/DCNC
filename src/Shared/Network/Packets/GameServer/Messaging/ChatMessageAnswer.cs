@@ -25,7 +25,7 @@ namespace Shared.Network.GameServer
                     bs.WriteUnicodeStatic(SenderCharacterName, 18);
                     bs.WriteUnicode(Message);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

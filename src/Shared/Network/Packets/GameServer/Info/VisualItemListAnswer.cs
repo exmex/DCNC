@@ -21,11 +21,11 @@ namespace Shared.Network.GameServer
                     bs.Write(0);
                     bs.Write(new byte[120]);
                 }
-                #if !DEBUG
-                throw new NotImplementedException();
-                #else
-                return ms.GetBuffer();
-                #endif
+#if DEBUG
+                return ms.ToArray();
+#else
+                return new byte[0];
+#endif
             }
             /*
             var ack = new Packet(Packets.VisualItemListAck);

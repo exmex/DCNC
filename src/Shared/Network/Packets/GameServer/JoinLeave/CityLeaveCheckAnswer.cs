@@ -27,7 +27,7 @@ namespace Shared.Network.GameServer
                     bs.WriteAsciiStatic(Post1, 255);
                     bs.WriteAsciiStatic(Post2, 255);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

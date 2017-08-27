@@ -107,7 +107,7 @@ namespace Shared.Network.GameServer
                     bs.Write(0); // Unknown10
                     bs.Write((short)0); // Unknown11
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
             /*ack.Writer.Write(0); // Speed (Car) Testvalue:100 -> http://i.imgur.com/AndRGwK.png
             ack.Writer.Write(0); // Durability (Car) Testvalue:100 -> http://i.imgur.com/zuaxZu5.png

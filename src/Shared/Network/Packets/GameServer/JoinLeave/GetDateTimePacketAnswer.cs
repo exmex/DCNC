@@ -52,7 +52,7 @@ namespace Shared.Network.GameServer
                     bs.Write(Minute);
                     bs.Write(Second);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

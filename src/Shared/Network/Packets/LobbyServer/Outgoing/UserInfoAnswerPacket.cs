@@ -71,7 +71,7 @@ namespace Shared.Network.LobbyServer
                         bs.Write(0); // GuildType? (unsigned int nGuild;)
                     }
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

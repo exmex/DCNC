@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using Shared.Objects;
 using Shared.Util;
+using Shared.Util.Configuration.Files;
 
 namespace Shared.Network
 {
@@ -126,36 +127,55 @@ namespace Shared.Network
 
         public void Send(Packet packet)
         {
+#if DEBUG
             var buffer = packet.Writer.GetBuffer();
 
             var bufferLength = buffer.Length;
             var length = (ushort) (bufferLength + 2); // Length includes itself
 
-            var bytesPerLine = 16;
-            var hexDump = "";
-            var j = 0;
-            foreach (var g in buffer.Select((c, i) => new {Char = c, Chunk = i / bytesPerLine}).GroupBy(c => c.Chunk))
+            var hexDump = BinaryWriterExt.HexDump(buffer);
+            
+            // Stop frequent packets from spamming the console.
+            if (packet.Id != Packets.UdpCastTcsSignalAck)
             {
-                var s1 = g.Select(c => $"{c.Char:X2} ").Aggregate((s, i) => s + i);
-                string s2 = null;
-                var first = true;
-                foreach (var c in g)
-                {
-                    var s = $"{(c.Char < 32 || c.Char > 122 ? '·' : (char) c.Char)} ";
-                    if (first)
-                    {
-                        first = false;
-                        s2 = s;
-                        continue;
-                    }
-                    s2 = s2 + s;
-                }
-                var s3 = $"{j++ * bytesPerLine:d6}: {s1} {s2}";
-                hexDump = hexDump + s3 + Environment.NewLine;
+                if(DefaultServer.PacketNameDatabase.ContainsKey(packet.Id))
+                    Log.Info("Sending packet {0} ({1} id {2}, 0x{2:X}).", DefaultServer.PacketNameDatabase[packet.Id],
+                        Packets.GetName(packet.Id), packet.Id);
+                else
+                    Log.Info("Sending unnamed packet ({0} id {1}, 0x{1:X}).",
+                        Packets.GetName(packet.Id), packet.Id);
             }
 
-            if (packet.Id != 3917 && packet.Id != 7 && packet.Id != 706 && packet.Id != 707 && packet.Id != 702)
-                Log.Debug("Sending ({0}): {1}", packet.Id, hexDump);
+            if (DefaultServer.DumpOutgoing)
+            {
+                // Make sure the packetcaptures directory exists.
+                Directory.CreateDirectory("packetcaptures\\outgoing\\");
+
+                // Dump the received data in hex
+                if (DefaultServer.PacketNameDatabase.ContainsKey(packet.Id))
+                {
+                    if (!File.Exists(
+                        "packetcaptures\\outgoing\\" + DefaultServer.PacketNameDatabase[packet.Id] + ".txt"))
+                        File.WriteAllText(
+                            "packetcaptures\\outgoing\\" + DefaultServer.PacketNameDatabase[packet.Id] + ".txt",
+                            hexDump);
+                }
+                else if (!File.Exists("packetcaptures\\outgoing\\" + packet.Id + ".txt"))
+                    File.WriteAllText("packetcaptures\\outgoing\\" + packet.Id + ".txt", hexDump);
+
+                // Dump the received data into a binary file
+                if (DefaultServer.PacketNameDatabase.ContainsKey(packet.Id))
+                {
+                    if (!File.Exists(
+                        "packetcaptures\\outgoing\\" + DefaultServer.PacketNameDatabase[packet.Id] + ".bin"))
+                        File.WriteAllBytes(
+                            "packetcaptures\\outgoing\\" + DefaultServer.PacketNameDatabase[packet.Id] + ".bin",
+                            buffer);
+                }
+                else if (!File.Exists("packetcaptures\\outgoing\\" + packet.Id + ".bin"))
+                    File.WriteAllBytes("packetcaptures\\outgoing\\" + packet.Id + ".bin", buffer);
+            }
+#endif
 
             try
             {

@@ -65,7 +65,7 @@ namespace Shared.Network.GameServer
                     bs.Write(FirstHuvId); // HUV first Id
                     bs.Write(Unknown2); // Not sure.
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

@@ -17,9 +17,7 @@
         {
             if (val < min)
                 return min;
-            if (val > max)
-                return max;
-            return val;
+            return val > max ? max : val;
         }
 
         /// <summary>
@@ -34,9 +32,7 @@
         {
             if (val < min)
                 return min;
-            if (val > max)
-                return max;
-            return val;
+            return val > max ? max : val;
         }
 
         /// <summary>
@@ -51,9 +47,7 @@
         {
             if (val < min)
                 return min;
-            if (val > max)
-                return max;
-            return val;
+            return val > max ? max : val;
         }
 
         /// <summary>
@@ -86,9 +80,7 @@
             }
             catch
             {
-                if (initialValue >= 0)
-                    return short.MaxValue;
-                return short.MinValue;
+                return initialValue >= 0 ? short.MaxValue : short.MinValue;
             }
         }
 
@@ -110,9 +102,7 @@
             }
             catch
             {
-                if (initialValue >= 0)
-                    return int.MaxValue;
-                return int.MinValue;
+                return initialValue >= 0 ? int.MaxValue : int.MinValue;
             }
         }
 
@@ -134,9 +124,7 @@
             }
             catch
             {
-                if (initialValue >= 0)
-                    return long.MaxValue;
-                return long.MinValue;
+                return initialValue >= 0 ? long.MaxValue : long.MinValue;
             }
         }
     }

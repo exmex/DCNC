@@ -116,7 +116,7 @@ namespace Shared.Network.AuthServer
                         bs.Write(Servers[i].RankingServerPort);
                     }
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

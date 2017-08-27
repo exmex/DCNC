@@ -30,7 +30,7 @@ namespace Shared.Network.LobbyServer
                     bs.WriteUnicodeStatic(CharacterName, 21);
                     bs.Write(Availability);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

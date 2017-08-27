@@ -37,7 +37,7 @@ namespace Shared.Network.AreaServer
 				    foreach (var count in UserCount)
 					    bs.Write(count);
 			    }
-			    return ms.GetBuffer();
+			    return ms.ToArray();
 		    }
 	    }
     }

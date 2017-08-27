@@ -5,6 +5,9 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// TODO: Packet not implemented
+    /// </summary>
     public class ItemListAnswer : OutPacket
     {
         /*
@@ -54,10 +57,10 @@ namespace Shared.Network.GameServer
                         bs.Write((uint)0);
                     }
                 }
-                #if !DEBUG
-                throw new NotImplementedException();
+                #if DEBUG
+                return ms.ToArray();
                 #else
-                return ms.GetBuffer();
+                return new byte[0];
                 #endif
             }
             

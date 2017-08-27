@@ -53,11 +53,11 @@ namespace Shared.Network.GameServer
                     bs.Write(Price); // Price
                     //ack.Writer.Write(Bumper);
                 }
-                #if !DEBUG
-                throw new NotImplementedException();
-                #else
-                return ms.GetBuffer();
-                #endif
+#if DEBUG
+                return ms.ToArray();
+#else
+                return new byte[0];
+#endif
             }
         }
     }

@@ -29,7 +29,7 @@ namespace Shared.Network.LobbyServer
                     bs.Write(LocalTime);
                     bs.Write(TimeT);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

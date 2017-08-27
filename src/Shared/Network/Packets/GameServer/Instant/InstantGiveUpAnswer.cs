@@ -21,7 +21,7 @@ namespace Shared.Network.GameServer
                 {
                     bs.Write(TableIndex);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

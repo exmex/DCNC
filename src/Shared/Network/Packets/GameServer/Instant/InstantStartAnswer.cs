@@ -22,7 +22,7 @@ namespace Shared.Network.GameServer
                     bs.Write(TableIndex);
                     bs.Write(new byte[3]); // Missing?
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
     }

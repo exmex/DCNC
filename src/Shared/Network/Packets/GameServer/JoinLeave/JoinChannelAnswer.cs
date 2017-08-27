@@ -26,7 +26,7 @@ namespace Shared.Network.GameServer
                     bs.Write(Serial);
                     bs.Write(SessionAge);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
             /*
             ack.Writer.WriteUnicodeStatic("speeding", 10); // ChannelName

@@ -32,7 +32,7 @@ namespace Shared.Network.GameServer
                     bs.Write(Rotation);
                     bs.Write(PositionState);
                 }
-                return ms.GetBuffer();
+                return ms.ToArray();
             }
         }
         
