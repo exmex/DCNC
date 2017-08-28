@@ -16,6 +16,8 @@ namespace GameServer
         public static Dictionary<uint, XiStrQuest> QuestTable;
         public static Dictionary<long, long> LevelTable;
 
+        public static GameChatCommands ChatCommands = new GameChatCommands();
+
         private bool _running;
 
         /// <summary>

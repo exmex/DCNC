@@ -250,5 +250,71 @@ namespace Shared.Models
                 cmd.Execute();
             }
         }
+
+        public static bool UpdateExp(MySqlConnection dbconn, string characterName, int amount, bool set = true)
+        {
+            if (!Exists(dbconn, characterName)) return false;
+
+            long currentExp = 0;
+            if (!set)
+            {
+                var command = new MySqlCommand(
+                    "SELECT * FROM Characters WHERE `Name` = @char", dbconn);
+
+                command.Parameters.AddWithValue("@char", characterName);
+                using (DbDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                        currentExp = Convert.ToInt64(reader["CurExp"]);
+                }
+            }
+            
+            using (var cmd = new UpdateCommand("UPDATE `Characters` SET {0} WHERE `Name` = @charName", dbconn))
+            {
+                cmd.AddParameter("@charName", characterName);
+                if(set)
+                    cmd.Set("CurExp", amount);
+                else
+                    cmd.Set("CurExp", currentExp+amount);
+
+                if (cmd.Execute() == 1)
+                    return true;
+            }
+
+            return false;
+        }
+        
+        public static bool UpdateMito(MySqlConnection dbconn, string characterName, long amount, bool set = true)
+        {
+            if (!Exists(dbconn, characterName)) return false;
+
+            long currentMoney = 0;
+            if (!set)
+            {
+                var command = new MySqlCommand(
+                    "SELECT * FROM Characters WHERE `Name` = @char", dbconn);
+
+                command.Parameters.AddWithValue("@char", characterName);
+                using (DbDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                        currentMoney = Convert.ToInt64(reader["Mito"]);
+                }
+            }
+            
+            using (var cmd = new UpdateCommand("UPDATE `Characters` SET {0} WHERE `Name` = @charName", dbconn))
+            {
+                cmd.AddParameter("@charName", characterName);
+                if(set)
+                    cmd.Set("Mito", amount);
+                else
+                    cmd.Set("Mito", currentMoney+amount);
+
+                if (cmd.Execute() == 1)
+                    return true;
+            }
+
+            return false;
+        }
     }
 }

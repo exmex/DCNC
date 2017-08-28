@@ -370,6 +370,7 @@
 550: Cmd_RemoveVehicle
 552: Cmd_ReplayData
 562: Cmd_EnterArea
+563: Cmd_EnterAreaAck
 564: Cmd_ExitArea
 566: Cmd_EnterGroup
 567: Cmd_ExitGroup

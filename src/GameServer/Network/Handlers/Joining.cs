@@ -39,7 +39,7 @@ namespace GameServer.Network.Handlers
             packet.Sender.Send(new ChatMessageAnswer()
             {
                 MessageType = Array.ConvertAll(new char[16], v => (char) 99).ToString(),
-                SenderCharacterName = "",
+                SenderCharacterName = "Server",
                 Message = "Server powered by DCNC - GigaToni",
             }.CreatePacket());
         }

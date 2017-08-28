@@ -43,6 +43,7 @@ namespace Shared.Models
                         Name = reader["Username"] as string,
                         Password = reader["Password"] as string,
                         Salt = reader["Salt"] as string,
+                        Permission = Convert.ToInt32(reader["Permission"]),
                         Ticket = Convert.ToUInt32(reader["Ticket"]),
                         Status = (UserStatus) Convert.ToByte(reader["Status"]),
                         CreateIp = reader["CreateIP"] as string
@@ -77,6 +78,7 @@ namespace Shared.Models
                         Name = reader["Username"] as string,
                         Password = reader["Password"] as string,
                         Salt = reader["Salt"] as string,
+                        Permission = Convert.ToInt32(reader["Permission"]),
                         Ticket = Convert.ToUInt32(reader["Ticket"]),
                         Status = (UserStatus) Convert.ToByte(reader["Status"]),
                         CreateIp = reader["CreateIP"] as string
@@ -110,6 +112,7 @@ namespace Shared.Models
                         Name = reader["Username"] as string,
                         Password = reader["Password"] as string,
                         Salt = reader["Salt"] as string,
+                        Permission = Convert.ToInt32(reader["Permission"]),
                         Ticket = Convert.ToUInt32(reader["Ticket"]),
                         Status = (UserStatus) Convert.ToByte(reader["Status"]),
                         CreateIp = reader["CreateIP"] as string
@@ -232,6 +235,7 @@ namespace Shared.Models
                             Name = reader["Username"] as string,
                             Password = reader["Password"] as string,
                             Salt = reader["Salt"] as string,
+                            Permission = Convert.ToInt32(reader["Permission"]),
                             Ticket = Convert.ToUInt32(reader["Ticket"]),
                             Status = (UserStatus) Convert.ToByte(reader["Status"]),
                             CreateIp = reader["CreateIP"] as string

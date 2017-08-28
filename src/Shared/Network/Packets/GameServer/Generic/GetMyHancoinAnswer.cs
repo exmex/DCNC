@@ -3,6 +3,9 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// TODO: Wrong Packet Size. CMD(1401) CmdLen: : 14, AnalysisSize: 12
+    /// </summary>
     public class GetMyHancoinAnswer : OutPacket
     {
         public int Hancoins;

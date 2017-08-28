@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Shared.Network;
 using Shared.Util.Commands;
 
@@ -50,7 +51,7 @@ namespace GameServer.Util
             Add("weather", "[fine|cloudy|foggy|rain|sunset]", "Changes weather", HandleWeather);
         }
 
-        private CommandResult HandleWeather(string command, IList<string> args)
+        private static CommandResult HandleWeather(string command, IList<string> args)
         {
             if (args.Count != 2)
                 return CommandResult.Fail;
@@ -98,6 +99,16 @@ namespace GameServer.Util
             var packet = new Packet(res);
             packet.Writer.Write(new byte[res2]);
             GameServer.Instance.Server.Broadcast(packet);
+            return CommandResult.Okay;
+        }
+
+        protected override CommandResult HandleConnections(string command, IList<string> args)
+        {
+            foreach (var client in GameServer.Instance.Server.GetClients())
+            {
+                Console.WriteLine($"{client.EndPoint.Address.ToString()}:{client.EndPoint.Port}");
+            }
+            
             return CommandResult.Okay;
         }
     }

@@ -97,7 +97,7 @@ namespace LobbyServer.Network.Handlers
 
             // Send check in lobby answer.
             checkInLobbyAnswerPacket.Result = 0;
-            checkInLobbyAnswerPacket.Permission = 0x8000; // TODO: Use account model instead.
+            checkInLobbyAnswerPacket.Permission = user.Permission;
             packet.Sender.Send(checkInLobbyAnswerPacket.CreatePacket());
 
             // Send current lobby time.

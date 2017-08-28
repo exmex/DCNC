@@ -82,11 +82,19 @@ namespace Shared.Network
             _port = port;
             _listener = new TcpListener(IPAddress.Any, port);
             _exchangeRequired = exchangeRequired;
-
-#if DEBUG
+            
             var i = 0;
+            i += AddAllMethodsFromType(Assembly.GetEntryAssembly().GetTypes());
+            i += AddAllMethodsFromType(Assembly.GetExecutingAssembly().GetTypes());
+#if DEBUG
+            Log.Info("Added {0} packets", i);
 #endif
-            foreach (var type in Assembly.GetEntryAssembly().GetTypes())
+        }
+
+        private int AddAllMethodsFromType(IEnumerable<Type> types)
+        {
+            var i = 0;
+            foreach (var type in types)
             foreach (var method in type.GetMethods())
             foreach (var boxedAttrib in method.GetCustomAttributes(typeof(PacketAttribute), false))
             {
@@ -102,10 +110,7 @@ namespace Shared.Network
                 i++;
 #endif
             }
-            
-#if DEBUG
-            Log.Info("Added {0} packets", i);
-#endif
+            return i;
         }
 
         public void Start()
@@ -133,6 +138,15 @@ namespace Shared.Network
 
         private void SetParser(ushort id, Action<Packet> parser)
         {
+            if (_parsers.ContainsKey(id))
+            {
+#if DEBUG
+                if(PacketNameDatabase.ContainsKey(id))
+                    Log.Error("Duplicated parser for packet {0} ({1} {2} : 0x{2:X}).", PacketNameDatabase[id], Packets.GetName(id), id);
+                else
+#endif
+                    Log.Error("Duplicated parser for packet ({0} {1} : 0x{1:X}).", Packets.GetName(id), id);
+            }
 #if DEBUG
             if(PacketNameDatabase.ContainsKey(id))
                 Log.Debug("Added parser for packet {0} ({1} {2} : 0x{2:X}).", PacketNameDatabase[id], Packets.GetName(id), id);
@@ -219,7 +233,12 @@ namespace Shared.Network
             }
         }
 
-        private IEnumerable<Client> GetClients() => _clients.ToArray();
+        public Client GetClient(string characterName)
+        {
+            return _clients.Find(client => client?.User?.ActiveCharacter?.Name == characterName);
+        }
+
+        public IEnumerable<Client> GetClients() => _clients.ToArray();
 
         public void Broadcast(Packet packet, Client exclude = null)
         {

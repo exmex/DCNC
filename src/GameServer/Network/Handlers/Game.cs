@@ -6,6 +6,7 @@ using Shared.Network.AuthServer;
 using Shared.Network.GameServer;
 using Shared.Objects;
 using Shared.Util;
+using Shared.Util.Commands;
 
 namespace GameServer.Network.Handlers
 {
@@ -154,6 +155,57 @@ namespace GameServer.Network.Handlers
                 SaleFlag = v7;
             }
             */
+        }
+
+        [Packet(Packets.CmdGameStream)]
+        public static void GameStream(Packet packet)
+        {
+            if (packet.Sender.User.Permission == 0x0)
+            {
+#if DEBUG
+                Log.Debug("User entered command but has no permission: " + packet.Sender.User.ActiveCharacter.Name);
+#endif
+                return;
+            }
+
+            packet.Reader.ReadInt16();
+            
+            var message = packet.Reader.ReadUnicode();
+            
+            var args = ConsoleUtil.ParseLine(message);
+            if (args.Count <= 0) return;
+            var cmd = args[0];
+            args.RemoveAt(0);
+            
+            var command = GameServer.ChatCommands.GetCommand(cmd);
+
+            if (command != null)
+            {
+                if (packet.Sender.User.Permission < command.RequiredPermission)
+                {
+                    Log.Warning("User tried to use admin command: " + command.Name);
+                    return;
+                }
+                var res = command.Func(GameServer.Instance.Server, packet.Sender, cmd, args);
+                if (res == CommandResult.InvalidArgument)
+                {
+                    packet.Sender.Send(new ChatMessageAnswer()
+                    {
+                        MessageType = "channel",
+                        SenderCharacterName = "Server",
+                        Message = "Syntax: " + command.Usage,
+                    }.CreatePacket());
+                }
+            }
+            else
+            {
+                packet.Sender.Send(new ChatMessageAnswer()
+                {
+                    MessageType = "channel",
+                    SenderCharacterName = "Server",
+                    Message = "Invalid command!",
+                }.CreatePacket());
+            }
         }
 
         [Packet(Packets.CmdChatMsg)]

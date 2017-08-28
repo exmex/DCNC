@@ -4,6 +4,9 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// TODO: Wrong Packet Size. CMD(993) CmdLen: : 11, AnalysisSize: 8
+    /// </summary>
     public class InstantStartAnswer : OutPacket
     {
         public uint TableIndex;

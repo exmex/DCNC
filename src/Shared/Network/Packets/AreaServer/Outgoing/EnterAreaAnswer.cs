@@ -4,6 +4,9 @@ using Shared.Util;
 
 namespace Shared.Network.AreaServer
 {
+	/// <summary>
+	/// TODO: Wrong Packet Size. CMD(563) CmdLen: : 22, AnalysisSize: 16
+	/// </summary>
     public class EnterAreaAnswer : OutPacket
     {
         public uint AreaId;

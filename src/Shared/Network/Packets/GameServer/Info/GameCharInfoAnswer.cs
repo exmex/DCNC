@@ -5,6 +5,9 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// TODO: Wrong Packet Size. CMD(661) CmdLen: : 1177, AnalysisSize: 831
+    /// </summary>
     public class GameCharInfoAnswer : OutPacket
     {
         public Character Character;

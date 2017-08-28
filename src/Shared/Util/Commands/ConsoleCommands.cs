@@ -19,6 +19,7 @@ namespace Shared.Util.Commands
             Add("status", "Displays application status", HandleStatus);
             Add("sendpkt", "[packetid] [nullbyte count]", "Sends an empty packet with the specified packet id",
                 HandleSendPkt);
+            Add("connections", "Displays all currently active connections", HandleConnections);
         }
 
         /// <summary>
@@ -63,7 +64,7 @@ namespace Shared.Util.Commands
             {
                 var line = Console.ReadLine();
 
-                var args = ParseLine(line);
+                var args = ConsoleUtil.ParseLine(line);
                 if (args.Count == 0)
                     continue;
 
@@ -85,6 +86,11 @@ namespace Shared.Util.Commands
         }
 
         protected virtual CommandResult HandleSendPkt(string command, IList<string> args)
+        {
+            return CommandResult.Fail;
+        }
+        
+        protected virtual CommandResult HandleConnections(string command, IList<string> args)
         {
             return CommandResult.Fail;
         }

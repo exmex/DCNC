@@ -5,8 +5,10 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
-
-    // TODO: Buy car still has not the correct structure.
+    /// <summary>
+    /// TODO: Wrong Packet Size. CMD(86) CmdLen: : 56, AnalysisSize: 24
+    /// TODO: Buy car still has not the correct structure.
+    /// </summary>
     public class BuyCarAnswer : OutPacket
     {
         public int Id;

@@ -18,6 +18,17 @@ namespace Shared.Objects
         public ulong ActiveCharacterId;
         public Team ActiveTeam;
 
+        /// <summary>
+        ///     The permission flags
+        ///     Valid values:
+        ///     0x8000 => Administrator
+        ///     0x4000 => Power User
+        ///     0x2000 => Remote Client User
+        ///     0x1000 => Developer
+        ///     0x0 => User
+        /// </summary>
+        public int Permission;
+
         public List<Character> Characters;
         public string CreateIp;
         public string Name;

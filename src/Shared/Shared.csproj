@@ -80,6 +80,7 @@
     <Compile Include="Network\Packets\GameServer\Generic\RoomNotifyChangeAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Generic\SaveCarPosPacket.cs" />
     <Compile Include="Network\Packets\GameServer\Info\AreaListAnswer.cs" />
+    <Compile Include="Network\Packets\GameServer\Info\CharUpdateAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Info\FriendListAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Info\GameCharInfoAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Info\GameCharInfoPacket.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="Objects\User.cs" />
     <Compile Include="Util\BinaryReaderExt.cs" />
     <Compile Include="Util\BinaryWriterExt.cs" />
+    <Compile Include="Util\Commands\ChatCommands.cs" />
     <Compile Include="Util\Commands\CommandManager.cs" />
     <Compile Include="Util\Commands\ConsoleCommands.cs" />
     <Compile Include="Util\Configuration\BaseConf.cs" />

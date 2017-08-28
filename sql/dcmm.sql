@@ -232,6 +232,7 @@ CREATE TABLE `users` (
   `Username` varchar(21) NOT NULL,
   `Password` varchar(64) NOT NULL,
   `Salt` varchar(64) NOT NULL,
+  `Permission` int(6) DEFAULT 0 NOT NULL;
   `Ticket` int(20) unsigned NOT NULL,
   `Status` tinyint(4) NOT NULL DEFAULT '1',
   `CreateIP` varchar(15) NOT NULL DEFAULT '127.0.0.1',

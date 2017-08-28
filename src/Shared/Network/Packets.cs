@@ -22,7 +22,7 @@ namespace Shared.Network
         public const ushort CheckCharNameAck = 81;
         public const ushort CreateCharAck = 83;
         public const ushort DeleteCharAck = 84;
-        public const ushort BuyCarAck = 86; // TODO: Wrong Packet Size. CMD(86) CmdLen: : 56, AnalysisSize: 24
+        public const ushort BuyCarAck = 86;
         public const ushort CheckInGameAck = 121;
         public const ushort LoadCharThreadAck = 124;
         public const ushort JoinChannelAck = 126;
@@ -38,6 +38,8 @@ namespace Shared.Network
         public const ushort FriendStatus = 274;
 
         public const ushort JoinAreaAck = 301;
+        
+        public const ushort CharUpdateAck = 361;
 
         public const ushort ItemListAck = 401;
         public const ushort ItemModListAck = 402;
@@ -52,8 +54,7 @@ namespace Shared.Network
 
         public const ushort WeatherAck = 640;
 
-        public const ushort GameCharInfoAck = 661
-            ; // TODO: Wrong Packet Size. CMD(661) CmdLen: : 1177, AnalysisSize: 831
+        public const ushort GameCharInfoAck = 661;
 
         public const ushort AreaStatusAck = 683;
         public const ushort UdpCastTcsSignalAck = 706;
@@ -63,13 +64,14 @@ namespace Shared.Network
         public const ushort FirstPositionAck = 783;
         public const ushort GetDateTimeAck = 785;
         public const ushort MyPositionAck = 789;
-        public const ushort MyTeamInfoAck = 841; // TODO: Wrong Packet Size. CMD(841) CmdLen: : 692, AnalysisSize: 393
+        public const ushort MyTeamInfoAck = 841;
         public const ushort InstantStartAck = 993;
         public const ushort InstantGiveUpAck = 1000;
         public const ushort InstantGoalPlaceAck = 1002;
         public const ushort BuyVisualItemThreadAck = 1203;
-        public const ushort GetMyHancoinAck = 1401; // TODO: Wrong Packet Size. CMD(1401) CmdLen: : 14, AnalysisSize: 12
-        public const ushort VisualItemListAck = 1801;
+        public const ushort GetMyHancoinAck = 1401;
+        //public const ushort VisualItemListAck = 1801;
+        public const ushort VisualItemListAck = 1201;
 
         public const ushort CityLeaveCheckAck = 3201;
         
@@ -333,7 +335,7 @@ namespace Shared.Network
         public const ushort CmdCBattleGetSetting = 910;
         public const ushort CmdObserverSupport = 916;
         public const ushort CmdInstantRequest = 990;
-        public const ushort CmdInstantStart = 992; // TODO: Wrong Packet Size. CMD(993) CmdLen: : 11, AnalysisSize: 8
+        public const ushort CmdInstantStart = 992;
         public const ushort CmdInstantComplete = 994;
         public const ushort CmdInstantGiveUp = 999;
         public const ushort CmdInstantGoalPlace = 1001;

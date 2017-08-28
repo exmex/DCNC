@@ -110,6 +110,7 @@ namespace Shared.Objects
 
         public int CalculateExp(int exp, out bool bLevelChangeOut, bool bUseBonus, bool bUseMita500Bonus)
         {
+          // TODO: Make this function!
             /*
              *  float v5; // et1@4
   int v7; // ST44_4@8
