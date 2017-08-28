@@ -74,29 +74,25 @@ namespace GameServer.Util
                 if (amount <= 0) // Allow only positive numbers
                     return CommandResult.InvalidArgument;
                 
-                var message = "Character not found!";
-                if (CharacterModel.UpdateMito(GameServer.Instance.Database.Connection, characterName, amount, false))
-                {
-                    message = $"{amount} Mito given to {characterName}";
-                }
-                    
+                var client = GameServer.Instance.Server.GetClient(characterName);
+                // Client / Character is not online! (This activeChar check is redundant, see GetClient(characterName)
+                if (client?.User.ActiveCharacter == null) return CommandResult.Fail;
+
+                client.User.ActiveCharacter.MitoMoney += amount;
+                CharacterModel.Update(GameServer.Instance.Database.Connection, client.User.ActiveCharacter);
+                
                 sender.Send(new ChatMessageAnswer()
                 {
                     MessageType = "channel",
                     SenderCharacterName = "Server",
-                    Message = message,
+                    Message = $"{amount} Mito given to {characterName}",
                 }.CreatePacket());
-
-                var client = GameServer.Instance.Server.GetClient(characterName);
-                if (client != null)
+                
+                client.Send(new CharUpdateAnswer()
                 {
-                    client.User.ActiveCharacter.MitoMoney += amount;
-                    client.Send(new CharUpdateAnswer()
-                    {
-                        character = client.User.ActiveCharacter
-                    }.CreatePacket());
-                    //BS_PktCharUpdate
-                }
+                    character = client.User.ActiveCharacter
+                }.CreatePacket());
+                
                 return CommandResult.Okay;
             });
             
@@ -111,31 +107,31 @@ namespace GameServer.Util
                 if (amount <= 0) // Allow only positive numbers
                     return CommandResult.InvalidArgument;
                 
-                var message = "Character not found!";
-                if (CharacterModel.UpdateExp(GameServer.Instance.Database.Connection, characterName, amount, false))
-                {
-                    message = $"{amount} EXP given to {characterName}";
-                }
+                var client = GameServer.Instance.Server.GetClient(characterName);
+                
+                // Client / Character is not online! (This activeChar check is redundant, see GetClient(characterName)
+                if (client?.User.ActiveCharacter == null) return CommandResult.Fail;
+                
+                bool levelUp;
+                bool useBonus = false;
+                bool useBonus500Mita = false;
+                client.User.ActiveCharacter.CurExp += client.User.ActiveCharacter.CalculateExp(amount, out levelUp, useBonus, useBonus500Mita);
+                // TODO: Check if user has leveled up, if so send levelup packet!
+                    
+                CharacterModel.Update(GameServer.Instance.Database.Connection, client.User.ActiveCharacter);
                     
                 sender.Send(new ChatMessageAnswer()
                 {
                     MessageType = "channel",
                     SenderCharacterName = "Server",
-                    Message = message,
+                    Message = $"{amount} EXP given to {characterName}",
+                }.CreatePacket());
+                    
+                client.Send(new CharUpdateAnswer()
+                {
+                    character = client.User.ActiveCharacter
                 }.CreatePacket());
                 
-                var client = GameServer.Instance.Server.GetClient(characterName);
-                if (client != null)
-                {
-                    client.User.ActiveCharacter.CurExp += amount;
-                    //GetExp = Exp;
-                    //GetExp = XiCsCharInfo::CalcExperience(pCharInfo, Exp, &bLevelChange, 0, 0);
-                    client.Send(new CharUpdateAnswer()
-                    {
-                        character = client.User.ActiveCharacter
-                    }.CreatePacket());
-                    //BS_PktCharUpdate
-                }
                 return CommandResult.Okay;
             });
         }

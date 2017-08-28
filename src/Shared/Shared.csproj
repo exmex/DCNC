@@ -165,6 +165,7 @@
     <Compile Include="Util\Password.cs" />
     <Compile Include="Util\RandomProvider.cs" />
     <Compile Include="Util\TdfReader.cs" />
+    <Compile Include="Util\Win32.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

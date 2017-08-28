@@ -4,6 +4,7 @@ using Shared;
 using Shared.Models;
 using Shared.Network;
 using Shared.Network.LobbyServer;
+using Shared.Objects;
 using Shared.Util;
 
 namespace LobbyServer.Network.Handlers
@@ -37,7 +38,7 @@ namespace LobbyServer.Network.Handlers
 
             packet.Sender.Send(new GameSettingsAnswer().CreatePacket());
             
-            packet.Sender.User.Characters = CharacterModel.Retrieve(LobbyServer.Instance.Database.Connection,
+            packet.Sender.User.Characters = CharacterModel.RetrieveUser(LobbyServer.Instance.Database.Connection,
                 packet.Sender.User.UID);
 
             packet.Sender.Send(new UserInfoAnswerPacket
@@ -129,9 +130,18 @@ namespace LobbyServer.Network.Handlers
             Log.Debug(createCharPacket.CharacterName + " " + createCharPacket.Avatar + " " +
                       createCharPacket.CarType + " " + createCharPacket.Color);
 
-            CharacterModel.CreateCharacter(LobbyServer.Instance.Database.Connection, packet.Sender.User.UID,
-                createCharPacket.CharacterName, createCharPacket.Avatar, createCharPacket.CarType,
-                createCharPacket.Color);
+            var character = new Character()
+            {
+                Uid = packet.Sender.User.UID,
+                Name = createCharPacket.CharacterName,
+                Avatar = createCharPacket.Avatar,
+                ActiveCar = new Vehicle()
+                {
+                    CarType = createCharPacket.CarType,
+                    Color = createCharPacket.Color,
+                }
+            };
+            CharacterModel.CreateCharacter(LobbyServer.Instance.Database.Connection, character);
 
             packet.Sender.Send(new CreateCharAnswerPacket
             {

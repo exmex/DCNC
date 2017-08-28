@@ -1,5 +1,9 @@
-﻿namespace Shared.Network.AreaServer.GameServer.Incoming
+﻿namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// 000000: 00 00 00 00 00 00 00 00 00 00 00 00 4A 70 AB 42  · · · · · · · · · · · · J p · B
+    /// 000016: 00 00 00 00 01 00 00 00 01 00 00 00  · · · · · · · · · · · ·
+    /// </summary>
     public class SaveCarPosPacket
     {
         public readonly int ChannelId;

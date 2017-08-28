@@ -1,7 +1,6 @@
 ﻿using System;
 using Shared.Models;
 using Shared.Network;
-using Shared.Network.AreaServer.GameServer.Incoming;
 using Shared.Network.AuthServer;
 using Shared.Network.GameServer;
 using Shared.Objects;
@@ -56,16 +55,22 @@ namespace GameServer.Network.Handlers
         }
 
         /*
-        000000: 00 00 00 00 00 00 00 00 00 00 00 00 4A 70 AB 42  · · · · · · · · · · · · J p · B
-        000016: 00 00 00 00 01 00 00 00 01 00 00 00  · · · · · · · · · · · ·
+        
         */
         [Packet(Packets.CmdSaveCarPos)]
         public static void SaveCarPos(Packet packet)
         {
             var saveCar = new SaveCarPosPacket(packet);
 
-            CharacterModel.UpdatePosition(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacterId,
-                saveCar.ChannelId, saveCar.X, saveCar.Y, saveCar.Z, saveCar.W, saveCar.CityId, saveCar.PosState);
+            packet.Sender.User.ActiveCharacter.LastChannel = saveCar.ChannelId;
+            packet.Sender.User.ActiveCharacter.City = saveCar.CityId;
+            packet.Sender.User.ActiveCharacter.PositionX = saveCar.X;
+            packet.Sender.User.ActiveCharacter.PositionY = saveCar.Y;
+            packet.Sender.User.ActiveCharacter.PositionZ = saveCar.Z;
+            packet.Sender.User.ActiveCharacter.Rotation = saveCar.W;
+            packet.Sender.User.ActiveCharacter.PosState = saveCar.PosState;
+            
+            CharacterModel.Update(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacter);
         }
 
         [Packet(Packets.CmdUpdateQuickSlot)]
@@ -121,22 +126,23 @@ namespace GameServer.Network.Handlers
         }
 
 
-        /*
-        000000: 01 00 00 00 01 00 00 00 00 00 00 00 00 00 80 3F  · · · · · · · · · · · · · · · ?
-        000016: 00 00 00 00  · · · · 
-        */
+        /// <summary>
+        /// Handles the fuel charge packet
+        /// TODO: Move Sale price to a server settings
+        /// </summary>
+        /// <param name="packet"></param>
         [Packet(Packets.CmdFuelChargeReq)]
-        public static void FuelChargeReq(Packet packet) // TODO: Send actual data
+        public static void FuelChargeReq(Packet packet)
         {
             var fuelChargeReqPacket = new FuelChargeReqPacket(packet);
 
-            Log.Debug($"CarID: {fuelChargeReqPacket.CarId}, Fuel: {fuelChargeReqPacket.Fuel}, Pay: {fuelChargeReqPacket.Pay}");
-
+            // Update money first
             packet.Sender.User.ActiveCharacter.MitoMoney = packet.Sender.User.ActiveCharacter.MitoMoney - fuelChargeReqPacket.Pay;
-            packet.Sender.User.ActiveCar.Mitron += fuelChargeReqPacket.Fuel;
+            CharacterModel.Update(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacter);
             
-            CharacterModel.UpdateMito(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacter);
-            VehicleModel.UpdateFuel(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCar);
+            // Update vehicle fuel
+            packet.Sender.User.ActiveCar.Mitron += fuelChargeReqPacket.Fuel;
+            VehicleModel.Update(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCar);
             
             var ack = new FuelChargeReqAnswer
             {
@@ -486,10 +492,16 @@ namespace GameServer.Network.Handlers
                 return;
             }
             var questReward = GameServer.QuestTable[questRewardPacket.TableIndex];
-            packet.Sender.User.ActiveCharacter.CurExp += questReward.RewardExp;
-            // TODO: Check if user has leveled up.
+            
+            bool levelUp;
+            bool useBonus = false;
+            bool useBonus500Mita = false;
+            packet.Sender.User.ActiveCharacter.CurExp += packet.Sender.User.ActiveCharacter.CalculateExp(questReward.RewardExp, out levelUp, useBonus, useBonus500Mita);
+            // TODO: Check if user has leveled up, if so send levelup packet!
+            
+            CharacterModel.Update(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacter);
 
-            // TODO: Load quest reward information here, and send it.
+            // TODO: Load quest reward item information here, and send it.
 
             var ack = new QuestRewardAnswer
             {
@@ -511,8 +523,6 @@ namespace GameServer.Network.Handlers
             if ( pStrQuest->Item01Ptr || pStrQuest->Item02Ptr || pStrQuest->Item03Ptr )
               PacketSend::Send_ItemModList((BS_PacketDispatch *)&pGameDispatch->vfptr);
             */
-
-            CharacterModel.UpdateExp(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacter);
         }
 
         //signed __int16 __usercall sub_52CAB0@<ax>(int a1@<ebp>, double a2@<st0>, int a3, int a4)

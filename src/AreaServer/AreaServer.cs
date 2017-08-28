@@ -44,8 +44,8 @@ namespace AreaServer
                 throw new Exception("Server is already running.");
 
             int x, y, width, height;
-            GetWindowPosition(out x, out y, out width, out height);
-            SetWindowPosition(width + 5, height + 5, width, height);
+            Win32.GetWindowPosition(out x, out y, out width, out height);
+            Win32.SetWindowPosition(width + 5, height + 5, width, height);
 
             ConsoleUtil.WriteHeader("Area Server", ConsoleColor.DarkGreen);
             ConsoleUtil.LoadingTitle();

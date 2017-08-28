@@ -44,8 +44,8 @@ namespace LobbyServer
                 throw new Exception("Server is already running.");
 
             int x, y, width, height;
-            GetWindowPosition(out x, out y, out width, out height);
-            SetWindowPosition(0, height + 5, width, height);
+            Win32.GetWindowPosition(out x, out y, out width, out height);
+            Win32.SetWindowPosition(0, height + 5, width, height);
 
             ConsoleUtil.WriteHeader("Lobby Server", ConsoleColor.DarkGreen);
             ConsoleUtil.LoadingTitle();

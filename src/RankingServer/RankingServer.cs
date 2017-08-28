@@ -44,8 +44,8 @@ namespace RankingServer
                 throw new Exception("Server is already running.");
 
             int x, y, width, height;
-            GetWindowPosition(out x, out y, out width, out height);
-            SetWindowPosition(0, 0, width, height);
+            Win32.GetWindowPosition(out x, out y, out width, out height);
+            Win32.SetWindowPosition(0, 0, width, height);
 
             ConsoleUtil.WriteHeader("Ranking Server", ConsoleColor.DarkGreen);
             ConsoleUtil.LoadingTitle();

@@ -169,7 +169,7 @@ namespace GameServer.Network.Handlers
             packet.Sender.User.ActiveCharacter = character;
             packet.Sender.User.ActiveCarId = character.CurrentCarId;
             packet.Sender.User.ActiveTeam = team;
-            packet.Sender.User.Characters = CharacterModel.Retrieve(GameServer.Instance.Database.Connection, user.UID);
+            packet.Sender.User.Characters = CharacterModel.RetrieveUser(GameServer.Instance.Database.Connection, user.UID);
 
             var vehicles = VehicleModel.Retrieve(GameServer.Instance.Database.Connection, character.Cid);
 
