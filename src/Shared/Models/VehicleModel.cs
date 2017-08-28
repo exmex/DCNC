@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
+using Shared.Database;
 using Shared.Objects;
 
 namespace Shared.Models
@@ -83,24 +84,37 @@ namespace Shared.Models
                 while (reader.Read())
                 {
                     var vehicle = new Vehicle();
-                    vehicle = new Vehicle();
-                    vehicle.CarID = Convert.ToUInt32(reader["CID"]);
-                    vehicle.AuctionCnt = Convert.ToUInt32(reader["auctionCount"]);
-                    vehicle.BaseColor = Convert.ToUInt32(reader["baseColor"]);
+                    vehicle = new Vehicle
+                    {
+                        CarID = Convert.ToUInt32(reader["CID"]),
+                        AuctionCnt = Convert.ToUInt32(reader["auctionCount"]),
+                        BaseColor = Convert.ToUInt32(reader["baseColor"]),
+                        CarType = Convert.ToUInt32(reader["carType"]),
+                        Grade = Convert.ToUInt32(reader["grade"]),
+                        Mitron = (float) Convert.ToDouble(reader["mitron"]),
+                        Kmh = (float) Convert.ToDouble(reader["kmh"]),
+                        SlotType = Convert.ToUInt32(reader["slotType"]),
+                        Color = Convert.ToUInt32(reader["color"]),
+                        MitronCapacity = (float) Convert.ToDouble(reader["mitronCapacity"]),
+                        MitronEfficiency = (float) Convert.ToDouble(reader["mitronEfficiency"])
+                    };
 
-                    vehicle.CarType = Convert.ToUInt32(reader["carType"]);
-                    vehicle.Grade = Convert.ToUInt32(reader["grade"]);
-                    vehicle.Mitron = (float) Convert.ToDouble(reader["mitron"]);
-                    vehicle.Kmh = (float) Convert.ToDouble(reader["kmh"]);
-                    vehicle.SlotType = Convert.ToUInt32(reader["slotType"]);
-                    vehicle.Color = Convert.ToUInt32(reader["color"]);
-                    vehicle.MitronCapacity = (float) Convert.ToDouble(reader["mitronCapacity"]);
-                    vehicle.MitronEfficiency = (float) Convert.ToDouble(reader["mitronEfficiency"]);
                     vehicles.Add(vehicle);
                 }
             }
 
             return vehicles;
+        }
+
+
+        public static void UpdateFuel(MySqlConnection dbconn, Vehicle vehicle)
+        {
+            using (var cmd = new UpdateCommand("UPDATE vehicles SET {0} WHERE CID=@vehId", dbconn))
+            {
+                cmd.AddParameter("@vehId", vehicle.CarID);
+                cmd.Set("mitron", vehicle.Mitron);
+                cmd.Execute();
+            }
         }
     }
 }

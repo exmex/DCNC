@@ -32,8 +32,11 @@ namespace GameServer.Util
             
             Add("weather", "/weather [fine/cloudy/foggy/rain/sunset]", 0x8000, "Changes the current weather", (server, sender, command, args) =>
             {
+                if(args.Count < 1)
+                    return CommandResult.InvalidArgument;
+                
                 var ack = new Packet(Packets.WeatherAck);
-                switch (args[1])
+                switch (args[0])
                 {
                     case "fine":
                         ack.Writer.Write(0);
@@ -68,6 +71,8 @@ namespace GameServer.Util
                 var characterName = args[0];
                 long amount;
                 if (!long.TryParse(args[1], out amount)) return CommandResult.InvalidArgument;
+                if (amount <= 0) // Allow only positive numbers
+                    return CommandResult.InvalidArgument;
                 
                 var message = "Character not found!";
                 if (CharacterModel.UpdateMito(GameServer.Instance.Database.Connection, characterName, amount, false))
@@ -103,6 +108,8 @@ namespace GameServer.Util
                 var characterName = args[0];
                 int amount;
                 if (!int.TryParse(args[1], out amount)) return CommandResult.InvalidArgument;
+                if (amount <= 0) // Allow only positive numbers
+                    return CommandResult.InvalidArgument;
                 
                 var message = "Character not found!";
                 if (CharacterModel.UpdateExp(GameServer.Instance.Database.Connection, characterName, amount, false))

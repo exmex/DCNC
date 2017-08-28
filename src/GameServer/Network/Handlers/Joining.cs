@@ -270,8 +270,29 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdPlayerInfoReq)]
         public static void PlayerInfoReq(Packet packet)
         {
+            var reqCnt = packet.Reader.ReadUInt32();
+            var serial = packet.Reader.ReadUInt16(); // No known scenarios where the requested info count is > 1
+            
+            foreach (var client in GameServer.Instance.Server.GetClients())
+            {
+                if (client.User.ActiveCharacter != null && client.User.ActiveCarId == serial)
+                {
+                    var character = client.User.ActiveCharacter;
+                    var playerInfo = new XiPlayerInfo()
+                    {
+                        CharacterName = character.Name,
+                        Serial = (ushort)client.User.ActiveCarId, // TODO: Verify if the serial is the same as carid
+                        Age = 0
+                    };
+                    var res = new Packet(Packets.PlayerInfoOldAck);
+                    res.Writer.Write(1); // Result
+                    res.Writer.Write(playerInfo);
+                    packet.Sender.Send(res);
+                    break;
+                }
+            }
             #if !DEBUG
-            throw new NotImplementedException();
+            Log.Unimplemented("Missing info for PlayerInfoReq");
             #endif
         }
 

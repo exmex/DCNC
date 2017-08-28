@@ -64,6 +64,7 @@ namespace Shared.Network
         public const ushort FirstPositionAck = 783;
         public const ushort GetDateTimeAck = 785;
         public const ushort MyPositionAck = 789;
+        public const ushort PlayerInfoOldAck = 802;
         public const ushort MyTeamInfoAck = 841;
         public const ushort InstantStartAck = 993;
         public const ushort InstantGiveUpAck = 1000;

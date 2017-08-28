@@ -284,6 +284,16 @@ namespace Shared.Models
             return false;
         }
         
+        public static void UpdateMito(MySqlConnection dbconn, Character character)
+        {
+            using (var cmd = new UpdateCommand("UPDATE characters SET {0} WHERE CID=@charId", dbconn))
+            {
+                cmd.AddParameter("@charId", character.Cid);
+                cmd.Set("Mito", character.MitoMoney);
+                cmd.Execute();
+            }
+        }
+        
         public static bool UpdateMito(MySqlConnection dbconn, string characterName, long amount, bool set = true)
         {
             if (!Exists(dbconn, characterName)) return false;

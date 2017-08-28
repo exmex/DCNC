@@ -94,7 +94,7 @@ namespace GameServer.Network.Handlers
         public static void SendMail(Packet packet)
         {
             #if !DEBUG
-            throw new NotImplementedException();
+            Log.Unimplemented("Not implemented");
             #endif
         }
 

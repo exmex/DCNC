@@ -62,20 +62,27 @@ namespace Shared.Util
 
             Write(buf);
         }
-
-        public void WriteUnicodeStatic(string str, int maxLength)
+        
+        public void WriteUnicodeStatic(string str, int maxLength, bool nullTerminated = false)
         {
             if (str == null)
                 str = "";
-
-            if (str.Length > maxLength)
+	
+            if (str.Length > maxLength) 
                 str = str.Substring(0, maxLength);
-
+	
+            if (nullTerminated)
+            {
+                if (str.Length > maxLength - 1)
+                    str = str.Substring(0, maxLength - 1);
+                str += '\0';
+            }
+	
             var stringBuf = Encoding.Unicode.GetBytes(str);
-
+	
             var buf = new byte[maxLength * 2];
             Array.Copy(stringBuf, 0, buf, 0, stringBuf.Length);
-
+	
             Write(buf);
         }
 

@@ -214,6 +214,8 @@ namespace Shared.Network
                     {
                         Log.Info("Handling unnamed packet ({0} id {1}, 0x{1:X}) on {2}.", Packets.GetName(packet.Id), packet.Id, _port);
                     }
+
+                    Log.Debug("HexDump:{0}{1}", Environment.NewLine, hexDump);
                 }
 #endif
                 _parsers[packet.Id](packet);
@@ -228,6 +230,8 @@ namespace Shared.Network
                     Log.Debug("HexDump:{0}{1}", Environment.NewLine, hexDump);
                     return;
                 }
+
+                Log.Debug("HexDump:{0}{1}", Environment.NewLine, hexDump);
 #endif
                 Log.Warning("Received unhandled packet {0} (id {1}, 0x{1:X}) on {2}.", Packets.GetName(packet.Id), packet.Id, _port);
             }

@@ -130,13 +130,21 @@ namespace GameServer.Network.Handlers
         {
             var fuelChargeReqPacket = new FuelChargeReqPacket(packet);
 
+            Log.Debug($"CarID: {fuelChargeReqPacket.CarId}, Fuel: {fuelChargeReqPacket.Fuel}, Pay: {fuelChargeReqPacket.Pay}");
+
+            packet.Sender.User.ActiveCharacter.MitoMoney = packet.Sender.User.ActiveCharacter.MitoMoney - fuelChargeReqPacket.Pay;
+            packet.Sender.User.ActiveCar.Mitron += fuelChargeReqPacket.Fuel;
+            
+            CharacterModel.UpdateMito(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacter);
+            VehicleModel.UpdateFuel(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCar);
+            
             var ack = new FuelChargeReqAnswer
             {
                 CarId = fuelChargeReqPacket.CarId,
                 Pay = fuelChargeReqPacket.Pay,
-                Fuel = fuelChargeReqPacket.Fuel,
-                Gold = packet.Sender.User.ActiveCharacter.MitoMoney - fuelChargeReqPacket.Pay,
-                DeltaFuel = packet.Sender.User.ActiveCar.Mitron + fuelChargeReqPacket.Fuel,
+                Fuel = packet.Sender.User.ActiveCar.Mitron,
+                Gold = packet.Sender.User.ActiveCharacter.MitoMoney,
+                DeltaFuel = fuelChargeReqPacket.Fuel,
                 SaleUnitPrice = 20.0f,
                 DiscountedSaleUnitPrice = 15.0f,
                 FuelCapacity = packet.Sender.User.ActiveCar.MitronCapacity,
@@ -434,7 +442,7 @@ namespace GameServer.Network.Handlers
         public static void QuestGoalPlace(Packet packet)
         {
             #if !DEBUG
-            throw new NotImplementedException();
+            Log.Unimplemented("Not implemented");
             #endif
         }
 
@@ -687,7 +695,7 @@ struct XiStrStatInfo
             };
             packet.Sender.Send(ack.CreatePacket());
 
-            var modListAnswer = new ItemModListAnswer()
+            /*var modListAnswer = new ItemModListAnswer()
             {
                 Items = new []
                 {
@@ -721,10 +729,10 @@ struct XiStrStatInfo
                     },
                 }
             };
-            packet.Sender.Send(modListAnswer.CreatePacket());
+            packet.Sender.Send(modListAnswer.CreatePacket());*/
             
             #if !DEBUG
-            throw new NotImplementedException();
+            Log.Unimplemented("Not implemented message called!");
             #endif
 
             //BS_PktItemDataList

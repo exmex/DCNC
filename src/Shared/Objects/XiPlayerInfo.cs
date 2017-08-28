@@ -1,6 +1,8 @@
-﻿namespace Shared.Objects
+﻿using Shared.Util;
+
+namespace Shared.Objects
 {
-    public class XiPlayerInfo
+    public class XiPlayerInfo : BinaryWriterExt.ISerializable
     {
         public string CharacterName;
 
@@ -15,6 +17,7 @@
         public ushort TeamNLevel;
         public XiVisualItem VisualItem;
         public float UseTime;
+
         /*
         struct XiPlayerInfo
 {
@@ -32,5 +35,12 @@
   float UseTime;
 };
         */
+        public void Serialize(BinaryWriterExt writer)
+        {
+            writer.WriteUnicodeStatic(CharacterName, 13, true);
+            writer.Write(Serial);
+            writer.Write(Age);
+            writer.Write(new byte[186]); // filler
+        }
     }
 }
