@@ -4,6 +4,7 @@ using System.Data.Common;
 using MySql.Data.MySqlClient;
 using Shared.Database;
 using Shared.Objects;
+using Shared.Util;
 
 namespace Shared.Models
 {
@@ -14,14 +15,15 @@ namespace Shared.Models
         public static Character Retrieve(MySqlConnection dbconn, string characterName)
         {
             var command = new MySqlCommand(
-                "SELECT Characters.*, vehicles.carType, vehicles.baseColor, teams.TEAMNAME, teams.TMARKID, teams.TEAMRANKING, teams.CLOSEDATE FROM Characters LEFT JOIN teams ON characters.TID = teams.TID LEFT JOIN vehicles ON characters.CurrentCarID = vehicles.CID WHERE Name = @char", dbconn);
+                "SELECT Characters.*, vehicles.carType, vehicles.baseColor, teams.TEAMNAME, teams.TMARKID, teams.TEAMRANKING, teams.CLOSEDATE FROM Characters LEFT JOIN teams ON characters.TID = teams.TID LEFT JOIN vehicles ON characters.CurrentCarID = vehicles.CID WHERE characters.Name = @char", dbconn);
 
             command.Parameters.AddWithValue("@char", characterName);
 
             var character = new Character();
             using (DbDataReader reader = command.ExecuteReader())
             {
-                if (reader.Read()) return null;
+
+                if (!reader.Read()) return null; 
                 character.ReadFromDb(reader);
             }
             return character;
@@ -30,7 +32,7 @@ namespace Shared.Models
         public static Character Retrieve(MySqlConnection dbconn, ulong cid)
         {
             var command = new MySqlCommand(
-                "SELECT Characters.*, vehicles.carType, vehicles.baseColor, teams.TEAMNAME, teams.TMARKID, teams.TEAMRANKING, teams.CLOSEDATE FROM Characters LEFT JOIN teams ON characters.TID = teams.TID LEFT JOIN vehicles ON characters.CurrentCarID = vehicles.CID WHERE CID = @cid", dbconn);
+                "SELECT Characters.*, vehicles.carType, vehicles.baseColor, teams.TEAMNAME, teams.TMARKID, teams.TEAMRANKING, teams.CLOSEDATE FROM Characters LEFT JOIN teams ON characters.TID = teams.TID LEFT JOIN vehicles ON characters.CurrentCarID = vehicles.CID WHERE characters.CID = @cid", dbconn);
 
             command.Parameters.AddWithValue("@cid", cid);
 
@@ -38,7 +40,7 @@ namespace Shared.Models
 
             using (DbDataReader reader = command.ExecuteReader())
             {
-                if (reader.Read()) return null;
+                if (!reader.Read()) return null;
                 character.ReadFromDb(reader);
             }
             return character;
@@ -65,6 +67,7 @@ namespace Shared.Models
                 while (reader.Read())
                 {
                     var character = new Character();
+                    character.ReadFromDb(reader);
                     chars.Add(character);
                 }
             }
@@ -133,9 +136,6 @@ namespace Shared.Models
         {
             long insertedCharId = -1;
             long insertedCarId = -1;
-            
-            
-
             using (var cmd = new InsertCommand("INSERT INTO `Characters` {0}", dbconn))
             {
                 cmd.Set("UID", character.Uid);
@@ -181,7 +181,10 @@ namespace Shared.Models
             using (var cmd = new UpdateCommand("UPDATE `Characters` SET {0} WHERE `CID` = @charId", dbconn))
             {
                 cmd.AddParameter("@charId", character.Cid);
-                character.WriteToDb(cmd);
+                
+                var updateCommand = cmd;
+                character.WriteToDb(ref updateCommand);
+                cmd.Execute();
             }
         }
 

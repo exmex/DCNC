@@ -1,4 +1,5 @@
 ﻿using System;
+using Shared;
 using Shared.Models;
 using Shared.Network;
 using Shared.Network.AuthServer;
@@ -486,17 +487,17 @@ namespace GameServer.Network.Handlers
                 return;
             }
 
-            if (!GameServer.QuestTable.ContainsKey(questRewardPacket.TableIndex))
+            if (!ServerMain.QuestTable.ContainsKey(questRewardPacket.TableIndex))
             {
                 packet.Sender.SendError("Quest reward not found.");
                 return;
             }
-            var questReward = GameServer.QuestTable[questRewardPacket.TableIndex];
+            var questReward = ServerMain.QuestTable[questRewardPacket.TableIndex];
             
             bool levelUp;
             bool useBonus = false;
             bool useBonus500Mita = false;
-            packet.Sender.User.ActiveCharacter.CurExp += packet.Sender.User.ActiveCharacter.CalculateExp(questReward.RewardExp, out levelUp, useBonus, useBonus500Mita);
+            packet.Sender.User.ActiveCharacter.CalculateExp(questReward.RewardExp, out levelUp, useBonus, useBonus500Mita);
             // TODO: Check if user has leveled up, if so send levelup packet!
             
             CharacterModel.Update(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacter);
