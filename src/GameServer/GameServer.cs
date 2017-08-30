@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using GameServer.Database;
 using GameServer.Util;
 using Shared;
@@ -80,7 +81,8 @@ namespace GameServer
             {
                 Log.Debug("Loading Exp Table");
                 LevelTable = XiExpTable.LoadFromTdf(reader);
-                Log.Debug("Exp Table Initialized with {0:D} rows.", QuestTable.Count);
+                if(LevelTable.Count == 0) throw new InvalidDataException("LevelTable corrupt!");
+                Log.Debug("Exp Table Initialized with {0:D} rows.", LevelTable.Count);
             }
             else
             {

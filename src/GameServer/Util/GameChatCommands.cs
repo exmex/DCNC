@@ -127,7 +127,6 @@ namespace GameServer.Util
                     Message = $"{amount} EXP given to {characterName}",
                 }.CreatePacket());
                 
-                // BUG/FIXME: Intermitten fault. Sometimes sends levelup sometimes it doesn't!? Could be related to server <-> database mismatch!
                 client.Send(new CharUpdateAnswer()
                 {
                     character = client.User.ActiveCharacter

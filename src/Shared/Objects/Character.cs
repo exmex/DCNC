@@ -250,16 +250,6 @@ namespace Shared.Objects
             long newNextExp = 0;
             for (var i = 1; i < ServerMain.LevelTable.Count; i++)
             {
-                // As per example: Current Level 4, Needs 250 exp, have 200, get 50 -> Level 5
-                // Current Level 4
-                // Base Exp (Prev need exp): 200
-                // Curr Exp: 200
-                // Next Exp: 250
-                // JUMPS UP TO LEVEL 6!?!?!
-                /*
-                [Debug] - CaclulateExp: CurExp: 200, Level: 4, BaseExp: 200, NextExp 250
-                [Debug] - NEW DATA CaclulateExp: CurExp: 250, Level: 6, BaseExp: 240, NextExp 290
-                */
                 var expLevelInfo = ServerMain.LevelTable[i];
                 if (ServerMain.LevelTable[i - 1].Value <= newExp && expLevelInfo.Value > newExp)
                 {
@@ -269,14 +259,15 @@ namespace Shared.Objects
                 }
             }
 
+#if DEBUG
             Log.Debug($"CaclulateExp: CurExp: {CurExp}, Level: {Level}, BaseExp: {BaseExp}, NextExp {NextExp}");
             Log.Debug($"NEW DATA CaclulateExp: CurExp: {newExp}, Level: {newLevel}, BaseExp: {newBaseExp}, NextExp {newNextExp}");
+#endif
             
             CurExp = newExp;
 
             if (Level < newLevel)
             {
-                CurExp = 0;
                 Level = newLevel;
                 BaseExp = newBaseExp;
                 NextExp = newNextExp;
