@@ -168,7 +168,7 @@ namespace SharedTests.Packets
                         Level = 10,
                         CurrentCarId = Utilities.Rand.Next(),
                         CreationDate = Utilities.Rand.Next(),
-                        Tid = Utilities.Rand.NextUInt32(),
+                        TeamId = Utilities.Rand.NextUInt32(),
                         TeamMarkId = Utilities.Rand.NextUInt32(),
                         ActiveCar = new Vehicle()
                         {
@@ -234,7 +234,7 @@ namespace SharedTests.Packets
                         Assert.AreEqual(packet.Characters[i].CreationDate, creationDate);
 
                         var tid = bs.ReadInt64(); // TeamId!!!
-                        Assert.AreEqual(packet.Characters[i].Tid, tid);
+                        Assert.AreEqual(packet.Characters[i].TeamId, tid);
 
                         var teamMarkId = bs.ReadInt64();
                         Assert.AreEqual(packet.Characters[i].TeamMarkId, teamMarkId);

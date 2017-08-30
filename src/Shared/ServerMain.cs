@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using Shared.Database;
+using Shared.Objects;
 using Shared.Util;
 using Shared.Util.Configuration;
 
@@ -13,8 +15,9 @@ namespace Shared
     public abstract class ServerMain
     {
         public const int ProtocolVersion = 10249;
-
         
+        public static Dictionary<uint, XiStrQuest> QuestTable;
+        public static Dictionary<int, KeyValuePair<ushort, long>> LevelTable;
 
         /// <summary>
         ///     Tries to find root folder and changes the working directory to it.

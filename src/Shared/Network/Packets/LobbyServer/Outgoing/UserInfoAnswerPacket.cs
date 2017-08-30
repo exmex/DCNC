@@ -65,7 +65,7 @@ namespace Shared.Network.LobbyServer
                         bs.Write(character.ActiveCar.CarType);
                         bs.Write(character.ActiveCar.BaseColor);
                         bs.Write(character.CreationDate);
-                        bs.Write(character.Tid);
+                        bs.Write(character.TeamId);
                         bs.Write(character.TeamMarkId);
                         bs.WriteUnicodeStatic(character.TeamName, 13);
                         bs.Write(0); // GuildType? (unsigned int nGuild;)

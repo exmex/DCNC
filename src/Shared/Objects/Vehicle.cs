@@ -61,7 +61,7 @@ namespace Shared.Objects
             SlotType = Convert.ToUInt32(reader["slotType"]);
         }
 
-        public void WriteToDb(UpdateCommand cmd)
+        public void WriteToDb(ref UpdateCommand cmd)
         {
             cmd.Set("auctionCount", AuctionCnt);
             //cmd.Set("auctionOn", vehicle.AuctionOn);

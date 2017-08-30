@@ -115,7 +115,7 @@ namespace GameServer.Util
                 bool levelUp;
                 bool useBonus = false;
                 bool useBonus500Mita = false;
-                client.User.ActiveCharacter.CurExp += client.User.ActiveCharacter.CalculateExp(amount, out levelUp, useBonus, useBonus500Mita);
+                client.User.ActiveCharacter.CalculateExp(amount, out levelUp, useBonus, useBonus500Mita);
                 // TODO: Check if user has leveled up, if so send levelup packet!
                     
                 CharacterModel.Update(GameServer.Instance.Database.Connection, client.User.ActiveCharacter);
@@ -126,7 +126,8 @@ namespace GameServer.Util
                     SenderCharacterName = "Server",
                     Message = $"{amount} EXP given to {characterName}",
                 }.CreatePacket());
-                    
+                
+                // BUG/FIXME: Intermitten fault. Sometimes sends levelup sometimes it doesn't!? Could be related to server <-> database mismatch!
                 client.Send(new CharUpdateAnswer()
                 {
                     character = client.User.ActiveCharacter

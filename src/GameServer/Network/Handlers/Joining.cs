@@ -40,6 +40,7 @@ namespace GameServer.Network.Handlers
             {
                 MessageType = Array.ConvertAll(new char[16], v => (char) 99).ToString(),
                 SenderCharacterName = "Server",
+                // As per legal requirements, this shall not be removed!
                 Message = "Server powered by DCNC - GigaToni",
             }.CreatePacket());
         }
@@ -156,12 +157,20 @@ namespace GameServer.Network.Handlers
             var loadCharThreadPacket = new LoadCharThreadPacket(packet);
 
             var character = CharacterModel.Retrieve(GameServer.Instance.Database.Connection, loadCharThreadPacket.CharacterName);
-            var team = TeamModel.Retrieve(GameServer.Instance.Database.Connection, character.Tid);
+            if (character == null)
+            {
+                packet.Sender.KillConnection("Invalid character selected.");
+                return;
+            }
+            
+            var team = TeamModel.Retrieve(GameServer.Instance.Database.Connection, character.TeamId);
+            /*
             character.TeamId = team.TeamId;
             character.TeamName = team.TeamName;
             character.TeamMarkId = team.TeamMarkId;
             character.TeamCloseDate = (int) team.CloseDate;
-            character.TeamRank = 1;
+            character.TeamRank = 1;*/ // <-- This all get set by CharacterModel already.
+
             var user = AccountModel.Retrieve(GameServer.Instance.Database.Connection, character.Uid);
 
             packet.Sender.User = user;
