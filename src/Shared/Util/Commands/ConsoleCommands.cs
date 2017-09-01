@@ -20,6 +20,8 @@ namespace Shared.Util.Commands
             Add("sendpkt", "[packetid] [nullbyte count]", "Sends an empty packet with the specified packet id",
                 HandleSendPkt);
             Add("connections", "Displays all currently active connections", HandleConnections);
+            
+            Add("crash", "Crashes the server", (command, args) => throw new Exception("Test Exception"));
         }
 
         /// <summary>
