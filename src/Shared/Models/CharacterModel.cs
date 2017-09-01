@@ -144,8 +144,8 @@ namespace Shared.Models
                 cmd.Set("City", 1);
                 cmd.Set("CreationDate", DateTimeOffset.Now.ToUnixTimeSeconds());
                 cmd.Set("Level", 1);
-                cmd.Set("GarageLevel", 1);
-                cmd.Set("InventoryLevel", 1);
+                cmd.Set("GarageLevel", 0);
+                cmd.Set("InventoryLevel", 0);
                 cmd.Set("posState", 1);
                 cmd.Set("channelId", -1);
                 // TODO: Change to packet Cmd_FirstPositon.
@@ -169,7 +169,7 @@ namespace Shared.Models
             using (var cmd = new UpdateCommand("UPDATE `Characters` SET {0} WHERE `CID` = @charId", dbconn))
             {
                 cmd.AddParameter("@charId", insertedCharId);
-                cmd.Set("CurrentCarID", insertedCarId);
+                cmd.Set("CurrentCarId", insertedCarId);
 
                 cmd.Execute();
             }

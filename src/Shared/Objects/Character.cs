@@ -23,8 +23,6 @@ namespace Shared.Objects
         public int Flags;
         public int GarageLevel;
         public int Guild;
-        [Obsolete("Same as GarageLevel")] public int HancoinGarage; // TODO/FIXME: Same as GarageLevel?
-        [Obsolete("Same as InventoryLevel")] public int HancoinInven; // TODO/FIXME: Same as InventoryLevel?
         public int InventoryLevel;
         public int LastChannel;
         public int LastDate;

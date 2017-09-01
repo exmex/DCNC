@@ -585,6 +585,31 @@ namespace GameServer.Network.Handlers
             VehicleModel.Update(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCar);
             
             var buyCarPacket = new BuyCarPacket(packet);
+            var price = 0; //XiVehicleTable::GetDefaultVehicleAbility(v14, v13, &Info) //Failed to purchase the car.
+
+            if (packet.Sender.User.ActiveCharacter.MitoMoney < price)
+            {
+                packet.Sender.SendError("Insufficient funds.");
+                return;
+            }
+            
+            var vehicleCount = VehicleModel.RetrieveCount(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacterId);            
+            if (vehicleCount >= (packet.Sender.User.ActiveCharacter.GarageLevel+1) * 8)
+            {
+                packet.Sender.SendError(((char)87u).ToString());
+                return;
+            
+                /*
+                if ( XiCsCharInfo::GetGarageSpace(pCharInfo) <= 0 )
+                  {
+                    PacketSend::Send_Error(lpDispatch->m_pSession, &off_6B8AD0);
+                    return 52;
+                  }
+                */
+            }
+
+            packet.Sender.User.ActiveCharacter.MitoMoney -= price;
+            CharacterModel.Update(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacter);
             
             packet.Sender.User.ActiveCar = new Vehicle()
             {

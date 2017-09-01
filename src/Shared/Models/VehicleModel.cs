@@ -87,5 +87,17 @@ namespace Shared.Models
                 return cmd.LastId;
             }
         }
+
+        public static int RetrieveCount(MySqlConnection dbconn, ulong charId)
+        {
+            var command = new MySqlCommand("SELECT COUNT(*) FROM Vehicles WHERE CharID = @cid", dbconn);
+
+            command.Parameters.AddWithValue("@cid", charId);
+            using (var reader = command.ExecuteReader())
+            {
+                return reader.GetInt32(0);
+            }
+            return 0;
+        }
     }
 }
