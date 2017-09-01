@@ -127,12 +127,11 @@ namespace Shared.Network
 
         public void Send(Packet packet)
         {
-#if DEBUG
             var buffer = packet.Writer.GetBuffer();
 
             var bufferLength = buffer.Length;
             var length = (ushort) (bufferLength + 2); // Length includes itself
-
+#if DEBUG
             var hexDump = BinaryWriterExt.HexDump(buffer);
             
             // Stop frequent packets from spamming the console.
