@@ -7,15 +7,21 @@ namespace AreaServer
     {
         private static void Main(string[] args)
         {
+#if !DEBUG
             try
             {
+#endif
                 AreaServer.Instance.Run();
+#if !DEBUG
             }
             catch (Exception ex)
             {
-                Log.Exception(ex, "An exception occured while starting the server.");
+                Log.Exception(ex, "An exception occured while running the server.");
+                
+                Console.WriteLine("Press any key to exit");
                 ConsoleUtil.Exit(1);
             }
+#endif
         }
     }
 }

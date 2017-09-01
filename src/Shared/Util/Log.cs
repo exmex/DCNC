@@ -124,6 +124,14 @@ namespace Shared.Util
             }
 
             WriteLine(LogLevel.Exception, ex.ToString());
+            
+#if !DEBUG
+            Console.WriteLine("Press any key to upload files to pastebin");
+            Console.ReadKey();
+                
+            var url = PastebinApi.Publish(File.ReadAllText(Log.LogFile));
+            Console.WriteLine($"Your logfile has been uploaded to: {url}");
+#endif
         }
 
         public static void Unimplemented(string format, params object[] args)
