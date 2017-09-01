@@ -1,41 +1,35 @@
 SET FOREIGN_KEY_CHECKS=0;
 
--- ----------------------------
--- Table structure for characters
--- ----------------------------
 DROP TABLE IF EXISTS `characters`;
 CREATE TABLE `characters` (
   `CID` bigint(20) NOT NULL AUTO_INCREMENT,
   `UID` bigint(20) NOT NULL,
   `Name` varchar(21) NOT NULL,
   `CreationDate` int(8) NOT NULL,
-  `Mito` bigint(20) NULL DEFAULT '1000',
-  `Mileage` bigint(20) NULL DEFAULT '0',
-  `Avatar` int(11) NULL DEFAULT '0',
-  `Level` int(11) NULL DEFAULT '1',
-  `BaseExp` int(11) NULL DEFAULT '0',
-  `CurExp` int(11) NULL DEFAULT '0',
-  `NextExp` int(11) NULL DEFAULT '100',
-  `City` int(11) NULL DEFAULT '1' COMMENT '0 = driverDome, 1 = moonpalace',
-  `CurrentCarID` int(11) NULL DEFAULT '1',
-  `GarageLevel` int(11) NULL DEFAULT '1',
-  `TeamId` bigint(20) NULL DEFAULT '-1',
-  `TeamRank` int(18) NULL DEFAULT '-1',
-  `InventoryLevel` int(11) NULL,
-  `posX` double(11,3) NULL DEFAULT '0',
-  `posY` double(11,3) NULL DEFAULT '0',
-  `posZ` double(11,3) NULL DEFAULT '0',
-  `posW` double(11,3) NULL DEFAULT '0',
-  `channelId` int(11) NULL,
-  `posState` int(11) NULL DEFAULT '0',
+  `Mito` bigint(20) DEFAULT '1000',
+  `Mileage` bigint(20) DEFAULT '0',
+  `Avatar` int(11) DEFAULT '0',
+  `Level` int(11) DEFAULT '1',
+  `BaseExp` int(11) DEFAULT '0',
+  `CurExp` int(11) DEFAULT '0',
+  `NextExp` int(11) DEFAULT '100',
+  `City` int(11) DEFAULT '1' COMMENT '0 = driverDome, 1 = moonpalace',
+  `CurrentCarID` int(11) DEFAULT '1',
+  `GarageLevel` int(11) DEFAULT '1',
+  `TeamId` bigint(20) DEFAULT '-1',
+  `TeamRank` int(18) DEFAULT '-1',
+  `InventoryLevel` int(11) DEFAULT NULL,
+  `posX` double(11,3) DEFAULT '0.000',
+  `posY` double(11,3) DEFAULT '0.000',
+  `posZ` double(11,3) DEFAULT '0.000',
+  `posW` double(11,3) DEFAULT '0.000',
+  `channelId` int(11) DEFAULT NULL,
+  `posState` int(11) DEFAULT '0',
   PRIMARY KEY (`CID`),
   KEY `UID` (`UID`),
   CONSTRAINT `characters_ibfk_1` FOREIGN KEY (`UID`) REFERENCES `users` (`UID`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for friends
--- ----------------------------
 DROP TABLE IF EXISTS `friends`;
 CREATE TABLE `friends` (
   `SERVERID` int(18) NOT NULL,
@@ -45,13 +39,6 @@ CREATE TABLE `friends` (
   PRIMARY KEY (`SERVERID`,`CID`,`FCID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Records of friends
--- ----------------------------
-
--- ----------------------------
--- Table structure for quests
--- ----------------------------
 DROP TABLE IF EXISTS `quests`;
 CREATE TABLE `quests` (
   `ServerId` int(18) NOT NULL,
@@ -65,9 +52,6 @@ CREATE TABLE `quests` (
   PRIMARY KEY (`ServerId`,`CID`,`QuestId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for servers
--- ----------------------------
 DROP TABLE IF EXISTS `servers`;
 CREATE TABLE `servers` (
   `Id` int(255) NOT NULL AUTO_INCREMENT,
@@ -89,23 +73,12 @@ CREATE TABLE `servers` (
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Records of servers
--- ----------------------------
-INSERT INTO `servers` VALUES ('1', 'Test', '0', '10', '127.0.0.1', '11021', '127.0.0.1', '11011', '127.0.0.1', '10701', '11031', '127.0.0.1', '10702', '11041', '127.0.0.1', '11078');
-
--- ----------------------------
--- Table structure for shop
--- ----------------------------
 DROP TABLE IF EXISTS `shop`;
 CREATE TABLE `shop` (
   `ItemID` bigint(20) NOT NULL,
   `Price` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Records of shop
--- ----------------------------
 INSERT INTO `shop` VALUES ('0', '250');
 INSERT INTO `shop` VALUES ('5', '400');
 INSERT INTO `shop` VALUES ('10', '1050');
@@ -171,9 +144,6 @@ INSERT INTO `shop` VALUES ('2031', '12000');
 INSERT INTO `shop` VALUES ('2036', '20000');
 INSERT INTO `shop` VALUES ('2025', '30000');
 
--- ----------------------------
--- Table structure for teams
--- ----------------------------
 DROP TABLE IF EXISTS `teams`;
 CREATE TABLE `teams` (
   `SERVERID` decimal(18,0) NOT NULL,
@@ -206,45 +176,26 @@ CREATE TABLE `teams` (
   PRIMARY KEY (`TID`,`SERVERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Records of teams
--- ----------------------------
-INSERT INTO `teams` VALUES ('0', '0', '1', 'Staff', 'Staff', 'Staff Only team', '60', '999', '10', '0', '0', '0', '0', '1', null, null, '0', '1', '', null, 'A', '0', '0', '0', 'http://placehold.it/350x150', 'http://placehold.it/350x150', '0');
-
--- ----------------------------
--- Table structure for updates
--- ----------------------------
 DROP TABLE IF EXISTS `updates`;
 CREATE TABLE `updates` (
   `path` varchar(255) NOT NULL,
   PRIMARY KEY (`path`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Records of updates
--- ----------------------------
-INSERT INTO `updates` VALUES ('main.sql');
-
--- ----------------------------
--- Table structure for users
--- ----------------------------
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `UID` bigint(20) NOT NULL AUTO_INCREMENT,
   `Username` varchar(21) NOT NULL,
   `Password` varchar(64) NOT NULL,
   `Salt` varchar(64) NOT NULL,
-  `Permission` int(6) DEFAULT 0 NOT NULL,
+  `Permission` int(6) NOT NULL DEFAULT '0',
   `Ticket` int(20) unsigned NOT NULL,
   `Status` tinyint(4) NOT NULL DEFAULT '1',
   `CreateIP` varchar(15) NOT NULL DEFAULT '127.0.0.1',
   `CreateDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`UID`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for vehicles
--- ----------------------------
 DROP TABLE IF EXISTS `vehicles`;
 CREATE TABLE `vehicles` (
   `CID` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -260,6 +211,5 @@ CREATE TABLE `vehicles` (
   `mitronCapacity` double(11,2) NOT NULL DEFAULT '500.00',
   `mitronEfficiency` double(11,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`CID`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
-
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 SET FOREIGN_KEY_CHECKS=1;
