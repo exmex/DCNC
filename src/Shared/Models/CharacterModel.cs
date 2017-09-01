@@ -15,14 +15,13 @@ namespace Shared.Models
         public static Character Retrieve(MySqlConnection dbconn, string characterName)
         {
             var command = new MySqlCommand(
-                "SELECT Characters.*, vehicles.carType, vehicles.baseColor, teams.TEAMNAME, teams.TMARKID, teams.TEAMRANKING, teams.CLOSEDATE FROM Characters LEFT JOIN teams ON characters.TID = teams.TID LEFT JOIN vehicles ON characters.CurrentCarID = vehicles.CID WHERE characters.Name = @char", dbconn);
+                "SELECT Characters.*, vehicles.carType, vehicles.baseColor, teams.TEAMNAME, teams.TMARKID, teams.TEAMRANKING, teams.CLOSEDATE FROM Characters LEFT JOIN teams ON characters.TeamId = teams.TID LEFT JOIN vehicles ON characters.CurrentCarID = vehicles.CID WHERE characters.Name = @char", dbconn);
 
             command.Parameters.AddWithValue("@char", characterName);
 
             var character = new Character();
             using (DbDataReader reader = command.ExecuteReader())
             {
-
                 if (!reader.Read()) return null; 
                 character.ReadFromDb(reader);
             }
@@ -32,7 +31,7 @@ namespace Shared.Models
         public static Character Retrieve(MySqlConnection dbconn, ulong cid)
         {
             var command = new MySqlCommand(
-                "SELECT Characters.*, vehicles.carType, vehicles.baseColor, teams.TEAMNAME, teams.TMARKID, teams.TEAMRANKING, teams.CLOSEDATE FROM Characters LEFT JOIN teams ON characters.TID = teams.TID LEFT JOIN vehicles ON characters.CurrentCarID = vehicles.CID WHERE characters.CID = @cid", dbconn);
+                "SELECT Characters.*, vehicles.carType, vehicles.baseColor, teams.TEAMNAME, teams.TMARKID, teams.TEAMRANKING, teams.CLOSEDATE FROM Characters LEFT JOIN teams ON characters.TeamId = teams.TID LEFT JOIN vehicles ON characters.CurrentCarID = vehicles.CID WHERE characters.CID = @cid", dbconn);
 
             command.Parameters.AddWithValue("@cid", cid);
 
@@ -55,7 +54,7 @@ namespace Shared.Models
         public static List<Character> RetrieveUser(MySqlConnection dbconn, ulong uid)
         {
             var command = new MySqlCommand(
-                "SELECT Characters.*, vehicles.carType, vehicles.baseColor, teams.TEAMNAME, teams.TMARKID, teams.TEAMRANKING, teams.CLOSEDATE FROM Characters LEFT JOIN teams ON characters.TID = teams.TID LEFT JOIN vehicles ON characters.CurrentCarID = vehicles.CID WHERE characters.UID = @uid",
+                "SELECT Characters.*, vehicles.carType, vehicles.baseColor, teams.TEAMNAME, teams.TMARKID, teams.TEAMRANKING, teams.CLOSEDATE FROM Characters LEFT JOIN teams ON characters.TeamId = teams.TID LEFT JOIN vehicles ON characters.CurrentCarID = vehicles.CID WHERE characters.UID = @uid",
                 dbconn);
 
             command.Parameters.AddWithValue("@uid", uid);

@@ -29,6 +29,7 @@ namespace Shared.Network
         public const ushort ChatMsgAck = 147;
         public const ushort ChasePropose = 186;
         public const ushort FriendListAck = 231;
+        public const ushort TutorialClearAck = 261;
         public const ushort QuestStartAck = 263;
         public const ushort QuestCompleteAck = 265;
         public const ushort QuestRewardAck = 267;
@@ -69,6 +70,7 @@ namespace Shared.Network
         public const ushort InstantStartAck = 993;
         public const ushort InstantGiveUpAck = 1000;
         public const ushort InstantGoalPlaceAck = 1002;
+        public const ushort VisualUpdateAck = 1061;
         public const ushort BuyVisualItemThreadAck = 1203;
         public const ushort GetMyHancoinAck = 1401;
         //public const ushort VisualItemListAck = 1801;

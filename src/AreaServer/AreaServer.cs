@@ -43,6 +43,8 @@ namespace AreaServer
             if (_running)
                 throw new Exception("Server is already running.");
 
+            Log.Info("Server startup requested");
+
             int x, y, width, height;
             Win32.GetWindowPosition(out x, out y, out width, out height);
             Win32.SetWindowPosition(width + 5, height + 5, width, height);
@@ -62,15 +64,19 @@ namespace AreaServer
             Server = new DefaultServer(Config.Area.Port, false);
             Server.Start();
 
-            var Server2 = new DefaultServer(11041, false);
-            Server2.Start();
+            var server2 = new DefaultServer(11041, false);
+            server2.Start();
 
             ConsoleUtil.RunningTitle();
             _running = true;
+            
+            Log.Info("Registering commands...");
 
             // Commands
             var commands = new AreaConsoleCommands();
             commands.Wait();
+            
+            Log.Info("Finished starting up server!");
         }
     }
 }

@@ -61,6 +61,25 @@ namespace Shared.Objects
             SlotType = Convert.ToUInt32(reader["slotType"]);
         }
 
+        public void WriteToDb(ref InsertCommand cmd)
+        {
+            cmd.Set("auctionCount", AuctionCnt);
+            //cmd.Set("auctionOn", vehicle.AuctionOn);
+            cmd.Set("baseColor", BaseColor);
+            //cmd.Set("CID", vehicle.CarID);
+            cmd.Set("carType", CarType);
+            cmd.Set("color", Color);
+            //cmd.Set("color2", vehicle.Color2);
+            cmd.Set("grade", Grade);
+            cmd.Set("kmh", Kmh);
+            cmd.Set("mitron", Mitron);
+            cmd.Set("mitronCapacity", MitronCapacity);
+            cmd.Set("mitronEfficiency", MitronEfficiency);
+            //cmd.Set("SSBOn", vehicle.SSBOn);
+            cmd.Set("slotType", SlotType);
+            cmd.Execute();
+        }
+        
         public void WriteToDb(ref UpdateCommand cmd)
         {
             cmd.Set("auctionCount", AuctionCnt);

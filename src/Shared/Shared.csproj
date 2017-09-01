@@ -81,6 +81,7 @@
     <Compile Include="Network\Packets\GameServer\Generic\SaveCarPosPacket.cs" />
     <Compile Include="Network\Packets\GameServer\Info\AreaListAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Info\CharUpdateAnswer.cs" />
+    <Compile Include="Network\Packets\GameServer\Info\DriveInfoPacket.cs" />
     <Compile Include="Network\Packets\GameServer\Info\FriendListAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Info\GameCharInfoAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Info\GameCharInfoPacket.cs" />
@@ -88,7 +89,9 @@
     <Compile Include="Network\Packets\GameServer\Info\ItemModListAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Info\MyTeamInfoAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Info\MyTeamInfoPacket.cs" />
+    <Compile Include="Network\Packets\GameServer\Info\StatUpdateAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Info\VisualItemListAnswer.cs" />
+    <Compile Include="Network\Packets\GameServer\Info\VisualUpdateAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Info\WeatherAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Instant\InstantGiveUpAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Instant\InstantGiveUpPacket.cs" />
@@ -120,6 +123,7 @@
     <Compile Include="Network\Packets\GameServer\Quests\QuestRewardPacket.cs" />
     <Compile Include="Network\Packets\GameServer\Quests\QuestStartAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Quests\QuestStartPacket.cs" />
+    <Compile Include="Network\Packets\GameServer\Tutorial\Tutorial.cs" />
     <Compile Include="Network\Packets\OutPacket.cs" />
     <Compile Include="Network\Packets\LobbyServer\Incoming\CheckCharacterNamePacket.cs" />
     <Compile Include="Network\Packets\LobbyServer\Incoming\CheckInLobbyPacket.cs" />
@@ -138,9 +142,12 @@
     <Compile Include="Models\TeamModel.cs" />
     <Compile Include="Objects\Server.cs" />
     <Compile Include="Objects\XiCarAttr.cs" />
+    <Compile Include="Objects\XiStrCarInfo.cs" />
+    <Compile Include="Objects\XiStrEnchantBonus.cs" />
+    <Compile Include="Objects\XiStrItem.cs" />
     <Compile Include="Objects\XiPlayerInfo.cs" />
     <Compile Include="Objects\XiStrMyItemMod.cs" />
-    <Compile Include="Objects\StatInfo.cs" />
+    <Compile Include="Objects\XiStrStatInfo.cs" />
     <Compile Include="Objects\Team.cs" />
     <Compile Include="Objects\Vehicle.cs" />
     <Compile Include="Objects\XiStrIcon.cs" />

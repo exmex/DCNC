@@ -12,7 +12,7 @@ namespace Shared.Models
         public static List<Friend> Retrieve(MySqlConnection dbconn, ulong characterId)
         {
             var command = new MySqlCommand(
-                "SELECT f.*, c.Name, c.channelId, c.City, c.TID, c.Level, t.UTEAMNAME, t.TMARKID FROM `friends` as f INNER JOIN characters as c ON c.CID = f.FCID INNER JOIN teams as t ON t.TID = c.TID WHERE f.CID=@cid",
+                "SELECT f.*, c.Name, c.channelId, c.City, c.TeamId, c.Level, t.UTEAMNAME, t.TMARKID FROM `friends` as f INNER JOIN characters as c ON c.CID = f.FCID INNER JOIN teams as t ON t.TID = c.TeamId WHERE f.CID=@cid",
                 dbconn);
             command.Parameters.AddWithValue("@cid", characterId);
 
@@ -27,7 +27,7 @@ namespace Shared.Models
                         CharacterName = reader["Name"] as string,
                         Level = Convert.ToUInt16(reader["Level"]),
                         State = Convert.ToChar(reader["FSTATE"]),
-                        TeamId = Convert.ToInt64(reader["TID"]),
+                        TeamId = Convert.ToInt64(reader["TeamId"]),
                         TeamName = reader["UTEAMNAME"] as string,
                         TeamMarkId = Convert.ToInt64(reader["TMARKID"]),
                         LocationId = Convert.ToUInt16(reader["City"])

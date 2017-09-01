@@ -12,7 +12,7 @@ namespace Shared.Network.GameServer
     {
         public Character Character;
         public Vehicle Vehicle;
-        public StatInfo StatisticInfo;
+        public XiStrStatInfo StatisticInfo;
         public Team Team;
         public uint Serial;
         public char LocType;
@@ -23,7 +23,7 @@ namespace Shared.Network.GameServer
         {
             Character = new Character();
             Vehicle = new Vehicle();
-            StatisticInfo = new StatInfo();
+            StatisticInfo = new XiStrStatInfo();
             Team = new Team();
         }
 

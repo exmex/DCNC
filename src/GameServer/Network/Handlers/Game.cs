@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Shared;
 using Shared.Models;
 using Shared.Network;
@@ -7,6 +8,7 @@ using Shared.Network.GameServer;
 using Shared.Objects;
 using Shared.Util;
 using Shared.Util.Commands;
+// ReSharper disable UnusedMember.Global
 
 namespace GameServer.Network.Handlers
 {
@@ -177,9 +179,7 @@ namespace GameServer.Network.Handlers
         {
             if (packet.Sender.User.Permission == 0x0)
             {
-#if DEBUG
-                Log.Debug("User entered command but has no permission: " + packet.Sender.User.ActiveCharacter.Name);
-#endif
+                Log.Warning("User entered command but has no permission: " + packet.Sender.User.ActiveCharacter.Name);
                 return;
             }
 
@@ -194,31 +194,22 @@ namespace GameServer.Network.Handlers
             
             var command = GameServer.ChatCommands.GetCommand(cmd);
 
-            if (command != null)
+            if (command == null) return;
+            
+            if (packet.Sender.User.Permission < command.RequiredPermission)
             {
-                if (packet.Sender.User.Permission < command.RequiredPermission)
-                {
-                    Log.Warning("User tried to use admin command: " + command.Name);
-                    return;
-                }
-                var res = command.Func(GameServer.Instance.Server, packet.Sender, cmd, args);
-                if (res == CommandResult.InvalidArgument)
-                {
-                    packet.Sender.Send(new ChatMessageAnswer()
-                    {
-                        MessageType = "channel",
-                        SenderCharacterName = "Server",
-                        Message = "Syntax: " + command.Usage,
-                    }.CreatePacket());
-                }
+                Log.Warning("User tried to use admin command: " + command.Name);
+                return;
             }
-            else
+            
+            var res = command.Func(GameServer.Instance.Server, packet.Sender, cmd, args);
+            if (res == CommandResult.InvalidArgument)
             {
                 packet.Sender.Send(new ChatMessageAnswer()
                 {
                     MessageType = "channel",
                     SenderCharacterName = "Server",
-                    Message = "Invalid command!",
+                    Message = "Syntax: " + command.Usage,
                 }.CreatePacket());
             }
         }
@@ -303,14 +294,18 @@ namespace GameServer.Network.Handlers
             // We're missing 346 bytes of data.
             */
             var gameCharInfoPacket = new GameCharInfoPacket(packet);
-            //gameCharInfoPacket.CharacterName <-- Unused for now!
+            
+            // TODO: Combine this into 1 MySQL Query.
+            var character = CharacterModel.Retrieve(GameServer.Instance.Database.Connection, gameCharInfoPacket.CharacterName);
+            character.ActiveCar = VehicleModel.Retrieve(GameServer.Instance.Database.Connection, (uint)character.CurrentCarId);
+            var activeTeam  =TeamModel.Retrieve(GameServer.Instance.Database.Connection, character.TeamId);
 
             var ack = new GameCharInfoAnswer
             {
-                Character = packet.Sender.User.ActiveCharacter,
-                Vehicle = packet.Sender.User.ActiveCar,
-                StatisticInfo = new StatInfo(),
-                Team = packet.Sender.User.ActiveTeam,
+                Character = character,
+                Vehicle = character.ActiveCar,
+                StatisticInfo = new XiStrStatInfo(),
+                Team = activeTeam,
                 Serial = 0,
                 LocType = 'A',
                 ChId = 'A',
@@ -503,7 +498,31 @@ namespace GameServer.Network.Handlers
             CharacterModel.Update(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacter);
 
             // TODO: Load quest reward item information here, and send it.
+            uint item01 = 0;
+            uint item02 = 0;
+            uint item03 = 0;
+            if(questReward.Item01 != "0")
+                item01 = ServerMain.ItemTable.FirstOrDefault(pair => pair.Value.ID == questReward.Item01).Key;
+            if (questReward.Item02 != "0")
+                item02 = ServerMain.ItemTable.FirstOrDefault(pair => pair.Value.ID == questReward.Item01).Key;
+            if (questReward.Item03 != "0")
+                item03 = ServerMain.ItemTable.FirstOrDefault(pair => pair.Value.ID == questReward.Item03).Key;
 
+
+            /*var ack = new QuestRewardAnswer
+            {
+                TableIndex = questReward.QuestIdN,
+                GetExp = (uint) questReward.RewardExp,
+                GetMoney = (uint) questReward.RewardMoney,
+                CurrentExp = (ulong) packet.Sender.User.ActiveCharacter.CurExp,
+                NextExp = (ulong) packet.Sender.User.ActiveCharacter.NextExp,
+                BaseExp = (ulong) packet.Sender.User.ActiveCharacter.BaseExp,
+                Level = packet.Sender.User.ActiveCharacter.Level,
+                ItemNum = (ushort)questReward.RewardItemNum,
+                RewardItem1 = questReward.Item01,
+                RewardItem2 = questReward.Item02,
+                RewardItem3 = questReward.Item03
+            };*/
             var ack = new QuestRewardAnswer
             {
                 TableIndex = questReward.QuestIdN,
@@ -513,10 +532,10 @@ namespace GameServer.Network.Handlers
                 NextExp = (ulong) packet.Sender.User.ActiveCharacter.NextExp,
                 BaseExp = (ulong) packet.Sender.User.ActiveCharacter.BaseExp,
                 Level = packet.Sender.User.ActiveCharacter.Level,
-                ItemNum = 0,
-                RewardItem1 = 0,
-                RewardItem2 = 0,
-                RewardItem3 = 0
+                ItemNum = (ushort)questReward.RewardItemNum,
+                RewardItem1 = item01,
+                RewardItem2 = item02,
+                RewardItem3 = item03
             };
             packet.Sender.Send(ack.CreatePacket());
 
@@ -562,28 +581,69 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdBuyCar)]
         public static void BuyCar(Packet packet)
         {
+            // Save current car.
+            VehicleModel.Update(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCar);
+            
             var buyCarPacket = new BuyCarPacket(packet);
-
-            var ack = new BuyCarAnswer
+            
+            packet.Sender.User.ActiveCar = new Vehicle()
             {
-                Id = 1,
                 CarType = buyCarPacket.CarType,
                 BaseColor = 0,
                 Grade = 0,
                 SlotType = 0,
-                AuctionCount = 0,
-                Fuel = 100.0f,
-                Kilometer = 0.0f,
+                AuctionCnt = 0,
+                Mitron = 100.0f,
+                Kmh = 0.0f,
                 Color = buyCarPacket.Color,
-                FuelCapacity = 0.0f,
-                FuelEfficiency = 0.0f,
-                AuctionOn = false,
-                Unknown1 = 0,
-                Unknown2 = 0,
-                Price = 10000
+                MitronCapacity = 0.0f,
+                MitronEfficiency = 0.0f,
+                AuctionOn = false
             };
-            // Per hour!?
-            packet.Sender.Send(ack.CreatePacket());
+            
+            // Save newly bought vehicle
+            var carId = VehicleModel.Create(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCar, packet.Sender.User.ActiveCharacterId);
+            packet.Sender.User.ActiveCar.CarID = (uint)carId;
+            
+            // TODO: Send actual data.
+            packet.Sender.Send(new StatUpdateAnswer()
+            {
+                StatisticInfo = new XiStrStatInfo()
+                {
+                    BasedAccel = 0,
+                    BasedBoost = 0,
+                    BasedCrash = 0,
+                    BasedSpeed = 0,
+                    CharAccel = 0,
+                    CharBoost = 0,
+                    CharCrash = 0,
+                    CharSpeed = 0,
+                    EquipAccel = 0,
+                    EquipBoost = 0,
+                    EquipCrash = 0,
+                    EquipSpeed = 0,
+                    ItemUseAccel = 0,
+                    ItemUseBoost = 0,
+                    ItemUseCrash = 0,
+                    ItemUseSpeed = 0,
+                    TotalAccel = 0,
+                    TotalBoost = 0,
+                    TotalCrash = 0,
+                    TotalSpeed = 0,
+                },
+                EnchantBonus = new XiStrEnchantBonus()
+                {
+                    Speed = 0,
+                    Crash = 0,
+                    Accel = 0,
+                    Boost = 0,
+                    AddSpeed = 0,
+                    Drop = 0.0f,
+                    Exp = 0.0f,
+                    MitronCapacity = 0.0f,
+                    MitronEfficiency = 0.0f
+                }
+            }.CreatePacket());
             
             /*PacketSend::Send_StatUpdate((BS_PacketDispatch *)&pGameDispatch->vfptr);
               PacketSend::Send_PartyEnChantUpdateAll((BS_PacketDispatch *)&pGameDispatch->vfptr);
@@ -595,6 +655,77 @@ namespace GameServer.Network.Handlers
             v28[44] = v27->m_CarInfo.AuctionOn;
             lpAckPkt->Gold = Price;
             */
+
+            var carInfo = new XiStrCarInfo()
+            {
+                CarID = packet.Sender.User.ActiveCar.CarID,
+                CarType = buyCarPacket.CarType,
+                BaseColor = packet.Sender.User.ActiveCar.BaseColor,
+                Grade = packet.Sender.User.ActiveCar.Grade,
+                SlotType = packet.Sender.User.ActiveCar.SlotType,
+                AuctionCnt = packet.Sender.User.ActiveCar.AuctionCnt,
+                Mitron = packet.Sender.User.ActiveCar.Mitron,
+                Kmh = packet.Sender.User.ActiveCar.Kmh,
+                Color = buyCarPacket.Color,
+                MitronCapacity = packet.Sender.User.ActiveCar.MitronCapacity,
+                MitronEfficiency = packet.Sender.User.ActiveCar.MitronEfficiency,
+                AuctionOn = packet.Sender.User.ActiveCar.AuctionOn,
+            };
+            
+            packet.Sender.Send(new VisualUpdateAnswer()
+            {
+                Serial = 0,
+                Age = 0,
+                CarId = packet.Sender.User.ActiveCar.CarID,
+                CarInfo = carInfo
+            }.CreatePacket());
+            
+            packet.Sender.Send(new BuyCarAnswer
+            {
+                CarInfo = carInfo,
+                Unknown1 = 0,
+                Unknown2 = 0,
+                Price = 10000 // <-- TODO: Read price from TDF
+            }.CreatePacket());
+        }
+
+        [Packet(Packets.CmdDriveInfoUpdate)]
+        public static void DriveInfoUpdate(Packet packet)
+        {
+            var driveInfo = new DriveInfoPacket(packet);
+
+            var fDeltaFuel = packet.Sender.User.ActiveCar.Mitron - driveInfo.TotalFuel;
+            if (fDeltaFuel > 0.0f)
+                packet.Sender.User.ActiveCar.Mitron -= fDeltaFuel;
+            var fDelta = driveInfo.TotalDistance - packet.Sender.User.ActiveCar.Kmh;
+            if (fDelta > 0.0f)
+            {
+                packet.Sender.User.ActiveCar.Kmh += fDelta;
+                packet.Sender.User.ActiveCharacter.TotalDistance += fDelta;
+            }
+
+            if (packet.Sender.User.ActiveCar.Mitron <= 0.0f)
+                packet.Sender.User.ActiveCar.Mitron = 0.0f;
+            
+            // Save car to db.
+            VehicleModel.Update(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCar);
+
+
+            /*
+            fDeltaFuel = pCarInfo->m_CarInfo.CarUnit.Mitron - *(float *)(lpBuffer + 14);
+            if ( fDeltaFuel > 0.0 )
+              pCarInfo->m_CarInfo.CarUnit.Mitron = pCarInfo->m_CarInfo.CarUnit.Mitron - fDeltaFuel;
+            fDelta = *(float *)(lpBuffer + 10) - pCarInfo->m_CarInfo.CarUnit.Kmh;
+            if ( fDelta > 0.0 )
+            {
+              pCarInfo->m_CarInfo.CarUnit.Kmh = pCarInfo->m_CarInfo.CarUnit.Kmh + fDelta;
+              pCharInfo->m_CharInfo.TotalDistance = pCharInfo->m_CharInfo.TotalDistance + fDelta;
+              pCarInfo->m_fFuelConsume = pCarInfo->m_fFuelConsume + fDelta;
+            }
+            pGame->m_lastUpdateTime = GetSystemTick();
+            if ( pCarInfo->m_CarInfo.CarUnit.Mitron < 0.0 )
+              pCarInfo->m_CarInfo.CarUnit.Mitron = *(float *)&FLOAT_0_0;
+                */
         }
 
         [Packet(Packets.CmdGetMyHancoinThread)]

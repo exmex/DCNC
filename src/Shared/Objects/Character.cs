@@ -136,7 +136,7 @@ namespace Shared.Objects
             CurrentCarId = Convert.ToInt32(reader["CurrentCarID"]);
             InventoryLevel = Convert.ToInt32(reader["InventoryLevel"]);
             GarageLevel = Convert.ToInt32(reader["GarageLevel"]);
-            TeamId = Convert.ToInt64(reader["TID"]);
+            TeamId = Convert.ToInt64(reader["TeamId"]);
             PositionX = Convert.ToSingle(reader["posX"]);
             PositionY = Convert.ToSingle(reader["posY"]);
             PositionZ = Convert.ToSingle(reader["posZ"]);
@@ -175,7 +175,7 @@ namespace Shared.Objects
             cmd.Set("CurrentCarID", CurrentCarId);
             cmd.Set("InventoryLevel", InventoryLevel);
             cmd.Set("GarageLevel", GarageLevel);
-            cmd.Set("TID", TeamId);
+            cmd.Set("TeamId", TeamId);
             cmd.Set("posX", PositionX);
             cmd.Set("posY", PositionY);
             cmd.Set("posZ", PositionZ);

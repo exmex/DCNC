@@ -69,11 +69,21 @@ namespace GameServer
             {
                 Log.Debug("Loading Quest Table");
                 QuestTable = XiStrQuest.LoadFromTdf(reader);
+                if(QuestTable.Count == 0) throw new InvalidDataException("QuestTable corrupt!");
                 Log.Debug("Quest Table Initialized with {0:D} rows.", QuestTable.Count);
             }
             else
             {
                 Log.Debug("Quest Table Load failed.");
+            }
+            
+            reader = new TdfReader();
+            if (reader.Load("system/data/ItemClient.tdf"))
+            {
+                Log.Debug("Loading Item Table");
+                ItemTable = XiStrItem.LoadFromTdf(reader);
+                if(ItemTable.Count == 0) throw new InvalidDataException("ItemTable corrupt!");
+                Log.Debug("Item Table Initialized with {0:D} rows.", ItemTable.Count);
             }
 
             reader = new TdfReader();

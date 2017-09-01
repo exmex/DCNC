@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.CompilerServices;
+using Shared.Objects;
 using Shared.Util;
 
 namespace Shared.Network.GameServer
@@ -11,21 +12,10 @@ namespace Shared.Network.GameServer
     /// </summary>
     public class BuyCarAnswer : OutPacket
     {
-        public int Id;
-        public uint CarType;
-        public int BaseColor;
-        public int Grade;
-        public int SlotType;
-        public int AuctionCount;
-        public float Fuel;
-        public float Kilometer; // Per hour!?
-        public uint Color;
-        public float FuelCapacity;
-        public float FuelEfficiency;
-        public bool AuctionOn;
         public int Unknown1;
         public short Unknown2;
         public int Price;
+        public XiStrCarInfo CarInfo = new XiStrCarInfo();
 
         public override Packet CreatePacket()
         {
@@ -38,20 +28,10 @@ namespace Shared.Network.GameServer
             {
                 using (var bs = new BinaryWriterExt(ms))
                 {
-                    bs.Write(Id); // ID
-                    bs.Write(CarType);
-                    bs.Write(BaseColor); // BaseColor?
-                    bs.Write(Grade); // Grade?
-                    bs.Write(SlotType); // SlotType?
-                    bs.Write(AuctionCount); // AuctionCnt?
-                    bs.Write(Fuel); // Mitron?
-                    bs.Write(Kilometer); // Kmh?
-                    bs.Write(Color);
-                    bs.Write(FuelCapacity); // Mitron cap?
-                    bs.Write(FuelEfficiency); // Mitron eff?
-                    bs.Write(AuctionOn); // AuctionOn
+                    CarInfo.Serialize(bs);
                     bs.Write(Unknown1); // ?????
                     bs.Write(Unknown2); // ?????
+                    bs.Write(new byte[10]); // ?????
                     bs.Write(Price); // Price
                     //ack.Writer.Write(Bumper);
                 }

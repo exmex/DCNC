@@ -75,5 +75,17 @@ namespace Shared.Models
 
             return vehicles;
         }
+        
+        public static long Create(MySqlConnection dbconn, Vehicle veh, ulong ownerId = 0)
+        {
+            using (var cmd = new InsertCommand("INSERT INTO `vehicles` {0}", dbconn))
+            {
+                if(ownerId != 0UL)
+                    cmd.Set("CharID", ownerId);
+                var insertCommand = cmd;
+                veh.WriteToDb(ref insertCommand);
+                return cmd.LastId;
+            }
+        }
     }
 }

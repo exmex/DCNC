@@ -115,12 +115,12 @@ namespace Shared.Network
 
         public void Start()
         {
-            Log.Info("Starting server", _port);
+            Log.Info("Starting network", _port);
 
             _listener.Start();
             _listener.BeginAcceptTcpClient(OnAccept, _listener);
 
-            Log.Info("Server started on port {0}", _port);
+            Log.Info("Network started on port {0}", _port);
         }
 
         private void OnAccept(IAsyncResult result)
@@ -215,7 +215,7 @@ namespace Shared.Network
                         Log.Info("Handling unnamed packet ({0} id {1}, 0x{1:X}) on {2}.", Packets.GetName(packet.Id), packet.Id, _port);
                     }
 
-                    Log.Debug("HexDump:{0}{1}", Environment.NewLine, hexDump);
+                    Log.Debug("HexDump {0}:{1}{2}", packet.Id, Environment.NewLine, hexDump);
                 }
 #endif
                 _parsers[packet.Id](packet);
@@ -227,11 +227,11 @@ namespace Shared.Network
                 {
                     Log.Info("Received unhandled packet {0} ({1} id {2}, 0x{2:X}) on {3}.", PacketNameDatabase[packet.Id],
                         Packets.GetName(packet.Id), packet.Id, _port);
-                    Log.Debug("HexDump:{0}{1}", Environment.NewLine, hexDump);
+                    Log.Debug("HexDump {0}:{1}{2}", packet.Id, Environment.NewLine, hexDump);
                     return;
                 }
 
-                Log.Debug("HexDump:{0}{1}", Environment.NewLine, hexDump);
+                Log.Debug("HexDump {0}:{1}{2}", packet.Id, Environment.NewLine, hexDump);
 #endif
                 Log.Warning("Received unhandled packet {0} (id {1}, 0x{1:X}) on {2}.", Packets.GetName(packet.Id), packet.Id, _port);
             }
