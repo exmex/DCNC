@@ -2,11 +2,11 @@
 {
     public class EnterAreaPacket
     {
-        public readonly uint AreaId;
+        public readonly int AreaId;
 
-        public readonly uint GroupId;
+        public readonly int GroupId;
 
-        public readonly uint LocalTime;
+        public readonly int LocalTime;
         public readonly short SessionId;
 
         public readonly string Username;
@@ -20,9 +20,9 @@
             Username = Username.Substring(Username.Length - 1); // Strip trailing nullbyte
             */
 
-            AreaId = packet.Reader.ReadUInt32();
-            LocalTime = packet.Reader.ReadUInt32();
-            GroupId = packet.Reader.ReadUInt32();
+            AreaId = packet.Reader.ReadInt32();
+            LocalTime = packet.Reader.ReadInt32();
+            GroupId = packet.Reader.ReadInt32();
         }
     }
 }

@@ -50,6 +50,8 @@
     <Compile Include="AreaServer.cs" />
     <Compile Include="Database\AreaDatabase.cs" />
     <Compile Include="Network\Handlers\Area.cs" />
+    <Compile Include="Network\Handlers\Chat.cs" />
+    <Compile Include="Network\Handlers\General.cs" />
     <Compile Include="Network\Handlers\Traffic.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

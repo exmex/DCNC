@@ -5,12 +5,11 @@ using Shared.Util;
 namespace Shared.Network.AreaServer
 {
 	/// <summary>
-	/// TODO: Wrong Packet Size. CMD(563) CmdLen: : 22, AnalysisSize: 16
 	/// </summary>
     public class EnterAreaAnswer : OutPacket
     {
-        public uint AreaId;
-        public uint LocalTime;
+        public int AreaId;
+        public int LocalTime;
 
         //public uint SystemTick;
 
@@ -45,8 +44,10 @@ namespace Shared.Network.AreaServer
 			    using (var bs = new BinaryWriterExt(ms))
 			    {
 				    bs.Write(AreaId);
+				    bs.Write(1); // Result
 				    bs.Write(LocalTime);
 				    bs.Write(Environment.TickCount);
+				    bs.Write(new byte[6]);
 			    }
 			    return ms.ToArray();
 		    }

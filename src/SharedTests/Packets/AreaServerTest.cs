@@ -27,8 +27,8 @@ namespace SharedTests.Packets
         {
             var packet = new EnterAreaAnswer()
             {
-                AreaId = Utilities.Rand.NextUInt32(),
-                LocalTime = Utilities.Rand.NextUInt32()
+                AreaId = Utilities.Rand.Next(),
+                LocalTime = Utilities.Rand.Next()
             };
             var bytes = packet.GetBytes();
 

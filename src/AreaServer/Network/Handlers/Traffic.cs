@@ -3,7 +3,7 @@ using Shared.Network.AreaServer;
 
 namespace AreaServer.Network.Handlers
 {
-    internal class Traffic
+    public static class Traffic
     {
         [Packet(Packets.CmdUdpCastTcsSignal)]
         public static void UdpCastTcsSignal(Packet packet)

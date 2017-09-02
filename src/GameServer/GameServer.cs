@@ -86,6 +86,9 @@ namespace GameServer
                 Log.Debug("Item Table Initialized with {0:D} rows.", ItemTable.Count);
             }
 
+            // TODO: Load VehicleList.csv to VehicleInfo
+            //VehicleInfo.Load("system/data/VehicleList.csv");
+            
             reader = new TdfReader();
             if (reader.Load("system/data/LevelServer.tdf"))
             {

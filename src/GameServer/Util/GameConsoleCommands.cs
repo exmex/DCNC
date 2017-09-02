@@ -11,7 +11,7 @@ namespace GameServer.Util
         {
             Add("traffic", "Arbitrary traffic", (command, args) =>
             {
-                var packet = new Packet(547);
+                var packet = new Packet(Packets.CmdMoveFreeTrafficVehicle);
                 ushort carId = 1;
                 if (args.Count > 1)
                     carId = ushort.Parse(args[1]);

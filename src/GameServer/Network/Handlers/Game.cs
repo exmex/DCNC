@@ -585,7 +585,8 @@ namespace GameServer.Network.Handlers
             VehicleModel.Update(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCar);
             
             var buyCarPacket = new BuyCarPacket(packet);
-            var price = 0; //XiVehicleTable::GetDefaultVehicleAbility(v14, v13, &Info) //Failed to purchase the car.
+            var price = 10; //XiVehicleTable::GetDefaultVehicleAbility(v14, v13, &Info) //Failed to purchase the car.
+            // TODO: Read price from CSV
 
             if (packet.Sender.User.ActiveCharacter.MitoMoney < price)
             {
@@ -710,7 +711,7 @@ namespace GameServer.Network.Handlers
                 CarInfo = carInfo,
                 Unknown1 = 0,
                 Unknown2 = 0,
-                Price = 10000 // <-- TODO: Read price from TDF
+                Price = price
             }.CreatePacket());
         }
 
