@@ -53,6 +53,17 @@ namespace Shared.Network
         /// </summary>
         public static bool DumpOutgoing { get; set; }
 
+#if DEBUG
+        public static readonly List<ushort> PacketDumpBlacklist = new List<ushort>()
+        {
+            Packets.CmdUnknownSync,
+            Packets.CmdNullPing,
+            Packets.CmdUdpCastTcsSignal,
+            Packets.UdpCastTcsSignalAck,
+            Packets.CmdMoveVehicle
+        };
+#endif
+
         public DefaultServer(int port, bool exchangeRequired = true)
         {
 #if DEBUG
@@ -160,17 +171,6 @@ namespace Shared.Network
         {
 #if DEBUG
             var hexDump = BinaryWriterExt.HexDump(packet.Buffer);
-            
-            // Hide frequent sync packets from console log.
-            /*if (packet.Id != Packets.CmdUnknownSync && packet.Id != Packets.CmdNullPing &&
-                packet.Id != Packets.UdpCastTcsSignalAck && packet.Id != Packets.CmdUdpCastTcsSignal &&
-                packet.Id != Packets.CmdUdpCastTcs)
-            {
-                if (!_packetNameDatabase.ContainsKey(packet.Id))
-                    Log.Debug("{0}: {1}", packet.Id, hexDump);
-                else
-                    Log.Debug("{0}: {1}", _packetNameDatabase[packet.Id], hexDump);
-            }*/
 
             if (DumpIncoming)
             {
@@ -202,8 +202,7 @@ namespace Shared.Network
             {
 #if DEBUG
                 // Stop frequent packets from spamming the console.
-                if (packet.Id != Packets.CmdUnknownSync && packet.Id != Packets.CmdNullPing &&
-                    packet.Id != Packets.CmdUdpCastTcsSignal)
+                if (!PacketDumpBlacklist.Contains(packet.Id))
                 {
                     if (PacketNameDatabase.ContainsKey(packet.Id))
                     {
@@ -227,13 +226,15 @@ namespace Shared.Network
                 {
                     Log.Info("Received unhandled packet {0} ({1} id {2}, 0x{2:X}) on {3}.", PacketNameDatabase[packet.Id],
                         Packets.GetName(packet.Id), packet.Id, _port);
-                    Log.Debug("HexDump {0}:{1}{2}", packet.Id, Environment.NewLine, hexDump);
+                    Log.Debug("HexDump  {0} ({1} id {2}, 0x{2:X}):{3}{4}", PacketNameDatabase[packet.Id],
+                        Packets.GetName(packet.Id), packet.Id, Environment.NewLine, hexDump);
                     return;
                 }
-
-                Log.Debug("HexDump {0}:{1}{2}", packet.Id, Environment.NewLine, hexDump);
 #endif
                 Log.Warning("Received unhandled packet {0} (id {1}, 0x{1:X}) on {2}.", Packets.GetName(packet.Id), packet.Id, _port);
+#if DEBUG
+                Log.Debug("HexDump {0} (id {1}, 0x{1:X}):{2}{3}", Packets.GetName(packet.Id), packet.Id, Environment.NewLine, hexDump);
+#endif
             }
         }
 

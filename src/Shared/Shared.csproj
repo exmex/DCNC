@@ -140,6 +140,8 @@
     <Compile Include="Objects\Character.cs" />
     <Compile Include="Objects\Item.cs" />
     <Compile Include="Models\TeamModel.cs" />
+    <Compile Include="Objects\ItemSerialize.cs" />
+    <Compile Include="Objects\QuestSerialize.cs" />
     <Compile Include="Objects\Server.cs" />
     <Compile Include="Objects\VehicleInfo.cs" />
     <Compile Include="Objects\XiCarAttr.cs" />

@@ -15,8 +15,8 @@ namespace Shared
     {
         public const int ProtocolVersion = 10249;
         
-        public static Dictionary<uint, XiStrQuest> QuestTable;
-        public static Dictionary<uint, XiStrItem> ItemTable;
+        public static QuestTable Quests;
+        public static ItemTable Items;
         public static Dictionary<int, KeyValuePair<ushort, long>> LevelTable;
 
         /// <summary>

@@ -482,17 +482,18 @@ namespace GameServer.Network.Handlers
                 return;
             }
 
-            if (!ServerMain.QuestTable.ContainsKey(questRewardPacket.TableIndex))
+            var questReward = ServerMain.Quests.QuestList.Find(quest1 => quest1.TableIndex == questRewardPacket.TableIndex);
+            if (questReward == null)
             {
                 packet.Sender.SendError("Quest reward not found.");
                 return;
             }
-            var questReward = ServerMain.QuestTable[questRewardPacket.TableIndex];
+            var itemReward = questReward.GetRewards();
             
             bool levelUp;
             bool useBonus = false;
             bool useBonus500Mita = false;
-            packet.Sender.User.ActiveCharacter.CalculateExp(questReward.RewardExp, out levelUp, useBonus, useBonus500Mita);
+            packet.Sender.User.ActiveCharacter.CalculateExp(questReward.Experience, out levelUp, useBonus, useBonus500Mita);
             // TODO: Check if user has leveled up, if so send levelup packet!
             
             CharacterModel.Update(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacter);
@@ -501,38 +502,38 @@ namespace GameServer.Network.Handlers
             uint item01 = 0;
             uint item02 = 0;
             uint item03 = 0;
-            if(questReward.Item01 != "0")
-                item01 = ServerMain.ItemTable.FirstOrDefault(pair => pair.Value.ID == questReward.Item01).Key;
-            if (questReward.Item02 != "0")
-                item02 = ServerMain.ItemTable.FirstOrDefault(pair => pair.Value.ID == questReward.Item01).Key;
-            if (questReward.Item03 != "0")
-                item03 = ServerMain.ItemTable.FirstOrDefault(pair => pair.Value.ID == questReward.Item03).Key;
-
-
-            /*var ack = new QuestRewardAnswer
+            if (itemReward.Length > 0)
             {
-                TableIndex = questReward.QuestIdN,
-                GetExp = (uint) questReward.RewardExp,
-                GetMoney = (uint) questReward.RewardMoney,
-                CurrentExp = (ulong) packet.Sender.User.ActiveCharacter.CurExp,
-                NextExp = (ulong) packet.Sender.User.ActiveCharacter.NextExp,
-                BaseExp = (ulong) packet.Sender.User.ActiveCharacter.BaseExp,
-                Level = packet.Sender.User.ActiveCharacter.Level,
-                ItemNum = (ushort)questReward.RewardItemNum,
-                RewardItem1 = questReward.Item01,
-                RewardItem2 = questReward.Item02,
-                RewardItem3 = questReward.Item03
-            };*/
+                if (itemReward.Length >= 1)
+                {
+                    item01 = (uint)ServerMain.Items.ItemList.FindIndex(item => item.Id == itemReward[0]);
+                    if (item01 == -1)
+                        item01 = 0;
+                }
+                if (itemReward.Length >= 2)
+                {
+                    item02 = (uint)ServerMain.Items.ItemList.FindIndex(item => item.Id == itemReward[1]);
+                    if (item02 == -1)
+                        item02 = 0;
+                }
+                if (itemReward.Length == 3)
+                {
+                    item03 = (uint)ServerMain.Items.ItemList.FindIndex(item => item.Id == itemReward[2]);
+                    if (item03 == -1)
+                        item03 = 0;
+                }
+            }
+            
             var ack = new QuestRewardAnswer
             {
-                TableIndex = questReward.QuestIdN,
-                GetExp = (uint) questReward.RewardExp,
-                GetMoney = (uint) questReward.RewardMoney,
+                TableIndex = (uint)questReward.TableIndex,
+                GetExp = (uint) questReward.Experience,
+                GetMoney = (uint) questReward.Mito,
                 CurrentExp = (ulong) packet.Sender.User.ActiveCharacter.CurExp,
                 NextExp = (ulong) packet.Sender.User.ActiveCharacter.NextExp,
                 BaseExp = (ulong) packet.Sender.User.ActiveCharacter.BaseExp,
                 Level = packet.Sender.User.ActiveCharacter.Level,
-                ItemNum = (ushort)questReward.RewardItemNum,
+                ItemNum = (ushort)itemReward.Length,
                 RewardItem1 = item01,
                 RewardItem2 = item02,
                 RewardItem3 = item03

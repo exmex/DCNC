@@ -64,7 +64,7 @@ namespace GameServer
             InitDatabase(Database = new GameDatabase(), Config);
 
             // Data
-            var reader = new TdfReader();
+            /*var reader = new TdfReader();
             if (reader.Load("system/data/QuestServer.tdf"))
             {
                 Log.Debug("Loading Quest Table");
@@ -75,21 +75,63 @@ namespace GameServer
             else
             {
                 Log.Debug("Quest Table Load failed.");
+            }*/
+
+            Log.Info("Loading Quest Table");
+            if (File.Exists("system/data/Quests.xml"))
+            {
+                try
+                {
+                    Quests = QuestTable.Load("system/data/Quests.xml");
+                }
+                catch (Exception e)
+                {
+#if !DEBUG
+                    throw new Exception("Quest data corrupt!");
+#else
+                    throw;
+#endif
+                }
             }
+            else
+            {
+                throw new FileNotFoundException("Quest data not found!");
+            }
+            Log.Info("Quest Table loaded with {0:D} entries", Quests.QuestList.Count);
             
-            reader = new TdfReader();
+            // ################# ITEMS ################ //
+            Log.Info("Loading Item Table");
+            if (File.Exists("system/data/Items.xml"))
+            {
+                try
+                {
+                    Items = ItemTable.Load("system/data/Items.xml");
+                }
+                catch (Exception)
+                {
+                    throw new Exception("Items data corrupt!");
+                }
+            }
+            else
+            {
+                throw new FileNotFoundException("Items data not found!");
+            }
+            Log.Info("Item Table loaded with {0:D} entries", Items.ItemList.Count);
+            
+            
+            /*reader = new TdfReader();
             if (reader.Load("system/data/ItemClient.tdf"))
             {
                 Log.Debug("Loading Item Table");
                 ItemTable = XiStrItem.LoadFromTdf(reader);
                 if(ItemTable.Count == 0) throw new InvalidDataException("ItemTable corrupt!");
                 Log.Debug("Item Table Initialized with {0:D} rows.", ItemTable.Count);
-            }
+            }*/
 
             // TODO: Load VehicleList.csv to VehicleInfo
             //VehicleInfo.Load("system/data/VehicleList.csv");
             
-            reader = new TdfReader();
+            var reader = new TdfReader();
             if (reader.Load("system/data/LevelServer.tdf"))
             {
                 Log.Debug("Loading Exp Table");

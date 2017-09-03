@@ -75,6 +75,8 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdAreaList)] // TODO: Actual areas and not just dummies
         public static void AreaList(Packet packet)
         {
+            // client calls 2 functions (not using any packet data), returns  137 * (*(_DWORD *)(pktBuf + 2) - 1) + 143;
+            
             //if ( *(_BYTE *)&BS_Global::ContentsFlag.Main.0 >> 8 )
             /*var ack = new Packet(789); // GateList
             ack.Writer.Write(1); // Gate Count
@@ -90,6 +92,8 @@ namespace GameServer.Network.Handlers
             {
                 Areas = new Area[10]
             };
+            
+            // TODO: Verify: Somehow the gameserver spits out an error here?!
             
             for (var i = 0; i < 10; i++)
             {

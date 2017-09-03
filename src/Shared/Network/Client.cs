@@ -135,7 +135,7 @@ namespace Shared.Network
             var hexDump = BinaryWriterExt.HexDump(buffer);
             
             // Stop frequent packets from spamming the console.
-            if (packet.Id != Packets.UdpCastTcsSignalAck)
+            if (!DefaultServer.PacketDumpBlacklist.Contains(packet.Id))
             {
                 if(DefaultServer.PacketNameDatabase.ContainsKey(packet.Id))
                     Log.Info("Sending packet {0} ({1} id {2}, 0x{2:X}).", DefaultServer.PacketNameDatabase[packet.Id],

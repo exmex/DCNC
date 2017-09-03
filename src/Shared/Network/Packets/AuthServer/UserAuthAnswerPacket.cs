@@ -87,7 +87,7 @@ namespace Shared.Network.AuthServer
                     bs.Write(Ticket);
                     bs.Write(Result);
                     bs.Write(Time);
-                    bs.Write(new byte[64]); // Filler. Unused?
+                    bs.Write(new byte[64]); // Filler. Unused? ("STicket")
                     bs.Write(ServerListId);
                     bs.Write(ServerCount);
                     for (var i = 0; i < Servers.Length; i++)
