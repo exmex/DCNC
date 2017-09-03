@@ -49,6 +49,7 @@
     <Compile Include="Models\AccountModel.cs" />
     <Compile Include="Models\CharacterModel.cs" />
     <Compile Include="Models\FriendModel.cs" />
+    <Compile Include="Models\ItemModel.cs" />
     <Compile Include="Models\QuestModel.cs" />
     <Compile Include="Models\ServerModel.cs" />
     <Compile Include="Models\VehicleModel.cs" />
@@ -123,7 +124,6 @@
     <Compile Include="Network\Packets\GameServer\Quests\QuestRewardPacket.cs" />
     <Compile Include="Network\Packets\GameServer\Quests\QuestStartAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Quests\QuestStartPacket.cs" />
-    <Compile Include="Network\Packets\GameServer\Tutorial\Tutorial.cs" />
     <Compile Include="Network\Packets\OutPacket.cs" />
     <Compile Include="Network\Packets\LobbyServer\Incoming\CheckCharacterNamePacket.cs" />
     <Compile Include="Network\Packets\LobbyServer\Incoming\CheckInLobbyPacket.cs" />
@@ -166,6 +166,7 @@
     <Compile Include="Util\Configuration\BaseConf.cs" />
     <Compile Include="Util\Configuration\ConfFile.cs" />
     <Compile Include="Util\Configuration\Files\DatabaseConfFile.cs" />
+    <Compile Include="Util\Configuration\Files\IPConfFile.cs" />
     <Compile Include="Util\Configuration\Files\LogConfFile.cs" />
     <Compile Include="Util\ConsoleUtil.cs" />
     <Compile Include="Util\FileReader.cs" />

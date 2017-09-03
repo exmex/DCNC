@@ -28,7 +28,7 @@ namespace SharedTests
 
         public static Packet ConstructTestPacket(string testFile, ushort packetId)
         {
-            var packet = ReadAllBytesNoLock(GetTestFile("/../../packetcaptures/"+testFile));
+            var packet = ReadAllBytesNoLock(GetTestFile("/../../packetcaptures/incoming/"+testFile));
             return new Packet(null, packetId, packet);
         }
     }

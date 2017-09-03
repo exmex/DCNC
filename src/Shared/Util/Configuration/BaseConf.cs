@@ -6,6 +6,7 @@ namespace Shared.Util.Configuration
     {
         protected BaseConf()
         {
+            Ip = new IPConfFile();
             Log = new LogConfFile();
             Database = new DatabaseConfFile();
         }
@@ -14,6 +15,8 @@ namespace Shared.Util.Configuration
         ///     log.conf
         /// </summary>
         public LogConfFile Log { get; protected set; }
+        
+        public IPConfFile Ip { get; protected set; }
 
         /// <summary>
         ///     database.conf
@@ -26,6 +29,7 @@ namespace Shared.Util.Configuration
         /// </summary>
         protected void LoadDefault()
         {
+            Ip.Load();
             Log.Load();
             Database.Load();
         }

@@ -86,17 +86,20 @@ namespace GameServer.Network.Handlers
             packet.Sender.Send(ack);
             
             // Missing: BS_PktChannelOwnershipListAck
-            */
+s            */
 
-            var ack = new AreaListAnswer
-            {
-                Areas = new Area[10]
-            };
+            var ack = new AreaListAnswer();
+            ack.Areas = new Area[10];
             
             // TODO: Verify: Somehow the gameserver spits out an error here?!
             
             for (var i = 0; i < 10; i++)
             {
+                if (ack.Areas[i] == null)
+                {
+                    Log.Error("FUCKKKKKKK!!!!!!!!!! " + i);
+                    return;
+                }
                 ack.Areas[i].AreaId = i;
                 ack.Areas[i].CurrentPlayers = 0;
                 ack.Areas[i].MaxPlayers = 100;
@@ -251,24 +254,15 @@ namespace GameServer.Network.Handlers
         }
 
         [Packet(Packets.CmdItemList)]
-        public static void ItemList(Packet packet) // TODO: Send actual data
+        public static void ItemList(Packet packet)
         {
+            var items = ItemModel.RetrieveAll(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacterId);
             var ack = new ItemListAnswer
             {
-                Items = new[]
-                {
-                    new XiStrMyItemMod
-                    {
-                        MyItem = new Item()
-                        {
-                            InvenIdx = 0,
-                            TableIdx = 50,
-                        }
-                    }
-                }
+                Items = items.ToArray()
             };
 
-            packet.Sender.Send(ack.CreatePacket());
+            //packet.Sender.Send(ack.CreatePacket());
         }
 
         [Packet(Packets.CmdVisualItemList)]

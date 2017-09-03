@@ -97,6 +97,28 @@ namespace Shared.Models
         }
         
         /// <summary>
+        /// Checks wether the userId owns the character name
+        /// TODO: Maybe rename this to OwnsCharacter?
+        /// </summary>
+        /// <param name="dbconn">The mysql database connection</param>
+        /// <param name="uid">The id of the user</param>
+        /// <returns></returns>
+        public static ulong HasCharacter(MySqlConnection dbconn, string characterName, ulong uid)
+        {
+            var command = new MySqlCommand(
+                "SELECT `CID` FROM Characters WHERE Name = @charName AND UID = @uid", dbconn);
+
+            command.Parameters.AddWithValue("@charName", characterName);
+            command.Parameters.AddWithValue("@uid", uid);
+
+            using (DbDataReader reader = command.ExecuteReader())
+            {
+                if (!reader.Read()) return 0;
+                return reader.HasRows ? Convert.ToUInt64(reader["CID"]) : 0;
+            }
+        }
+        
+        /// <summary>
         /// Deletes the character from the DB
         /// </summary>
         /// <param name="dbconn">The mysql connection</param>

@@ -499,28 +499,43 @@ namespace GameServer.Network.Handlers
             CharacterModel.Update(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacter);
 
             // TODO: Load quest reward item information here, and send it.
-            uint item01 = 0;
-            uint item02 = 0;
-            uint item03 = 0;
+            int item01 = 0;
+            int item02 = 0;
+            int item03 = 0;
+            ItemTable.Item _item01 = null;
+            ItemTable.Item _item02 = null;
+            ItemTable.Item _item03 = null;
             if (itemReward.Length > 0)
             {
                 if (itemReward.Length >= 1)
                 {
-                    item01 = (uint)ServerMain.Items.ItemList.FindIndex(item => item.Id == itemReward[0]);
-                    if (item01 == -1)
-                        item01 = 0;
+                    _item01 = ServerMain.Items.ItemList.Find(item => item.Id == itemReward[0]);
+                    if (_item01 != null)
+                    {
+                        item01 = ServerMain.Items.ItemList.IndexOf(_item01);
+                        if (item01 == -1)
+                            item01 = 0;
+                    }
                 }
                 if (itemReward.Length >= 2)
                 {
-                    item02 = (uint)ServerMain.Items.ItemList.FindIndex(item => item.Id == itemReward[1]);
-                    if (item02 == -1)
-                        item02 = 0;
+                    _item02 = ServerMain.Items.ItemList.Find(item => item.Id == itemReward[1]);
+                    if (_item02 != null)
+                    {
+                        item02 = ServerMain.Items.ItemList.IndexOf(_item02);
+                        if (item02 == -1)
+                            item02 = 0;
+                    }
                 }
                 if (itemReward.Length == 3)
                 {
-                    item03 = (uint)ServerMain.Items.ItemList.FindIndex(item => item.Id == itemReward[2]);
-                    if (item03 == -1)
-                        item03 = 0;
+                    _item03 = ServerMain.Items.ItemList.Find(item => item.Id == itemReward[2]);
+                    if (_item03 != null)
+                    {
+                        item03 = ServerMain.Items.ItemList.IndexOf(_item03);
+                        if (item03 == -1)
+                            item03 = 0;
+                    }
                 }
             }
             
@@ -534,11 +549,17 @@ namespace GameServer.Network.Handlers
                 BaseExp = (ulong) packet.Sender.User.ActiveCharacter.BaseExp,
                 Level = packet.Sender.User.ActiveCharacter.Level,
                 ItemNum = (ushort)itemReward.Length,
-                RewardItem1 = item01,
-                RewardItem2 = item02,
-                RewardItem3 = item03
+                RewardItem1 = (uint)item01,
+                RewardItem2 = (uint)item02,
+                RewardItem3 = (uint)item03
             };
             packet.Sender.Send(ack.CreatePacket());
+
+            if ((item01 != 0 && _item01 != null) ||
+                (item02 != 0 && _item02 != null) ||
+                (item03 != 0 && _item03 != null))
+            {
+            }
 
             /*
             if ( pStrQuest->Item01Ptr || pStrQuest->Item02Ptr || pStrQuest->Item03Ptr )
@@ -765,6 +786,19 @@ namespace GameServer.Network.Handlers
             };
 
             packet.Sender.Send(ack.CreatePacket());
+        }
+        
+        public static class Tutorial
+        {
+            [Packet(Packets.CmdTutorialClear)]
+            public static void TutorialClear(Packet packet)
+            {
+                var type = packet.Reader.ReadUInt32();
+                var ack = new Packet(Packets.TutorialClearAck);
+                ack.Writer.Write(type);
+            
+                packet.Sender.Send(ack);
+            }
         }
 
         [Packet(Packets.CmdCheckStat)]

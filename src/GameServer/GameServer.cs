@@ -84,7 +84,7 @@ namespace GameServer
                 {
                     Quests = QuestTable.Load("system/data/Quests.xml");
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
 #if !DEBUG
                     throw new Exception("Quest data corrupt!");

@@ -155,11 +155,13 @@ namespace LobbyServer.Network.Handlers
             var deleteCharacterPacket = new DeleteCharacterPacket(packet);
 
             // Check if the user owns the character, if not don't do anything.
-            if (CharacterModel.HasCharacter(LobbyServer.Instance.Database.Connection, deleteCharacterPacket.CharacterId,
-                packet.Sender.User.UID))
+            var cid = CharacterModel.HasCharacter(LobbyServer.Instance.Database.Connection,
+                deleteCharacterPacket.CharacterName,
+                packet.Sender.User.UID);
+            if (cid != 0)
             {
                 CharacterModel.DeleteCharacter(LobbyServer.Instance.Database.Connection,
-                    deleteCharacterPacket.CharacterId, packet.Sender.User.UID);
+                    cid, packet.Sender.User.UID);
 
                 packet.Sender.Send(new DeleteCharacterAnswerPacket
                 {

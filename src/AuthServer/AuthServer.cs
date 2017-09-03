@@ -33,7 +33,7 @@ namespace AuthServer
         /// <summary>
         ///     Configuration
         /// </summary>
-        private AuthConf Config { get; set; }
+        public AuthConf Config { get; set; }
 
         /// <summary>
         ///     Loads all necessary components and starts the server.

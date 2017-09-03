@@ -6,24 +6,10 @@ using Shared.Util;
 namespace Shared.Network.GameServer
 {
     /// <summary>
-    /// TODO: Packet not implemented
     /// </summary>
     public class ItemListAnswer : OutPacket
     {
-        /*
-        struct XiStrMyVSItem
-        {
-          unsigned int CarID;
-          int ItemState;
-          unsigned int TableIdx;
-          unsigned int InvenIdx;
-          XiStrPlateName PlateName;
-          int Period;
-          int UpdateTime;
-          int CreateTime;
-        };
-        */
-        public XiStrMyItemMod[] Items;
+        public Item[] Items;
         public override Packet CreatePacket()
         {
             return base.CreatePacket(Packets.ItemListAck);
@@ -38,30 +24,10 @@ namespace Shared.Network.GameServer
                     bs.Write(0x40000); // 262144
                     foreach (var item in Items)
                     {
-                        bs.Write(item.MyItem.CarID);
-                        bs.Write(item.MyItem.Itm.State);
-                        bs.Write(item.MyItem.Itm.Slot);
-                        bs.Write(item.MyItem.Itm.StateVar);
-                        bs.Write(item.MyItem.iunit.StackNum);
-                        bs.Write(item.MyItem.iunit.Random);
-                        bs.Write(item.MyItem.iunit.AssistA);
-                        bs.Write(item.MyItem.iunit.AssistB);
-                        bs.Write(item.MyItem.iunit.Box);
-                        bs.Write(item.MyItem.iunit.Belonging);
-                        bs.Write(item.MyItem.iunit.Upgrade);
-                        bs.Write(item.MyItem.iunit.UpgradePoint);
-                        bs.Write(item.MyItem.iunit.ExpireTick);
-                        bs.Write(item.MyItem.TableIdx);
-                        bs.Write(item.MyItem.InvenIdx);
-                        bs.Write((uint)0);
-                        bs.Write((uint)0);
+                        bs.Write(item);
                     }
                 }
-                #if DEBUG
                 return ms.ToArray();
-                #else
-                return new byte[0];
-                #endif
             }
             
             /*

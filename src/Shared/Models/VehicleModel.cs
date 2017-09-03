@@ -97,7 +97,6 @@ namespace Shared.Models
             {
                 return reader.GetInt32(0);
             }
-            return 0;
         }
     }
 }

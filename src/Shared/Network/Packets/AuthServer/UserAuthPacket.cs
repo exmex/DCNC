@@ -1,5 +1,8 @@
-﻿using MySql.Data.MySqlClient;
+﻿using System;
+using System.Net;
+using MySql.Data.MySqlClient;
 using Shared.Models;
+using Shared.Objects;
 using Shared.Util;
 
 namespace Shared.Network.AuthServer
@@ -46,53 +49,7 @@ namespace Shared.Network.AuthServer
         /// <param name="connection">The mysql connection</param>
         public static void OnPacket(Packet packet, MySqlConnection connection)
         {
-            var authPacket = new UserAuthPacket(packet);
-
-            Log.Debug("Login (v{0}) request from {1}", authPacket.ProtocolVersion.ToString(), authPacket.Username);
-
-            // Check the protocol version, make sure the client is up-to-date with us
-            if (authPacket.ProtocolVersion < ServerMain.ProtocolVersion)
-            {
-                Log.Debug("Client too old?");
-                packet.Sender.SendError("Your client is outdated!");
-            }
-
-            // Check if the account exists
-            if (!AccountModel.AccountExists(connection, authPacket.Username))
-            {
-                Log.Debug("Account {0} not found!", authPacket.Username);
-                packet.Sender.SendError("Invalid Username or password!");
-                return;
-            }
-
-            // Retrieve the account
-            var user = AccountModel.Retrieve(connection, authPacket.Username);
-            if (user == null)
-            {
-                Log.Debug("Account {0} not found!", authPacket.Username);
-                packet.Sender.SendError("Invalid Username or password!");
-                return;
-            }
-
-            // Check password
-            var passwordHashed = Util.Password.GenerateSaltedHash(authPacket.Password, user.Salt);
-            if (passwordHashed != user.Password)
-            {
-                Log.Debug("Account {0} found but invalid password! (Entered PW: {1} (Salt: {2}) vs SaltedPW: {3})",
-                    authPacket.Username,
-                    passwordHashed, user.Salt, user.Password);
-                packet.Sender.SendError("Invalid Username or password!");
-                return;
-            }
-
-            // Create new session ticket
-            var ticket = AccountModel.CreateSession(connection, authPacket.Username);
             
-            packet.Sender.Send(new UserAuthAnswerPacket
-            {
-                Ticket = ticket,
-                Servers = ServerModel.Retrieve(connection).ToArray()
-            }.CreatePacket());
         }
     }
 }
