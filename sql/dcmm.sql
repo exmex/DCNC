@@ -15,10 +15,10 @@ CREATE TABLE `characters` (
   `NextExp` int(11) DEFAULT '100',
   `City` int(11) DEFAULT '1' COMMENT '0 = driverDome, 1 = moonpalace',
   `CurrentCarID` int(11) DEFAULT '1',
-  `GarageLevel` int(11) DEFAULT '1',
+  `GarageLevel` int(11) DEFAULT '0',
   `TeamId` bigint(20) DEFAULT '-1',
   `TeamRank` int(18) DEFAULT '-1',
-  `InventoryLevel` int(11) DEFAULT NULL,
+  `InventoryLevel` int(11) DEFAULT '0',
   `posX` double(11,3) DEFAULT '0.000',
   `posY` double(11,3) DEFAULT '0.000',
   `posZ` double(11,3) DEFAULT '0.000',
@@ -39,6 +39,35 @@ CREATE TABLE `friends` (
   PRIMARY KEY (`SERVERID`,`CID`,`FCID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+DROP TABLE IF EXISTS `items`;
+CREATE TABLE `items` (
+  `Id` int(12) NOT NULL AUTO_INCREMENT,
+  `CarId` int(11) DEFAULT NULL,
+  `Random` int(6) DEFAULT '0',
+  `CharacterId` int(11) DEFAULT NULL,
+  `Durability` float DEFAULT '100',
+  `TableIndex` int(6) DEFAULT NULL,
+  `InventoryIndex` int(11) DEFAULT NULL,
+  `UpgradePoint` int(6) DEFAULT '0',
+  `Upgrade` int(6) DEFAULT '0',
+  `Belonging` int(6) DEFAULT '0',
+  `Box` int(6) DEFAULT '0',
+  `AssistJ` int(6) DEFAULT '0',
+  `AssistI` int(6) DEFAULT '0',
+  `AssistH` int(6) DEFAULT '0',
+  `AssistG` int(6) DEFAULT '0',
+  `AssistF` int(6) DEFAULT '0',
+  `AssistE` int(6) DEFAULT '0',
+  `AssistD` int(6) DEFAULT '0',
+  `AssistC` int(6) DEFAULT '0',
+  `AssistB` int(6) DEFAULT '0',
+  `AssistA` int(6) DEFAULT '0',
+  `State` int(6) DEFAULT '0',
+  `Slot` int(11) DEFAULT '0',
+  `StackNum` int(11) DEFAULT '1',
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+
 DROP TABLE IF EXISTS `quests`;
 CREATE TABLE `quests` (
   `ServerId` int(18) NOT NULL,
@@ -52,97 +81,11 @@ CREATE TABLE `quests` (
   PRIMARY KEY (`ServerId`,`CID`,`QuestId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-DROP TABLE IF EXISTS `servers`;
-CREATE TABLE `servers` (
-  `Id` int(255) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(255) NOT NULL DEFAULT 'Test',
-  `PlayersOnline` int(5) DEFAULT '0',
-  `MaxPlayers` int(5) DEFAULT '10',
-  `GameServerIp` varchar(255) DEFAULT '127.0.0.1',
-  `GameServerPort` int(5) DEFAULT '11021',
-  `LobbyServerIp` varchar(255) DEFAULT '127.0.0.1',
-  `LobbyServerPort` int(5) DEFAULT '11011',
-  `AreaServer1Ip` varchar(255) DEFAULT '127.0.0.1',
-  `AreaServer1UdpPort` int(5) DEFAULT '10701',
-  `AreaServer1Port` int(5) DEFAULT '11031',
-  `AreaServer2Ip` varchar(255) DEFAULT '127.0.0.1',
-  `AreaServer2UdpPort` int(5) DEFAULT '10702',
-  `AreaServer2Port` int(5) DEFAULT '11041',
-  `RankingServerIp` varchar(255) DEFAULT '127.0.0.1',
-  `RankingServerPort` int(5) DEFAULT '11078',
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
-
 DROP TABLE IF EXISTS `shop`;
 CREATE TABLE `shop` (
   `ItemID` bigint(20) NOT NULL,
   `Price` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `shop` VALUES ('0', '250');
-INSERT INTO `shop` VALUES ('5', '400');
-INSERT INTO `shop` VALUES ('10', '1050');
-INSERT INTO `shop` VALUES ('15', '2000');
-INSERT INTO `shop` VALUES ('20', '3250');
-INSERT INTO `shop` VALUES ('25', '250');
-INSERT INTO `shop` VALUES ('30', '400');
-INSERT INTO `shop` VALUES ('35', '1050');
-INSERT INTO `shop` VALUES ('40', '2000');
-INSERT INTO `shop` VALUES ('45', '3250');
-INSERT INTO `shop` VALUES ('50', '250');
-INSERT INTO `shop` VALUES ('55', '400');
-INSERT INTO `shop` VALUES ('60', '1050');
-INSERT INTO `shop` VALUES ('65', '2000');
-INSERT INTO `shop` VALUES ('70', '3250');
-INSERT INTO `shop` VALUES ('75', '250');
-INSERT INTO `shop` VALUES ('80', '400');
-INSERT INTO `shop` VALUES ('85', '1050');
-INSERT INTO `shop` VALUES ('90', '2000');
-INSERT INTO `shop` VALUES ('95', '3250');
-INSERT INTO `shop` VALUES ('1445', '5000');
-INSERT INTO `shop` VALUES ('1488', '50');
-INSERT INTO `shop` VALUES ('1502', '200');
-INSERT INTO `shop` VALUES ('1503', '1000');
-INSERT INTO `shop` VALUES ('1504', '30000');
-INSERT INTO `shop` VALUES ('1516', '5000');
-INSERT INTO `shop` VALUES ('1554', '100');
-INSERT INTO `shop` VALUES ('1561', '1000');
-INSERT INTO `shop` VALUES ('1568', '500');
-INSERT INTO `shop` VALUES ('1569', '1000');
-INSERT INTO `shop` VALUES ('1570', '2000');
-INSERT INTO `shop` VALUES ('1665', '1000');
-INSERT INTO `shop` VALUES ('1666', '1000');
-INSERT INTO `shop` VALUES ('1667', '1000');
-INSERT INTO `shop` VALUES ('1818', '3000');
-INSERT INTO `shop` VALUES ('1874', '49000');
-INSERT INTO `shop` VALUES ('1875', '63000');
-INSERT INTO `shop` VALUES ('1876', '98000');
-INSERT INTO `shop` VALUES ('1877', '196000');
-INSERT INTO `shop` VALUES ('2546', '4000');
-INSERT INTO `shop` VALUES ('2547', '6000');
-INSERT INTO `shop` VALUES ('2548', '7000');
-INSERT INTO `shop` VALUES ('1979', '1200');
-INSERT INTO `shop` VALUES ('1980', '700');
-INSERT INTO `shop` VALUES ('1981', '2000');
-INSERT INTO `shop` VALUES ('1982', '100');
-INSERT INTO `shop` VALUES ('2032', '1000');
-INSERT INTO `shop` VALUES ('1989', '10000');
-INSERT INTO `shop` VALUES ('2013', '15000');
-INSERT INTO `shop` VALUES ('2014', '15000');
-INSERT INTO `shop` VALUES ('2015', '15000');
-INSERT INTO `shop` VALUES ('2034', '10000');
-INSERT INTO `shop` VALUES ('2068', '5000');
-INSERT INTO `shop` VALUES ('2069', '7000');
-INSERT INTO `shop` VALUES ('2070', '10000');
-INSERT INTO `shop` VALUES ('2700', '10000');
-INSERT INTO `shop` VALUES ('2708', '10000');
-INSERT INTO `shop` VALUES ('2709', '10000');
-INSERT INTO `shop` VALUES ('2003', '10000');
-INSERT INTO `shop` VALUES ('2004', '12000');
-INSERT INTO `shop` VALUES ('2005', '15000');
-INSERT INTO `shop` VALUES ('2031', '12000');
-INSERT INTO `shop` VALUES ('2036', '20000');
-INSERT INTO `shop` VALUES ('2025', '30000');
 
 DROP TABLE IF EXISTS `teams`;
 CREATE TABLE `teams` (
@@ -193,6 +136,8 @@ CREATE TABLE `users` (
   `Status` tinyint(4) NOT NULL DEFAULT '1',
   `CreateIP` varchar(15) NOT NULL DEFAULT '127.0.0.1',
   `CreateDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `LastActiveChar` int(6) DEFAULT '0',
+  `Serial` int(6) unsigned DEFAULT NULL,
   PRIMARY KEY (`UID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
@@ -212,5 +157,4 @@ CREATE TABLE `vehicles` (
   `mitronEfficiency` double(11,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`CID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
-
 SET FOREIGN_KEY_CHECKS=1;
