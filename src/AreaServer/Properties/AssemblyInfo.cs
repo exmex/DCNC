@@ -6,7 +6,11 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("NeoCity Area Server")]
 [assembly: AssemblyDescription("NeoCity Area Server")]
-[assembly: AssemblyConfiguration("")]
+#if DEBUG
+    [assembly: AssemblyConfiguration("Debug")]
+#else
+    [assembly: AssemblyConfiguration("Release")]
+#endif
 [assembly: AssemblyCompany("DCNC")]
 [assembly: AssemblyProduct("NeoCity Area Server")]
 [assembly: AssemblyCopyright("Copyright © 2016")]
@@ -31,6 +35,12 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyInformationalVersion("0.2.{dmin:2015}.{chash:6}{!}-{branch}")]
+#if DEBUG
+[assembly: AssemblyInformationalVersion("0.2.{dmin:2015}.{chash:6}{!}-{branch}-debug")]
+#else
+[assembly: AssemblyInformationalVersion("0.2.{dmin:2015}.{chash:6}{!}-{branch}-release")]
+#endif
+[assembly: AssemblyVersion("0.2.0.0")]
+[assembly: AssemblyFileVersion("0.2.0.0")]
 /*[assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]*/
