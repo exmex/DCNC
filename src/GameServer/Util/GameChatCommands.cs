@@ -27,18 +27,19 @@ namespace GameServer.Util
             Add("weather", "/weather [fine/cloudy/foggy/rain/sunset]", 0x8000, "Changes the current weather",
                 WeatherCommandHandler);
             Add("kick", "/kick [Character Name]", 0x1000, "Kicks the user", KickCommandHandler);
-            Add("ban", "/ban [Character Name]", 0x8000, "Bans the user", BanCommandHandler);
-            Add("tempban", "/tempban [Character Name]", 0x8000, "Bans the user", BanCommandHandler);
+            Add("ban", "/ban [Character Name]", 0x8000, "Bans the user forever", BanCommandHandler);
+            //Add("tempban", "/tempban [Character Name]", 0x8000, "Bans the user", BanCommandHandler);
             Add("money", "/money [Character Name] [Amount]", 0x8000, "Gives the charactername money",
                 MoneyCommandHandler);
             Add("exp", "/exp [Character Name] [Amount]", 0x8000, "Gives the user experience", ExpCommandHandler);
 
             Add("mute", "/mute [Character Name]", 0x800, "Mutes/Unmutes the character from chat", MuteCommandHandler);
+            Add("tempmute", "/mute [Character Name]", 0x800, "Mutes/Unmutes the character from chat", MuteCommandHandler);
 
             Add("gm", "/gm", 0x100, "Toggles your GM Status", ToggleGmStatusCommandHandler);
         }
 
-        private CommandResult MuteCommandHandler(DefaultServer server, Client sender, string command,
+        private static CommandResult MuteCommandHandler(DefaultServer server, Client sender, string command,
             IList<string> args)
         {
             if (args.Count < 1)
@@ -48,8 +49,11 @@ namespace GameServer.Util
 
             var client = GameServer.Instance.Server.GetClient(characterName);
             if (client?.User == null) return CommandResult.Fail;
+            if(client.User.Status == UserStatus.Banned) return CommandResult.Fail;
 
             client.User.Status = client.User.Status == UserStatus.Muted ? UserStatus.Normal : UserStatus.Muted;
+            if(command == "mute") // temp mute doesn't save to the db!
+                AccountModel.Update(GameServer.Instance.Database.Connection, client.User);
 
             var newStatusStr = client.User.Status == UserStatus.Muted ? "muted" : "unmuted";
             sender.SendChatMessage($"User {client.User.Name} was {newStatusStr}");
@@ -62,7 +66,7 @@ namespace GameServer.Util
             return CommandResult.Okay;
         }
 
-        private CommandResult ToggleGmStatusCommandHandler(DefaultServer server, Client sender, string command,
+        private static CommandResult ToggleGmStatusCommandHandler(DefaultServer server, Client sender, string command,
             IList<string> args)
         {
             sender.User.GMFlag = !sender.User.GMFlag;
@@ -74,7 +78,7 @@ namespace GameServer.Util
             return CommandResult.Okay;
         }
 
-        private CommandResult HelpCommandHandler(DefaultServer server, Client sender, string command,
+        private static CommandResult HelpCommandHandler(DefaultServer server, Client sender, string command,
             IList<string> args)
         {
             if (args.Count < 1)
@@ -92,7 +96,7 @@ namespace GameServer.Util
             return CommandResult.Okay;
         }
 
-        private CommandResult CopyrightCommandHandler(DefaultServer server, Client sender, string command,
+        private static CommandResult CopyrightCommandHandler(DefaultServer server, Client sender, string command,
             IList<string> args)
         {
             // As per legal requirements, this shall not be removed or changed!
@@ -172,7 +176,7 @@ namespace GameServer.Util
             if (client?.User == null) return CommandResult.Fail;
 
             client.KillConnection($"Kicked by {sender.User.Name}");
-            sender.SendChatMessage("User kicked!");
+            sender.SendChatMessage($"User {characterName} ({client.User.Name}) kicked!");
 
             return CommandResult.Okay;
         }
@@ -197,12 +201,7 @@ namespace GameServer.Util
             client.User.ActiveCharacter.MitoMoney += amount;
             CharacterModel.Update(GameServer.Instance.Database.Connection, client.User.ActiveCharacter);
 
-            sender.Send(new ChatMessageAnswer()
-            {
-                MessageType = "channel",
-                SenderCharacterName = "Server",
-                Message = $"{amount} Mito given to {characterName}",
-            }.CreatePacket());
+            sender.SendChatMessage($"{amount} Mito given to {characterName} ({client.User.Name})");
 
             client.Send(new CharUpdateAnswer()
             {
@@ -237,12 +236,7 @@ namespace GameServer.Util
 
             CharacterModel.Update(GameServer.Instance.Database.Connection, client.User.ActiveCharacter);
 
-            sender.Send(new ChatMessageAnswer()
-            {
-                MessageType = "channel",
-                SenderCharacterName = "Server",
-                Message = $"{amount} EXP given to {characterName}",
-            }.CreatePacket());
+            sender.SendChatMessage($"{amount} EXP given to {characterName} ({client.User.Name})");
 
             client.Send(new CharUpdateAnswer()
             {
@@ -267,7 +261,7 @@ namespace GameServer.Util
             AccountModel.Update(GameServer.Instance.Database.Connection, client.User);
 
             client.KillConnection($"Banned by {sender.User.Name}");
-            sender.SendChatMessage("User banned!");
+            sender.SendChatMessage($"User {characterName} ({client.User.Name}) banned!");
 
             return CommandResult.Okay;
         }
