@@ -542,6 +542,25 @@ namespace GameServer.Network.Handlers
                     }
                 }
             }
+            
+            if ((item01 != 0 && _item01 != null))
+            {
+                if(packet.Sender.User.ActiveCharacter.GiveItem(GameServer.Instance.Database.Connection, item01, 1) ==
+                   null)
+                    item01 = 0;
+            }
+            if ((item02 != 0 && _item02 != null))
+            {
+                if(packet.Sender.User.ActiveCharacter.GiveItem(GameServer.Instance.Database.Connection, item02, 1) ==
+                   null)
+                    item02 = 0;
+            }
+            if ((item03 != 0 && _item03 != null))
+            {
+                if (packet.Sender.User.ActiveCharacter.GiveItem(GameServer.Instance.Database.Connection, item03, 1) ==
+                    null)
+                    item03 = 0;
+            }
 
             var ack = new QuestRewardAnswer
             {
@@ -558,13 +577,8 @@ namespace GameServer.Network.Handlers
                 RewardItem3 = (uint) item03
             };
             packet.Sender.Send(ack.CreatePacket());
-
-            if ((item01 != 0 && _item01 != null) ||
-                (item02 != 0 && _item02 != null) ||
-                (item03 != 0 && _item03 != null))
-            {
-            }
-
+            
+            packet.Sender.User.ActiveCharacter.FlushItemModBuffer(packet.Sender);
             /*
             if ( pStrQuest->Item01Ptr || pStrQuest->Item02Ptr || pStrQuest->Item03Ptr )
               PacketSend::Send_ItemModList((BS_PacketDispatch *)&pGameDispatch->vfptr);
