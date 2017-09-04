@@ -72,7 +72,7 @@ namespace AuthServer.Network.Handlers
 
             // Create new session ticket
             var ticket = AccountModel.CreateSession(AuthServer.Instance.Database.Connection, authPacket.Username);
-            
+
             packet.Sender.Send(new UserAuthAnswerPacket
             {
                 Ticket = ticket,

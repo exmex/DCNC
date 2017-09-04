@@ -166,7 +166,7 @@ namespace SharedTests.Packets
                         Cid = Utilities.Rand.NextUInt32(),
                         Avatar = 2,
                         Level = 10,
-                        CurrentCarId = Utilities.Rand.Next(),
+                        CurrentCarId = Utilities.Rand.NextUInt32(),
                         CreationDate = Utilities.Rand.Next(),
                         TeamId = Utilities.Rand.NextUInt32(),
                         TeamMarkId = Utilities.Rand.NextUInt32(),
@@ -221,7 +221,7 @@ namespace SharedTests.Packets
                         var level = bs.ReadInt32();
                         Assert.AreEqual(packet.Characters[i].Level, level);
 
-                        var currentCarId = bs.ReadInt32();
+                        var currentCarId = bs.ReadUInt32();
                         Assert.AreEqual(packet.Characters[i].CurrentCarId, currentCarId);
 
                         var carType = bs.ReadUInt32();

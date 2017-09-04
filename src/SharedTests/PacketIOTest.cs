@@ -14,7 +14,7 @@ namespace SharedTests
         {
             Assert.AreEqual(sizeof(uint)*2, new TimeSyncAnswerPacket().GetBytes().Length);
             
-            Assert.AreEqual(sizeof(uint)*3, new EnterAreaAnswer().GetBytes().Length);
+            Assert.AreEqual(sizeof(int)*4 + sizeof(byte)*6, new EnterAreaAnswer().GetBytes().Length);
             
             Assert.AreEqual(sizeof(int)*3, new BuyItemAnswer().GetBytes().Length);
             

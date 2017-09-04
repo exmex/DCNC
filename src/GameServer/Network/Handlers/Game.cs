@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Shared;
 using Shared.Models;
 using Shared.Network;
@@ -8,6 +9,7 @@ using Shared.Network.GameServer;
 using Shared.Objects;
 using Shared.Util;
 using Shared.Util.Commands;
+
 // ReSharper disable UnusedMember.Global
 
 namespace GameServer.Network.Handlers
@@ -72,7 +74,7 @@ namespace GameServer.Network.Handlers
             packet.Sender.User.ActiveCharacter.PositionZ = saveCar.Z;
             packet.Sender.User.ActiveCharacter.Rotation = saveCar.W;
             packet.Sender.User.ActiveCharacter.PosState = saveCar.PosState;
-            
+
             CharacterModel.Update(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacter);
         }
 
@@ -140,13 +142,14 @@ namespace GameServer.Network.Handlers
             var fuelChargeReqPacket = new FuelChargeReqPacket(packet);
 
             // Update money first
-            packet.Sender.User.ActiveCharacter.MitoMoney = packet.Sender.User.ActiveCharacter.MitoMoney - fuelChargeReqPacket.Pay;
+            packet.Sender.User.ActiveCharacter.MitoMoney =
+                packet.Sender.User.ActiveCharacter.MitoMoney - fuelChargeReqPacket.Pay;
             CharacterModel.Update(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacter);
-            
+
             // Update vehicle fuel
             packet.Sender.User.ActiveCar.Mitron += fuelChargeReqPacket.Fuel;
             VehicleModel.Update(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCar);
-            
+
             var ack = new FuelChargeReqAnswer
             {
                 CarId = fuelChargeReqPacket.CarId,
@@ -178,24 +181,24 @@ namespace GameServer.Network.Handlers
         public static void GameStream(Packet packet)
         {
             var unknown1 = packet.Reader.ReadInt16();
-            
+
             var message = packet.Reader.ReadUnicode();
-            
+
             var args = ConsoleUtil.ParseLine(message);
             if (args.Count <= 0) return;
             var cmd = args[0];
             args.RemoveAt(0); // Remove command itself
-            
+
             var command = GameServer.ChatCommands.GetCommand(cmd);
 
             if (command == null) return;
-            
+
             if (packet.Sender.User.Permission < command.RequiredPermission)
             {
                 Log.Warning("User tried to use admin command: " + command.Name);
                 return;
             }
-            
+
             var res = command.Func(GameServer.Instance.Server, packet.Sender, cmd, args);
             if (res == CommandResult.InvalidArgument)
             {
@@ -257,7 +260,7 @@ namespace GameServer.Network.Handlers
         public static void MyTeamInfo(Packet packet)
         {
             var myTeamInfoPacket = new MyTeamInfoPacket(packet);
-            
+
             var ack = new MyTeamInfoAnswer
             {
                 Action = myTeamInfoPacket.Action,
@@ -291,11 +294,13 @@ namespace GameServer.Network.Handlers
             // We're missing 346 bytes of data.
             */
             var gameCharInfoPacket = new GameCharInfoPacket(packet);
-            
+
             // TODO: Combine this into 1 MySQL Query.
-            var character = CharacterModel.Retrieve(GameServer.Instance.Database.Connection, gameCharInfoPacket.CharacterName);
-            character.ActiveCar = VehicleModel.Retrieve(GameServer.Instance.Database.Connection, (uint)character.CurrentCarId);
-            var activeTeam  =TeamModel.Retrieve(GameServer.Instance.Database.Connection, character.TeamId);
+            var character = CharacterModel.Retrieve(GameServer.Instance.Database.Connection,
+                gameCharInfoPacket.CharacterName);
+            character.ActiveCar =
+                VehicleModel.Retrieve(GameServer.Instance.Database.Connection, (uint) character.CurrentCarId);
+            var activeTeam = TeamModel.Retrieve(GameServer.Instance.Database.Connection, character.TeamId);
 
             var ack = new GameCharInfoAnswer
             {
@@ -440,7 +445,7 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdQuestGoalPlace)]
         public static void QuestGoalPlace(Packet packet)
         {
-            #if !DEBUG
+#if !DEBUG
             Log.Unimplemented("Not implemented");
             #endif
         }
@@ -450,7 +455,7 @@ namespace GameServer.Network.Handlers
         public static void QuestComplete(Packet packet)
         {
             var questCompletePacket = new QuestCompletePacket(packet);
-            
+
             QuestModel.Update(GameServer.Instance.Database.Connection, 0, packet.Sender.User.ActiveCharacterId,
                 questCompletePacket.TableIndex, 1);
 
@@ -479,29 +484,31 @@ namespace GameServer.Network.Handlers
                 return;
             }
 
-            var questReward = ServerMain.Quests.QuestList.Find(quest1 => quest1.TableIndex == questRewardPacket.TableIndex);
+            var questReward =
+                ServerMain.Quests.QuestList.Find(quest1 => quest1.TableIndex == questRewardPacket.TableIndex);
             if (questReward == null)
             {
                 packet.Sender.SendError("Quest reward not found.");
                 return;
             }
             var itemReward = questReward.GetRewards();
-            
+
             bool levelUp;
             bool useBonus = false;
             bool useBonus500Mita = false;
-            packet.Sender.User.ActiveCharacter.CalculateExp(questReward.Experience, out levelUp, useBonus, useBonus500Mita);
+            packet.Sender.User.ActiveCharacter.CalculateExp(questReward.Experience, out levelUp, useBonus,
+                useBonus500Mita);
             // TODO: Check if user has leveled up, if so send levelup packet!
-            
+
             CharacterModel.Update(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacter);
 
             // TODO: Load quest reward item information here, and send it.
             int item01 = 0;
             int item02 = 0;
             int item03 = 0;
-            ItemTable.Item _item01 = null;
-            ItemTable.Item _item02 = null;
-            ItemTable.Item _item03 = null;
+            ItemTable.ItemData _item01 = null;
+            ItemTable.ItemData _item02 = null;
+            ItemTable.ItemData _item03 = null;
             if (itemReward.Length > 0)
             {
                 if (itemReward.Length >= 1)
@@ -535,20 +542,20 @@ namespace GameServer.Network.Handlers
                     }
                 }
             }
-            
+
             var ack = new QuestRewardAnswer
             {
-                TableIndex = (uint)questReward.TableIndex,
+                TableIndex = (uint) questReward.TableIndex,
                 GetExp = (uint) questReward.Experience,
                 GetMoney = (uint) questReward.Mito,
                 CurrentExp = (ulong) packet.Sender.User.ActiveCharacter.CurExp,
                 NextExp = (ulong) packet.Sender.User.ActiveCharacter.NextExp,
                 BaseExp = (ulong) packet.Sender.User.ActiveCharacter.BaseExp,
                 Level = packet.Sender.User.ActiveCharacter.Level,
-                ItemNum = (ushort)itemReward.Length,
-                RewardItem1 = (uint)item01,
-                RewardItem2 = (uint)item02,
-                RewardItem3 = (uint)item03
+                ItemNum = (ushort) itemReward.Length,
+                RewardItem1 = (uint) item01,
+                RewardItem2 = (uint) item02,
+                RewardItem3 = (uint) item03
             };
             packet.Sender.Send(ack.CreatePacket());
 
@@ -602,7 +609,7 @@ namespace GameServer.Network.Handlers
         {
             // Save current car.
             VehicleModel.Update(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCar);
-            
+
             var buyCarPacket = new BuyCarPacket(packet);
             var price = 10; //XiVehicleTable::GetDefaultVehicleAbility(v14, v13, &Info) //Failed to purchase the car.
             // TODO: Read price from CSV
@@ -612,13 +619,14 @@ namespace GameServer.Network.Handlers
                 packet.Sender.SendError("Insufficient funds.");
                 return;
             }
-            
-            var vehicleCount = VehicleModel.RetrieveCount(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacterId);            
-            if (vehicleCount >= (packet.Sender.User.ActiveCharacter.GarageLevel+1) * 8)
+
+            var vehicleCount = VehicleModel.RetrieveCount(GameServer.Instance.Database.Connection,
+                packet.Sender.User.ActiveCharacterId);
+            if (vehicleCount >= (packet.Sender.User.ActiveCharacter.GarageLevel + 1) * 8)
             {
-                packet.Sender.SendError(((char)87u).ToString());
+                packet.Sender.SendError(((char) 87u).ToString());
                 return;
-            
+
                 /*
                 if ( XiCsCharInfo::GetGarageSpace(pCharInfo) <= 0 )
                   {
@@ -630,7 +638,7 @@ namespace GameServer.Network.Handlers
 
             packet.Sender.User.ActiveCharacter.MitoMoney -= price;
             CharacterModel.Update(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacter);
-            
+
             packet.Sender.User.ActiveCar = new Vehicle()
             {
                 CarType = buyCarPacket.CarType,
@@ -645,11 +653,12 @@ namespace GameServer.Network.Handlers
                 MitronEfficiency = 0.0f,
                 AuctionOn = false
             };
-            
+
             // Save newly bought vehicle
-            var carId = VehicleModel.Create(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCar, packet.Sender.User.ActiveCharacterId);
-            packet.Sender.User.ActiveCar.CarID = (uint)carId;
-            
+            var carId = VehicleModel.Create(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCar,
+                packet.Sender.User.ActiveCharacterId);
+            packet.Sender.User.ActiveCar.CarID = (uint) carId;
+
             // TODO: Send actual data.
             packet.Sender.Send(new StatUpdateAnswer()
             {
@@ -689,7 +698,7 @@ namespace GameServer.Network.Handlers
                     MitronEfficiency = 0.0f
                 }
             }.CreatePacket());
-            
+
             /*PacketSend::Send_StatUpdate((BS_PacketDispatch *)&pGameDispatch->vfptr);
               PacketSend::Send_PartyEnChantUpdateAll((BS_PacketDispatch *)&pGameDispatch->vfptr);
               PacketSend::Send_ItemModList((BS_PacketDispatch *)&pGameDispatch->vfptr);
@@ -716,7 +725,7 @@ namespace GameServer.Network.Handlers
                 MitronEfficiency = packet.Sender.User.ActiveCar.MitronEfficiency,
                 AuctionOn = packet.Sender.User.ActiveCar.AuctionOn,
             };
-            
+
             packet.Sender.Send(new VisualUpdateAnswer()
             {
                 Serial = 0,
@@ -724,7 +733,7 @@ namespace GameServer.Network.Handlers
                 CarId = packet.Sender.User.ActiveCar.CarID,
                 CarInfo = carInfo
             }.CreatePacket());
-            
+
             packet.Sender.Send(new BuyCarAnswer
             {
                 CarInfo = carInfo,
@@ -751,7 +760,7 @@ namespace GameServer.Network.Handlers
 
             if (packet.Sender.User.ActiveCar.Mitron <= 0.0f)
                 packet.Sender.User.ActiveCar.Mitron = 0.0f;
-            
+
             // Save car to db.
             VehicleModel.Update(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCar);
 
@@ -784,7 +793,7 @@ namespace GameServer.Network.Handlers
 
             packet.Sender.Send(ack.CreatePacket());
         }
-        
+
         public static class Tutorial
         {
             [Packet(Packets.CmdTutorialClear)]
@@ -793,7 +802,7 @@ namespace GameServer.Network.Handlers
                 var type = packet.Reader.ReadUInt32();
                 var ack = new Packet(Packets.TutorialClearAck);
                 ack.Writer.Write(type);
-            
+
                 packet.Sender.Send(ack);
             }
         }
@@ -807,17 +816,17 @@ namespace GameServer.Network.Handlers
                 CarDurability = 0,
                 CarAcceleration = 0,
                 CarBoost = 0,
-        
+
                 PartSpeed = 0,
                 PartDurability = 0,
                 PartAcceleration = 0,
                 PartBoost = 0,
-        
+
                 UserSpeed = 0,
                 UserDurability = 0,
                 UserAcceleration = 0,
                 UserBoost = 0,
-        
+
                 CharSpeed = 0,
                 CharDurability = 0,
                 CharAcceleration = 0,
@@ -827,13 +836,13 @@ namespace GameServer.Network.Handlers
                 ItemUseCrash = 0,
                 ItemUseAcceleration = 0,
                 ItemUseBoost = 0,
-        
+
                 VehicleSpeed = 0,
                 VehicleDurability = 0,
                 VehicleAcceleration = 0,
                 VehicleBoost = 0,
             };
-            
+
             packet.Sender.Send(ack.CreatePacket());
             /*
             Send_StatUpdate:
@@ -887,57 +896,113 @@ struct XiStrStatInfo
         {
             var buyItemPacket = new BuyItemPacket(packet);
 
+            // Check if the item really exists
+            if (ServerMain.Items.ItemList.Count < buyItemPacket.TableIndex)
+            {
+                packet.Sender.SendDebugError("Item out of range!");
+#if !DEBUG
+                packet.Sender.KillConnection("Invalid shop item");
+#endif
+                return;
+            }
+
+            // Get price for single item
+            var itemData = ServerMain.Items.ItemList[buyItemPacket.TableIndex];
+            int price;
+            if (!int.TryParse(itemData.BuyValue, out price) || itemData.BuyValue == "n/a")
+            {
+                packet.Sender.SendDebugError("No price for item");
+#if !DEBUG
+                packet.Sender.KillConnection("Price missing!");
+#endif
+            }
+
+            price = price * buyItemPacket.Quantity;
+
+            var character = packet.Sender.User.ActiveCharacter;
+
+            // Check money
+            if (character.MitoMoney < price)
+            {
+                packet.Sender.SendDebugError("Not enough money");
+                return;
+            }
+
+            // Give the item to user
+            var inventoryItem = character.GiveItem(GameServer.Instance.Database.Connection,
+                buyItemPacket.TableIndex, buyItemPacket.Quantity);
+            if (inventoryItem == null)
+            {
+                packet.Sender.SendDebugError("Giving item failed");
+                return;
+            }
+
+            // Finally update money
+            character.MitoMoney -= price;
+            CharacterModel.Update(GameServer.Instance.Database.Connection, character);
+
             var ack = new BuyItemAnswer()
             {
-                ItemId = buyItemPacket.ItemId,
+                ItemId = buyItemPacket.TableIndex,
                 Quantity = buyItemPacket.Quantity,
-                Gold = 200,
+                Price = price,
             };
             packet.Sender.Send(ack.CreatePacket());
-
-            /*var modListAnswer = new ItemModListAnswer()
-            {
-                Items = new []
-                {
-                    new XiStrMyItemMod()
-                    {
-                        MyItem = new Item()
-                        {
-                            CarID = 4,
-                            Itm = new ItemData()
-                            {
-                                Slot = 1,
-                                State = 1,
-                                StateVar = 1,
-                            },
-                            iunit = new IUnit()
-                            {
-                                StackNum = buyItemPacket.Quantity,
-                                Random = 0,
-                                AssistA = 0,
-                                AssistB = 0,
-                                Box = 0,
-                                Belonging = 0,
-                                Upgrade = 0,
-                                UpgradePoint = 0,
-                                ExpireTick = 0,
-                            },
-                            TableIdx = (uint)buyItemPacket.ItemId,
-                            InvenIdx = 0,
-                        },
-                        State = 0,
-                    },
-                }
-            };
-            packet.Sender.Send(modListAnswer.CreatePacket());*/
             
-            #if !DEBUG
-            Log.Unimplemented("Not implemented message called!");
-            #endif
+            character.FlushItemModBuffer(packet.Sender);
+        }
 
-            //BS_PktItemDataList
+        [Packet(Packets.CmdSellItem)]
+        public static void SellItem(Packet packet)
+        {
+            var sellItemPacket = new SellItemPacket(packet);
+            
+            // Check if the item really exists
+            if (ServerMain.Items.ItemList.Count < sellItemPacket.TableIndex)
+            {
+                packet.Sender.SendDebugError("Item out of range!");
+#if !DEBUG
+                packet.Sender.KillConnection("Invalid shop item");
+#endif
+                return;
+            }
+            
+            // Get price for single item
+            var itemData = ServerMain.Items.ItemList[(int)sellItemPacket.TableIndex];
+            uint price;
+            if (!uint.TryParse(itemData.SellValue, out price) || itemData.BuyValue == "n/a")
+            {
+                packet.Sender.SendDebugError("No sell price for item");
+#if !DEBUG
+                packet.Sender.KillConnection("Price missing!");
+#endif
+            }
+            
+            price = price * sellItemPacket.Quantity;
 
-            //PacketSend::Send_ItemModList((BS_PacketDispatch *)&pGameDispatch->vfptr);
+            var character = packet.Sender.User.ActiveCharacter;
+            
+            // Give the item to user
+            if (!character.RemoveItem(GameServer.Instance.Database.Connection,
+                sellItemPacket.Slot, sellItemPacket.Quantity))
+            {
+                packet.Sender.SendDebugError("Removing item failure");
+                return;
+            }
+
+            // Finally update money
+            character.MitoMoney += price;
+            CharacterModel.Update(GameServer.Instance.Database.Connection, character);
+            
+            packet.Sender.Send(new SellItemAnswer()
+            {
+                TableIndex = sellItemPacket.TableIndex,
+                Quantity = sellItemPacket.Quantity,
+                Money = price,
+                Slot = sellItemPacket.Slot 
+            }.CreatePacket());
+            
+            character.FlushItemModBuffer(packet.Sender);
         }
 
         [Packet(Packets.CmdBuyVisualItemThread)]
@@ -987,7 +1052,7 @@ struct XiStrStatInfo
                         MufflerFlame = 1,
                         Wheel = 1,
                         Spoiler = 1,
-                        Reserve = new short[]{0,0,0,0,0,0},
+                        Reserve = new short[] {0, 0, 0, 0, 0, 0},
                         PlateString = "HELLO",
                     },
                     UseTime = 100.0f,

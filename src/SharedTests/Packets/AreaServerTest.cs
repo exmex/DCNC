@@ -18,7 +18,7 @@ namespace SharedTests.Packets
             Assert.AreEqual(123, packet.Serial);
             StringAssert.AreEqualIgnoringCase("Administrator", packet.CharacterName);
             Assert.AreEqual(5, packet.AreaId);
-            Assert.AreEqual(4294967295, packet.LocalTime);
+            Assert.AreEqual(-1, packet.LocalTime);
             Assert.AreEqual(13762644, packet.GroupId);
         }
 
@@ -36,10 +36,13 @@ namespace SharedTests.Packets
             {
                 using (var bs = new BinaryReaderExt(ms))
                 {
-                    var areaId = bs.ReadUInt32();
+                    var areaId = bs.ReadInt32();
                     Assert.AreEqual(packet.AreaId, areaId);
                     
-                    var localTime = bs.ReadUInt32();
+                    var result = bs.ReadInt32();
+                    Assert.AreEqual(1, result);
+                    
+                    var localTime = bs.ReadInt32();
                     Assert.AreEqual(packet.LocalTime, localTime);
                 }
             }

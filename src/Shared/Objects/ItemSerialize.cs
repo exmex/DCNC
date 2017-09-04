@@ -31,13 +31,23 @@ namespace Shared.Objects
         [XmlAttribute("partsshop")] public string PartsShop;
 
         [XmlAttribute("sendable")] public string Sendable;
+        
+        virtual public bool IsStackable()
+        {
+            return false;
+        }
+
+        virtual public uint GetMaxStack()
+        {
+            return 1;
+        }
     }
 
     [Serializable]
     [XmlRoot(ElementName = "Items", Namespace = "")]
     public class ItemTable
     {
-        public class Item : BasicItem
+        public class ItemData : BasicItem
         {
             [XmlAttribute("setid")] public string SetId;
 
@@ -60,7 +70,7 @@ namespace Shared.Objects
             [XmlAttribute("neostats")] public string NeoStats;
         }
 
-        [XmlElement(ElementName = "Item")] public List<Item> ItemList = new List<Item>();
+        [XmlElement(ElementName = "Item")] public List<ItemData> ItemList = new List<ItemData>();
 
         public void LoadTdf(string fileName)
         {
@@ -71,7 +81,7 @@ namespace Shared.Objects
             {
                 for (var row = 0; row < tdfFile.Header.Row; row++)
                 {
-                    var item = new Item();
+                    var item = new ItemData();
                     reader.ReadUnicode(); // Empty
                     reader.ReadUnicode(); // Type
                     reader.ReadUnicode(); // Set Type

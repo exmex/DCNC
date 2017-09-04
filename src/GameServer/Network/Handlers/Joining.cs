@@ -197,7 +197,7 @@ s            */
                 ServerStartTime = 0,
                 Character = character,
                 Vehicles = vehicles.ToArray(),
-                CurrentCarId = character.CurrentCarId,
+                CurrentCarId = (int)character.CurrentCarId,
             };
             packet.Sender.Send(ack.CreatePacket());
 
@@ -256,10 +256,13 @@ s            */
         [Packet(Packets.CmdItemList)]
         public static void ItemList(Packet packet)
         {
+            ItemModel.RetrieveAll(GameServer.Instance.Database.Connection,
+                ref packet.Sender.User.ActiveCharacter);
+            
             var items = ItemModel.RetrieveAll(GameServer.Instance.Database.Connection, packet.Sender.User.ActiveCharacterId);
             var ack = new ItemListAnswer
             {
-                Items = items.ToArray()
+                InventoryItems = items.ToArray()
             };
 
             packet.Sender.Send(ack.CreatePacket());

@@ -144,6 +144,8 @@ namespace Shared.Network
                 else
                     Log.Info("Sending unnamed packet ({0} id {1}, 0x{1:X}).",
                         Packets.GetName(packet.Id), packet.Id);
+                
+                Log.Debug("HexDump {0}:{1}{2}", packet.Id, Environment.NewLine, hexDump);
             }
 
             if (DefaultServer.DumpOutgoing)
@@ -190,9 +192,16 @@ namespace Shared.Network
 
         public void SendError(string format, params object[] args)
         {
-            var err = new Packet(1);
+            var err = new Packet(Packets.ErrorAck);
             err.Writer.WriteUnicode(string.Format(format, args));
             Send(err);
+        }
+
+        public void SendDebugError(string format, params object[] args)
+        {
+#if DEBUG
+            SendError(format, args);
+#endif
         }
 
         private void KillConnection(Exception ex)

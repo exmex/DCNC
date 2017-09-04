@@ -10,7 +10,7 @@ namespace Shared.Network.GameServer
         
         public override Packet CreatePacket()
         {
-            return base.CreatePacket(Packets.BuyItemAck);
+            return base.CreatePacket(Packets.ItemModListAck);
         }
 
         public override byte[] GetBytes()

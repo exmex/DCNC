@@ -1,17 +1,18 @@
-﻿using System.IO;
+using System.IO;
 using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
-    public class BuyItemAnswer : OutPacket
+    public class SellItemAnswer : OutPacket
     {
-        public int ItemId;
-        public int Quantity;
-        public int Price;
+        public uint TableIndex;
+        public uint Quantity;
+        public uint Money;
+        public uint Slot;
         
         public override Packet CreatePacket()
         {
-            return base.CreatePacket(Packets.BuyItemAck);
+            return base.CreatePacket(Packets.SellItemAck);
         }
 
         public override byte[] GetBytes()
@@ -20,9 +21,10 @@ namespace Shared.Network.GameServer
             {
                 using (var bs = new BinaryWriterExt(ms))
                 {
-                    bs.Write(ItemId);
+                    bs.Write(TableIndex);
                     bs.Write(Quantity);
-                    bs.Write(Price);
+                    bs.Write(Money);
+                    bs.Write(Slot);
                 }
                 return ms.ToArray();
             }

@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.InteropServices;
+using MySql.Data.MySqlClient;
 using Shared.Database;
 using Shared.Models;
 using Shared.Network;
+using Shared.Network.GameServer;
 using Shared.Util;
 
 namespace Shared.Objects
@@ -19,7 +22,7 @@ namespace Shared.Objects
         public int CreationDate;
 
         public long CurExp;
-        public int CurrentCarId;
+        public uint CurrentCarId;
         public int Flags;
         public int GarageLevel;
         public int Guild;
@@ -55,14 +58,47 @@ namespace Shared.Objects
         public string TeamName; // 0xD / 13
         public int TeamRank;
         
-        [Obsolete("Same as TeamId")]
-        public long Tid; // TODO/FIXME: Same as teamId?
         public float TotalDistance, PositionX, PositionY, PositionZ, Rotation;
         public uint TPvpCnt;
         public uint TPvpPoint;
         public uint TPvpWinCnt;
         public ulong Uid;
+        
+        // Do not send this here!
         public User User;
+        // 20 pro "page" each page 1 level?
+        public InventoryItem[] InventoryItems;
+        
+        /// <summary>
+        /// All pending item modifications
+        /// Item moved, item added, item deleted / used
+        /// </summary>
+        private List<ItemMod> ItemModificationBuffer;
+
+        public Character()
+        {
+            ItemModificationBuffer = new List<ItemMod>();
+        }
+
+        public void AddItemMod(InventoryItem item, bool moved = false)
+        {
+            ItemModificationBuffer.Add(new ItemMod()
+            {
+                InventoryItem = item,
+                State = moved ? 3 : item.StackNum == 0 ? 2 : 0,
+            });
+        }
+
+        public void FlushItemModBuffer(Client client)
+        {
+            var mods = ItemModificationBuffer.ToArray();
+            ItemModificationBuffer.Clear();
+            
+            client.Send(new ItemModListAnswer()
+            {
+                Items = mods,
+            }.CreatePacket());
+        }
 
         public void Serialize(BinaryWriterExt writer)
         {
@@ -131,8 +167,11 @@ namespace Shared.Objects
             CurExp = Convert.ToInt32(reader["CurExp"]);
             NextExp = Convert.ToInt32(reader["NextExp"]);
             City = Convert.ToInt32(reader["City"]);
-            CurrentCarId = Convert.ToInt32(reader["CurrentCarID"]);
+            CurrentCarId = Convert.ToUInt32(reader["CurrentCarID"]);
             InventoryLevel = Convert.ToInt32(reader["InventoryLevel"]);
+            
+            InventoryItems = new InventoryItem[(InventoryLevel+1)*20];
+            
             GarageLevel = Convert.ToInt32(reader["GarageLevel"]);
             TeamId = Convert.ToInt64(reader["TeamId"]);
             PositionX = Convert.ToSingle(reader["posX"]);
@@ -469,6 +508,20 @@ namespace Shared.Objects
             */
         }
 
+        public bool FindFreeSlot(MySqlConnection dbconn, InventoryItem inventoryItem)
+        {
+            foreach (var item in InventoryItems)
+            {
+                if (item.TableIndex != inventoryItem.TableIndex) continue;
+                
+                // check if the item is stackable!
+                item.StackNum++;
+                ItemModel.Update(dbconn, item);
+                return false;
+            }
+            return true;
+        }
+
         public void LevelUp()
         {
             /*
@@ -785,6 +838,50 @@ namespace Shared.Objects
                     }
                 }
             }*/
+        }
+
+        public InventoryItem GiveItem(MySqlConnection dbconn, int tableIndex, int quantity)
+        {
+            uint invIdx = 0;
+            foreach (var item in InventoryItems)
+            {
+                if (item == null)
+                    break;
+                invIdx++;
+            }
+
+            var invItem = new InventoryItem(Cid, CurrentCarId, tableIndex, invIdx, quantity);
+            if (!ItemModel.Create(dbconn, invItem)) return null;
+            
+            AddItemMod(invItem);
+            InventoryItems[invIdx] = invItem;
+            return invItem;
+        }
+
+        public bool RemoveItem(MySqlConnection dbconn, uint slot, uint quantity)
+        {
+            if (InventoryItems[slot] == null) return false;
+            var itemInSlot = InventoryItems[slot];
+            if (itemInSlot.StackNum < quantity) return false;
+
+            // Check if the item should be removed, or just decreased
+            if (itemInSlot.StackNum - quantity == 0)
+            {
+                if (!ItemModel.Remove(dbconn, Cid, slot))
+                    return false;
+                InventoryItems[slot] = null;
+                itemInSlot.StackNum = 0;
+            }
+            else
+            {
+                InventoryItems[slot].StackNum -= quantity;
+                itemInSlot.StackNum -= quantity;
+                
+                ItemModel.Update(dbconn, InventoryItems[slot]);
+            }
+
+            AddItemMod(itemInSlot);
+            return true;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Shared.Objects
     public class User
     {
         public Vehicle ActiveCar;
-        public int ActiveCarId;
+        public uint ActiveCarId;
         public Character ActiveCharacter;
         public ulong ActiveCharacterId;
         public Team ActiveTeam;

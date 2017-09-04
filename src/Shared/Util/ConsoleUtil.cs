@@ -26,7 +26,7 @@ namespace Shared.Util
             @"Copyright (c) 2017 GigaToni",
             @"For problems & support: https://github.com/exmex/DCNC/issues",
             @"Also visit our discord channel: https://discord.gg/GnW6xxf",
-            @"Special Thanks to amPearl"
+            @"Special Thanks to amPerl"
         };
 
         /// <summary>

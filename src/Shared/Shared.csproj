@@ -72,6 +72,8 @@
     <Compile Include="Network\Packets\GameServer\Buy\BuyItemPacket.cs" />
     <Compile Include="Network\Packets\GameServer\Buy\BuyVisualItemThreadAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Buy\BuyVisualItemThreadPacket.cs" />
+    <Compile Include="Network\Packets\GameServer\Buy\SellItemAnswer.cs" />
+    <Compile Include="Network\Packets\GameServer\Buy\SellItemPacket.cs" />
     <Compile Include="Network\Packets\GameServer\Chase\ChaseRequestAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Chase\ChaseRequestPacket.cs" />
     <Compile Include="Network\Packets\GameServer\Generic\CheckStatAnswer.cs" />
@@ -138,7 +140,7 @@
     <Compile Include="Network\Packets\LobbyServer\Outgoing\LobbyTimeAnswerPacket.cs" />
     <Compile Include="Network\Packets\LobbyServer\Outgoing\UserInfoAnswerPacket.cs" />
     <Compile Include="Objects\Character.cs" />
-    <Compile Include="Objects\Item.cs" />
+    <Compile Include="Objects\InventoryItem.cs" />
     <Compile Include="Models\TeamModel.cs" />
     <Compile Include="Objects\ItemSerialize.cs" />
     <Compile Include="Objects\QuestSerialize.cs" />

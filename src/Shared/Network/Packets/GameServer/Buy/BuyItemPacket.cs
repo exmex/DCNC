@@ -2,15 +2,15 @@
 {
     public class BuyItemPacket
     {
-        public int ItemId;
+        public int TableIndex;
         public int Unknown;
         public int Quantity;
 
         public BuyItemPacket(Packet packet)
         {
-            ItemId = packet.Reader.ReadInt16();
-            Unknown = packet.Reader.ReadInt16();
-            Quantity = packet.Reader.ReadInt16();
+            TableIndex = packet.Reader.ReadInt32();
+            Quantity = packet.Reader.ReadInt32();
+            Unknown = packet.Reader.ReadInt32();
         }
     }
 }

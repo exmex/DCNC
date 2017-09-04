@@ -33,10 +33,10 @@ namespace GameServer.Util
                 MoneyCommandHandler);
             Add("exp", "/exp [Character Name] [Amount]", 0x8000, "Gives the user experience", ExpCommandHandler);
 
-            Add("mute", "/mute [Character Name]", 0x800, "Mutes/Unmutes the character from chat", MuteCommandHandler);
-            Add("tempmute", "/mute [Character Name]", 0x800, "Mutes/Unmutes the character from chat", MuteCommandHandler);
+            Add("mute", "/mute [Character Name]", 0x8000, "Mutes/Unmutes the character from chat", MuteCommandHandler);
+            Add("tempmute", "/mute [Character Name]", 0x8000, "Mutes/Unmutes the character from chat", MuteCommandHandler);
 
-            Add("gm", "/gm", 0x100, "Toggles your GM Status", ToggleGmStatusCommandHandler);
+            Add("gm", "/gm", 0x1000, "Toggles your GM Status", ToggleGmStatusCommandHandler);
         }
 
         private static CommandResult MuteCommandHandler(DefaultServer server, Client sender, string command,

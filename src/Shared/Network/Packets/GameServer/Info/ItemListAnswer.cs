@@ -8,7 +8,7 @@ namespace Shared.Network.GameServer
     /// </summary>
     public class ItemListAnswer : OutPacket
     {
-        public Item[] Items;
+        public InventoryItem[] InventoryItems;
         public override Packet CreatePacket()
         {
             return base.CreatePacket(Packets.ItemListAck);
@@ -21,8 +21,8 @@ namespace Shared.Network.GameServer
                 using (var bs = new BinaryWriterExt(ms))
                 {
                     bs.Write(262144); // First packet, 262145 would be 2nd, 3rd etc.
-                    bs.Write(Items.Length);
-                    foreach (var item in Items)
+                    bs.Write(InventoryItems.Length);
+                    foreach (var item in InventoryItems)
                     {
                         bs.Write(item);
                     }

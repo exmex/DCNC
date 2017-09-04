@@ -4,6 +4,7 @@ using System.Data.Common;
 using System.IO;
 using System.Runtime.CompilerServices;
 using Shared.Database;
+using Shared.Models;
 using Shared.Network;
 using Shared.Util;
 
@@ -11,17 +12,17 @@ namespace Shared.Objects
 {
     public class ItemMod : BinaryWriterExt.ISerializable
     {
-        public Item Item;
+        public InventoryItem InventoryItem;
         public int State;
         
         public void Serialize(BinaryWriterExt writer)
         {
-            writer.Write(Item);            
+            writer.Write(InventoryItem);            
             writer.Write(State);            
         }
     }
     
-    public class Item : BinaryWriterExt.ISerializable
+    public class InventoryItem : BinaryWriterExt.ISerializable
     {
         public int DbId;
         
@@ -52,10 +53,25 @@ namespace Shared.Objects
         public string Id;
         public ulong CharacterId;
 
-
-        public static Item ReadFromDb(DbDataReader reader)
+        public InventoryItem()
         {
-            var item = new Item
+        }
+
+        public InventoryItem(ulong characterId, uint carId, int tableIndex, uint slot, int quantity = 1, float durability = 1f)
+        {
+            CharacterId = characterId;
+            CarId = carId;
+            TableIndex = tableIndex;
+
+            StackNum = (uint)quantity;
+
+            InventoryIndex = slot;
+            Durability = durability;
+        }
+
+        public static InventoryItem ReadFromDb(DbDataReader reader)
+        {
+            var item = new InventoryItem
             {
                 DbId = Convert.ToInt32(reader["Id"]),
                 CarId = Convert.ToUInt32(reader["CarId"]),
@@ -87,9 +103,58 @@ namespace Shared.Objects
             return item;
         }
 
-        public void WriteToDb(ref UpdateCommand updateCommand)
+        public void WriteToDb(ref UpdateCommand cmd)
         {
-            
+            cmd.Set("CarId", CarId);
+            cmd.Set("State", State);
+            cmd.Set("Slot", Slot);
+            cmd.Set("StackNum", StackNum);
+            cmd.Set("AssistA", AssistA);
+            cmd.Set("AssistB", AssistB);
+            cmd.Set("AssistC", AssistC);
+            cmd.Set("AssistD", AssistD);
+            cmd.Set("AssistE", AssistE);
+            cmd.Set("AssistF", AssistF);
+            cmd.Set("AssistG", AssistG);
+            cmd.Set("AssistH", AssistH);
+            cmd.Set("AssistI", AssistI);
+            cmd.Set("AssistJ", AssistJ);
+            cmd.Set("Box", Box);
+            cmd.Set("Belonging", Belonging);
+            cmd.Set("Upgrade", Upgrade);
+            cmd.Set("UpgradePoint", UpgradePoint);
+            cmd.Set("Durability", Durability);
+            cmd.Set("TableIndex", TableIndex);
+            cmd.Set("InventoryIndex", InventoryIndex);
+            cmd.Set("Random", Random);
+            cmd.Set("CharacterId", CharacterId);
+        }
+        
+        public void WriteToDb(ref InsertCommand cmd)
+        {
+            cmd.Set("CarId", CarId);
+            cmd.Set("State", State);
+            cmd.Set("Slot", Slot);
+            cmd.Set("StackNum", StackNum);
+            cmd.Set("AssistA", AssistA);
+            cmd.Set("AssistB", AssistB);
+            cmd.Set("AssistC", AssistC);
+            cmd.Set("AssistD", AssistD);
+            cmd.Set("AssistE", AssistE);
+            cmd.Set("AssistF", AssistF);
+            cmd.Set("AssistG", AssistG);
+            cmd.Set("AssistH", AssistH);
+            cmd.Set("AssistI", AssistI);
+            cmd.Set("AssistJ", AssistJ);
+            cmd.Set("Box", Box);
+            cmd.Set("Belonging", Belonging);
+            cmd.Set("Upgrade", Upgrade);
+            cmd.Set("UpgradePoint", UpgradePoint);
+            cmd.Set("Durability", Durability);
+            cmd.Set("TableIndex", TableIndex);
+            cmd.Set("InventoryIndex", InventoryIndex);
+            cmd.Set("Random", Random);
+            cmd.Set("CharacterId", CharacterId);
         }
 
         public void Serialize(BinaryWriterExt writer)

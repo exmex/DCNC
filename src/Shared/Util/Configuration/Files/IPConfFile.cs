@@ -1,3 +1,5 @@
+using System;
+
 namespace Shared.Util.Configuration.Files
 {
     public class IPConfFile : ConfFile
@@ -19,7 +21,7 @@ namespace Shared.Util.Configuration.Files
         
         public void Load()
         {
-            Require("system/conf/game.conf");
+            Require("system/conf/ip.conf");
             
             GameServerIp = GetString("gameServerIp", "127.0.0.1");
             LobbyServerIp = GetString("lobbyServerIp", "127.0.0.1");

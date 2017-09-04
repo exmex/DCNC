@@ -2,13 +2,13 @@
 {
     public class XiStrMyItemMod
     {
-        public Item MyItem;
+        public InventoryItem MyInventoryItem;
 
         public int State;
 
         public XiStrMyItemMod()
         {
-            MyItem = new Item();
+            MyInventoryItem = new InventoryItem();
         }
 
         /*struct XiStrMyItemMod
