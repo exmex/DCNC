@@ -177,20 +177,14 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdGameStream)]
         public static void GameStream(Packet packet)
         {
-            if (packet.Sender.User.Permission == 0x0)
-            {
-                Log.Warning("User entered command but has no permission: " + packet.Sender.User.ActiveCharacter.Name);
-                return;
-            }
-
-            packet.Reader.ReadInt16();
+            var unknown1 = packet.Reader.ReadInt16();
             
             var message = packet.Reader.ReadUnicode();
             
             var args = ConsoleUtil.ParseLine(message);
             if (args.Count <= 0) return;
             var cmd = args[0];
-            args.RemoveAt(0);
+            args.RemoveAt(0); // Remove command itself
             
             var command = GameServer.ChatCommands.GetCommand(cmd);
 
@@ -205,12 +199,7 @@ namespace GameServer.Network.Handlers
             var res = command.Func(GameServer.Instance.Server, packet.Sender, cmd, args);
             if (res == CommandResult.InvalidArgument)
             {
-                packet.Sender.Send(new ChatMessageAnswer()
-                {
-                    MessageType = "channel",
-                    SenderCharacterName = "Server",
-                    Message = "Syntax: " + command.Usage,
-                }.CreatePacket());
+                packet.Sender.SendChatMessage("Syntax: " + command.Usage);
             }
         }
 
@@ -220,6 +209,14 @@ namespace GameServer.Network.Handlers
             var chatMsgPacket = new ChatMessagePacket(packet);
 
             var sender = packet.Sender.User.ActiveCharacter.Name;
+            if (packet.Sender.User.GMFlag)
+                sender = $"GM {sender}";
+
+            if (packet.Sender.User.Status == UserStatus.Muted)
+            {
+                packet.Sender.SendChatMessage("You are muted!");
+                return;
+            }
 
             Log.Debug($"({chatMsgPacket.MessageType}) <{sender}> {chatMsgPacket.Message}");
 

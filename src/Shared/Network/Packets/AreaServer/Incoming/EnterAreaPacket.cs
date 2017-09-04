@@ -7,15 +7,15 @@
         public readonly int GroupId;
 
         public readonly int LocalTime;
-        public readonly short SessionId;
+        public readonly short Serial;
 
-        public readonly string Username;
+        public readonly string CharacterName;
 
         public EnterAreaPacket(Packet packet)
         {
-            SessionId = packet.Reader.ReadInt16();
+            Serial = packet.Reader.ReadInt16();
 
-            Username = packet.Reader.ReadUnicodeStatic(21);
+            CharacterName = packet.Reader.ReadUnicodeStatic(21);
             /*Username = packet.Reader.ReadUnicode();
             Username = Username.Substring(Username.Length - 1); // Strip trailing nullbyte
             */

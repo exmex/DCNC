@@ -6,22 +6,27 @@ namespace AreaServer.Network.Handlers
     public static class Chat
     {
         /// <summary>
-        /// TODO: Load sender name from Client.
         /// </summary>
         /// <param name="packet"></param>
         [Packet(Packets.CmdAreaChat)]
         public static void AreaChat(Packet packet)
         {
+            if (packet.Sender.User == null)
+            {
+                packet.Sender.KillConnection("Not loggedin!");
+                return;
+            }
+            
             var type = packet.Reader.ReadUnicodeStatic(10);
-            var sender = packet.Reader.ReadUnicodeStatic(18);
-            //packet.Reader.ReadBytes(18 * 2); // sender 18 chars max
+            //var sender = packet.Reader.ReadUnicodeStatic(18);
+            packet.Reader.ReadUnicodeStatic(18);
             var message = packet.Reader.ReadUnicodePrefixed();
 
             //string sender = packet.Sender.Player.ActiveCharacter.Name;
 
             var ack = new Packet(Packets.CmdAreaChat);
             ack.Writer.WriteUnicodeStatic(type, 10);
-            ack.Writer.WriteUnicodeStatic(sender, 18);
+            ack.Writer.WriteUnicodeStatic(packet.Sender.User.ActiveCharacter.Name, 18);
             ack.Writer.WriteUnicode(message);
 
             switch (type)

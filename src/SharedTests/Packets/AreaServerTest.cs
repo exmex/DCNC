@@ -15,8 +15,8 @@ namespace SharedTests.Packets
         {
             var packet = new EnterAreaPacket(Utilities.ConstructTestPacket("EnterArea.bin", Shared.Network.Packets.CmdEnterArea));
 
-            Assert.AreEqual(123, packet.SessionId);
-            StringAssert.AreEqualIgnoringCase("Administrator", packet.Username);
+            Assert.AreEqual(123, packet.Serial);
+            StringAssert.AreEqualIgnoringCase("Administrator", packet.CharacterName);
             Assert.AreEqual(5, packet.AreaId);
             Assert.AreEqual(4294967295, packet.LocalTime);
             Assert.AreEqual(13762644, packet.GroupId);

@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Common;
+using Shared.Database;
 
 namespace Shared.Objects
 {
@@ -29,6 +32,8 @@ namespace Shared.Objects
         /// </summary>
         public int Permission;
 
+        public bool GMFlag;
+
         public List<Character> Characters;
         public string CreateIp;
         public string Name;
@@ -39,5 +44,27 @@ namespace Shared.Objects
         public ulong UID;
 
         public static User Empty => new User {Status = UserStatus.Normal};
+
+        public static User ReadFromDb(DbDataReader reader)
+        {
+            return new User
+            {
+                UID = Convert.ToUInt64(reader["UID"]),
+                Name = reader["Username"] as string,
+                Password = reader["Password"] as string,
+                Salt = reader["Salt"] as string,
+                Permission = Convert.ToInt32(reader["Permission"]),
+                Ticket = Convert.ToUInt32(reader["Ticket"]),
+                Status = (UserStatus) Convert.ToByte(reader["Status"]),
+                CreateIp = reader["CreateIP"] as string,
+                ActiveCharacterId = Convert.ToUInt64(reader["LastActiveChar"]),
+            };
+        }
+
+        public void WriteToDb(ref UpdateCommand cmd)
+        {
+            cmd.Set("Status", (byte)Status);
+            cmd.Set("Permission", Permission);
+        }
     }
 }

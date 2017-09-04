@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using Shared.Network.GameServer;
 using Shared.Objects;
 using Shared.Util;
 using Shared.Util.Configuration.Files;
@@ -209,9 +210,25 @@ namespace Shared.Network
         {
             if (!_connected) return;
             _connected = false;
-
-            Log.Info("Killing off client. {0}", reason);
+#if !DEBUG
+            if(reason != "Socket or IO Exception")
+#endif
+            {
+                Log.Info("Killing off client. {0}", reason);
+            }
             _tcp.Close();
+        }
+
+        public void SendChatMessage(string message)
+        {
+            //Array.ConvertAll(new char[16], v => (char) 99).ToString()
+            var ack = new ChatMessageAnswer
+            {
+                MessageType = "channel",
+                SenderCharacterName = "SERVER",
+                Message = message
+            };
+            Send(ack.CreatePacket());
         }
     }
 }

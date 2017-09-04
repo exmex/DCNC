@@ -13,7 +13,6 @@ namespace AuthServer.Network.Handlers
     {
         /// <summary>
         /// Handles the CmdServerMessage packet
-        /// TODO: It would be better to ignore this packet, since the client discards the answer regardless.
         /// </summary>
         /// <param name="packet">The packet</param>
         [Packet(Packets.CmdServerMessage)]
@@ -51,6 +50,12 @@ namespace AuthServer.Network.Handlers
             {
                 Log.Debug("Account {0} not found!", authPacket.Username);
                 packet.Sender.SendError("Invalid Username or password!");
+                return;
+            }
+
+            if (user.Status == UserStatus.Banned)
+            {
+                packet.Sender.KillConnection("Banned user");
                 return;
             }
 

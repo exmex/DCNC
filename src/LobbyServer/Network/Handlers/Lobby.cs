@@ -36,6 +36,7 @@ namespace LobbyServer.Network.Handlers
                 packet.Sender.KillConnection();
             }
 
+            // Send gamesettings
             packet.Sender.Send(new GameSettingsAnswer().CreatePacket());
             
             packet.Sender.User.Characters = CharacterModel.RetrieveUser(LobbyServer.Instance.Database.Connection,

@@ -24,12 +24,15 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdJoinChannel)]
         public static void JoinChannel(Packet packet)
         {
+            var serial = GameServer.Instance.Server.LastSerial++;
+            GameServer.Instance.Server.ActiveSerials.Add(serial, packet.Sender.User);
+            
             packet.Sender.Send(new JoinChannelAnswer()
             {
                 ChannelName = "speeding",
                 CharacterName = packet.Sender.User.ActiveCharacter.Name,
-                Serial = 123,
-                SessionAge = 123,
+                Serial = (short)serial,
+                SessionAge = 0,
             }.CreatePacket());
 
             packet.Sender.Send(new WeatherAnswer()
@@ -37,13 +40,9 @@ namespace GameServer.Network.Handlers
                 CurrentWeather = WeatherAnswer.Weather.Rain
             }.CreatePacket());
             
-            packet.Sender.Send(new ChatMessageAnswer()
-            {
-                MessageType = Array.ConvertAll(new char[16], v => (char) 99).ToString(),
-                SenderCharacterName = "Server",
-                // As per legal requirements, this shall not be removed!
-                Message = "Server powered by DCNC - GigaToni",
-            }.CreatePacket());
+            // As per legal requirements, this shall not be removed!
+            packet.Sender.SendChatMessage($"Server powered by DCNC (v{Shared.Util.Version.GetVersion()}) - GigaToni");
+            // As per legal requirements, this shall not be removed!
         }
 
         [Packet(Packets.CmdJoinArea)]
@@ -180,6 +179,7 @@ s            */
             character.TeamRank = 1;*/ // <-- This all get set by CharacterModel already.
 
             var user = AccountModel.Retrieve(GameServer.Instance.Database.Connection, character.Uid);
+            AccountModel.SetActiveCharacter(GameServer.Instance.Database.Connection, user, character.Cid);
 
             packet.Sender.User = user;
             packet.Sender.User.ActiveCharacterId = character.Cid;
@@ -262,7 +262,7 @@ s            */
                 Items = items.ToArray()
             };
 
-            //packet.Sender.Send(ack.CreatePacket());
+            packet.Sender.Send(ack.CreatePacket());
         }
 
         [Packet(Packets.CmdVisualItemList)]
@@ -283,21 +283,20 @@ s            */
             
             foreach (var client in GameServer.Instance.Server.GetClients())
             {
-                if (client.User.ActiveCharacter != null && client.User.ActiveCarId == serial)
+                if (client.User.ActiveCharacter == null || client.User.ActiveCarId != serial) continue;
+                
+                var character = client.User.ActiveCharacter;
+                var playerInfo = new XiPlayerInfo()
                 {
-                    var character = client.User.ActiveCharacter;
-                    var playerInfo = new XiPlayerInfo()
-                    {
-                        CharacterName = character.Name,
-                        Serial = (ushort)client.User.ActiveCarId, // TODO: Verify if the serial is the same as carid
-                        Age = 0
-                    };
-                    var res = new Packet(Packets.PlayerInfoOldAck);
-                    res.Writer.Write(1); // Result
-                    res.Writer.Write(playerInfo);
-                    packet.Sender.Send(res);
-                    break;
-                }
+                    CharacterName = character.Name,
+                    Serial = (ushort)client.User.ActiveCarId, // TODO: Verify if the serial is the same as carid
+                    Age = 0
+                };
+                var res = new Packet(Packets.PlayerInfoOldAck);
+                res.Writer.Write(1); // Result
+                res.Writer.Write(playerInfo);
+                packet.Sender.Send(res);
+                break;
             }
             #if !DEBUG
             Log.Unimplemented("Missing info for PlayerInfoReq");

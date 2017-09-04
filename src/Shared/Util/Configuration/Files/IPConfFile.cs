@@ -19,6 +19,8 @@ namespace Shared.Util.Configuration.Files
         
         public void Load()
         {
+            Require("system/conf/game.conf");
+            
             GameServerIp = GetString("gameServerIp", "127.0.0.1");
             LobbyServerIp = GetString("lobbyServerIp", "127.0.0.1");
             AreaServer1Ip = GetString("areaServer1Ip", "127.0.0.1");

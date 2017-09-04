@@ -45,7 +45,7 @@ namespace Shared.Objects
         public int Upgrade;
         public int UpgradePoint;
         public uint ExpireTick;
-        public float ItemHealth;
+        public float Durability;
         public int TableIndex;
         public uint InventoryIndex;
         public int Random;
@@ -58,11 +58,30 @@ namespace Shared.Objects
             var item = new Item
             {
                 DbId = Convert.ToInt32(reader["Id"]),
-                Id = reader["IdStr"] as string,
-                CharacterId = Convert.ToUInt64(reader["CharacterId"]),
-                InventoryIndex = Convert.ToUInt32(reader["InventoryIndex"]),
+                CarId = Convert.ToUInt32(reader["CarId"]),
+                State = Convert.ToUInt16(reader["State"]),
+                Slot = Convert.ToUInt16(reader["Slot"]),
                 StackNum = Convert.ToUInt32(reader["StackNum"]),
-                CarId = Convert.ToUInt32(reader["CarId"])
+                AssistA = Convert.ToUInt32(reader["AssistA"]),
+                AssistB = Convert.ToUInt32(reader["AssistB"]),
+                AssistC = Convert.ToUInt32(reader["AssistC"]),
+                AssistD = Convert.ToUInt32(reader["AssistD"]),
+                AssistE = Convert.ToUInt32(reader["AssistE"]),
+                AssistF = Convert.ToUInt32(reader["AssistF"]),
+                AssistG = Convert.ToUInt32(reader["AssistG"]),
+                AssistH = Convert.ToUInt32(reader["AssistH"]),
+                AssistI = Convert.ToUInt32(reader["AssistI"]),
+                AssistJ = Convert.ToUInt32(reader["AssistJ"]),
+                Box = Convert.ToUInt32(reader["Box"]),
+                Belonging = Convert.ToUInt32(reader["Belonging"]),
+                Upgrade = Convert.ToInt32(reader["Upgrade"]),
+                UpgradePoint = Convert.ToInt32(reader["UpgradePoint"]),
+                ExpireTick = 0,
+                Durability = Convert.ToSingle(reader["Durability"]),
+                TableIndex = Convert.ToInt32(reader["TableIndex"]),
+                InventoryIndex = Convert.ToUInt32(reader["InventoryIndex"]),
+                Random = Convert.ToInt32(reader["Random"]),
+                CharacterId = Convert.ToUInt64(reader["CharacterId"])
             };
 
             return item;
@@ -95,7 +114,7 @@ namespace Shared.Objects
             writer.Write(Upgrade);
             writer.Write(UpgradePoint);
             writer.Write(ExpireTick);
-            writer.Write(ItemHealth); // Only neo, -1
+            writer.Write(Durability); // Only neo, -1
             writer.Write(0); // Unk1?!
             writer.Write(TableIndex);
             writer.Write(InventoryIndex);

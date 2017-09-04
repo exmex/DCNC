@@ -28,30 +28,13 @@ namespace Shared.Models
 
             command.Parameters.AddWithValue("@user", username);
             command.Parameters.AddWithValue("@pwhash", passwordHash);
-
-            Log.Info("Username: {0}, PasswordHash: {1}", username, passwordHash);
-
-            User user = null;
-
+            
             using (DbDataReader reader = command.ExecuteReader())
             {
-                if (reader.Read())
-                {
-                    user = new User
-                    {
-                        UID = Convert.ToUInt64(reader["UID"]),
-                        Name = reader["Username"] as string,
-                        Password = reader["Password"] as string,
-                        Salt = reader["Salt"] as string,
-                        Permission = Convert.ToInt32(reader["Permission"]),
-                        Ticket = Convert.ToUInt32(reader["Ticket"]),
-                        Status = (UserStatus) Convert.ToByte(reader["Status"]),
-                        CreateIp = reader["CreateIP"] as string
-                    };
-                }
+                if (!reader.Read()) return null;
+                
+                return User.ReadFromDb(reader);
             }
-
-            return user;
         }
 
         /// <summary>
@@ -65,28 +48,13 @@ namespace Shared.Models
             var command = new MySqlCommand("SELECT * FROM Users WHERE Username = @user", dbconn);
 
             command.Parameters.AddWithValue("@user", username);
-
-            User user = null;
-
+            
             using (DbDataReader reader = command.ExecuteReader())
             {
-                if (reader.Read())
-                {
-                    user = new User
-                    {
-                        UID = Convert.ToUInt64(reader["UID"]),
-                        Name = reader["Username"] as string,
-                        Password = reader["Password"] as string,
-                        Salt = reader["Salt"] as string,
-                        Permission = Convert.ToInt32(reader["Permission"]),
-                        Ticket = Convert.ToUInt32(reader["Ticket"]),
-                        Status = (UserStatus) Convert.ToByte(reader["Status"]),
-                        CreateIp = reader["CreateIP"] as string
-                    };
-                }
+                if (!reader.Read()) return null;
+                
+                return User.ReadFromDb(reader);
             }
-
-            return user;
         }
 
         /// <summary>
@@ -101,25 +69,11 @@ namespace Shared.Models
 
             command.Parameters.AddWithValue("@uid", uid);
 
-            User user = null;
-
             using (DbDataReader reader = command.ExecuteReader())
             {
-                if (reader.Read())
-                    user = new User
-                    {
-                        UID = Convert.ToUInt64(reader["UID"]),
-                        Name = reader["Username"] as string,
-                        Password = reader["Password"] as string,
-                        Salt = reader["Salt"] as string,
-                        Permission = Convert.ToInt32(reader["Permission"]),
-                        Ticket = Convert.ToUInt32(reader["Ticket"]),
-                        Status = (UserStatus) Convert.ToByte(reader["Status"]),
-                        CreateIp = reader["CreateIP"] as string
-                    };
+                if (!reader.Read()) return null;
+                return User.ReadFromDb(reader);
             }
-
-            return user;
         }
 
         /// <summary>
@@ -204,10 +158,11 @@ namespace Shared.Models
                 mc.Parameters.AddWithValue("@user", username);
                 mc.Parameters.AddWithValue("@ticketKey", ticketKey);
 
-                mc.ExecuteNonQuery();
-
-                return ticketKey;
+                if(mc.ExecuteNonQuery() == 1)
+                    return ticketKey;
             }
+
+            return 0;
         }
 
         /// <summary>
@@ -224,25 +179,37 @@ namespace Shared.Models
             {
                 mc.Parameters.AddWithValue("@user", accountId);
                 mc.Parameters.AddWithValue("@ticketKey", ticketKey);
-
-                User user = null;
+                
                 using (DbDataReader reader = mc.ExecuteReader())
                 {
-                    if (reader.Read())
-                        user = new User
-                        {
-                            UID = Convert.ToUInt64(reader["UID"]),
-                            Name = reader["Username"] as string,
-                            Password = reader["Password"] as string,
-                            Salt = reader["Salt"] as string,
-                            Permission = Convert.ToInt32(reader["Permission"]),
-                            Ticket = Convert.ToUInt32(reader["Ticket"]),
-                            Status = (UserStatus) Convert.ToByte(reader["Status"]),
-                            CreateIp = reader["CreateIP"] as string
-                        };
+                    if (!reader.Read()) return null;
+                    
+                    return User.ReadFromDb(reader);
                 }
+            }
+        }
 
-                return user;
+        public static bool SetActiveCharacter(MySqlConnection dbconn, User user, ulong charId)
+        {
+            using (var mc = new MySqlCommand("UPDATE `Users` SET `LastActiveChar` = @charId WHERE `UID` = @userId",
+                dbconn))
+            {
+                mc.Parameters.AddWithValue("@userId", user.UID);
+                mc.Parameters.AddWithValue("@charId", charId);
+
+                return mc.ExecuteNonQuery() == 1;
+            }
+        }
+        
+        public static bool Update(MySqlConnection dbconn, User user)
+        {
+            using (var cmd = new UpdateCommand("UPDATE `Users` SET {0} WHERE `UID` = @userId", dbconn))
+            {
+                cmd.AddParameter("@userId", user.UID);
+                
+                var updateCommand = cmd;
+                user.WriteToDb(ref updateCommand);
+                return cmd.Execute() == 1;
             }
         }
     }

@@ -177,6 +177,7 @@
     <Compile Include="Util\PastebinApi.cs" />
     <Compile Include="Util\RandomProvider.cs" />
     <Compile Include="Util\TdfReader.cs" />
+    <Compile Include="Util\Version.cs" />
     <Compile Include="Util\Win32.cs" />
   </ItemGroup>
   <ItemGroup>

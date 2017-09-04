@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
+using Shared.Objects;
 using Shared.Util;
 
 namespace Shared.Network
@@ -52,6 +53,9 @@ namespace Shared.Network
         /// Specifies wether or not we should dump outgoing packets to a file!
         /// </summary>
         public static bool DumpOutgoing { get; set; }
+
+        public ushort LastSerial = 0;
+        public Dictionary<ushort, User> ActiveSerials = new Dictionary<ushort, User>();
 
 #if DEBUG
         public static readonly List<ushort> PacketDumpBlacklist = new List<ushort>()

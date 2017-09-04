@@ -65,7 +65,7 @@ namespace Shared.Objects
                 {
                     var quest = new Quest();
                     quest.Id = reader.ReadUnicode();
-                    quest.TableIndex = Convert.ToInt32(reader.ReadUnicode());
+                    quest.TableIndex = Convert.ToInt32(reader.ReadUnicode())-1;
                     quest.MissionType = reader.ReadUnicode();
                     //quest.Title = reader.ReadUnicode();
                     //quest.IntroPrompt = reader.ReadUnicode();

@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using Shared.Objects;
 using Shared.Util;
@@ -21,7 +20,8 @@ namespace Shared.Network.GameServer
             {
                 using (var bs = new BinaryWriterExt(ms))
                 {
-                    bs.Write(0x40000); // 262144
+                    bs.Write(262144); // First packet, 262145 would be 2nd, 3rd etc.
+                    bs.Write(Items.Length);
                     foreach (var item in Items)
                     {
                         bs.Write(item);

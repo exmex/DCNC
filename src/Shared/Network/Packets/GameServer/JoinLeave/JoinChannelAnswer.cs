@@ -7,7 +7,7 @@ namespace Shared.Network.GameServer
     {
         public string ChannelName;
         public string CharacterName;
-        public ushort Serial;
+        public short Serial;
         public ushort SessionAge;
 
         public override Packet CreatePacket()
