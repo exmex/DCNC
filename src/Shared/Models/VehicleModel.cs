@@ -95,6 +95,8 @@ namespace Shared.Models
             command.Parameters.AddWithValue("@cid", charId);
             using (var reader = command.ExecuteReader())
             {
+                if (!reader.Read()) return -1;
+                
                 return reader.GetInt32(0);
             }
         }
