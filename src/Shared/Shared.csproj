@@ -203,9 +203,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="docs\MySqlParameter.xml" />
-    <None Include="docs\MySqlParameterCollection.xml" />
-    <None Include="docs\MySqlTransaction.xml" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -213,31 +210,23 @@
     <Folder Include="Network\Packets\Ranking\Outgoing\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <PreBuildEvent>"$(SolutionDir)External\NetRevisionTool.exe" /info /patch "$(ProjectDir)"
-taskkill /F /IM "AuthServer.exe" 2&gt;nul 1&gt;nul
-taskkill /F /IM "LobbyServer.exe" 2&gt;nul 1&gt;nul
-taskkill /F /IM "AreaServer.exe" 2&gt;nul 1&gt;nul
-taskkill /F /IM "GameServer.exe" 2&gt;nul 1&gt;nul
-taskkill /F /IM "RankingServer.exe" 2&gt;nul 1&gt;nul
-Exit 0</PreBuildEvent>
+  <PropertyGroup>
+    <PreBuildEvent>
+if $(ConfigurationName) NEQ ReleaseUnix (
+    "$(SolutionDir)External\NetRevisionTool.exe" /info /patch "$(ProjectDir)"
+    taskkill /F /IM "AuthServer.exe" 2&gt;nul 1&gt;nul
+    taskkill /F /IM "LobbyServer.exe" 2&gt;nul 1&gt;nul
+    taskkill /F /IM "AreaServer.exe" 2&gt;nul 1&gt;nul
+    taskkill /F /IM "GameServer.exe" 2&gt;nul 1&gt;nul
+    taskkill /F /IM "RankingServer.exe" 2&gt;nul 1&gt;nul
+    Exit 0
+)</PreBuildEvent>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <PostBuildEvent>"$(SolutionDir)External\NetRevisionTool.exe" /restore "$(ProjectDir)"
-    </PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <PreBuildEvent>"$(SolutionDir)External\NetRevisionTool.exe" /info /patch "$(ProjectDir)"
-taskkill /F /IM "AuthServer.exe" 2&gt;nul 1&gt;nul
-taskkill /F /IM "LobbyServer.exe" 2&gt;nul 1&gt;nul
-taskkill /F /IM "AreaServer.exe" 2&gt;nul 1&gt;nul
-taskkill /F /IM "GameServer.exe" 2&gt;nul 1&gt;nul
-taskkill /F /IM "RankingServer.exe" 2&gt;nul 1&gt;nul
-Exit 0</PreBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <PostBuildEvent>"$(SolutionDir)External\NetRevisionTool.exe" /restore "$(ProjectDir)"
-    </PostBuildEvent>
+  <PropertyGroup>
+    <PostBuildEvent>
+if $(ConfigurationName) NEQ ReleaseUnix (
+    "$(SolutionDir)External\NetRevisionTool.exe" /restore "$(ProjectDir)"
+)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

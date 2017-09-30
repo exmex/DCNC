@@ -87,23 +87,19 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PostBuildEvent>"$(SolutionDir)External\NetRevisionTool.exe" /restore "$(ProjectDir)"
-    </PostBuildEvent>
+  <PropertyGroup>
+    <PreBuildEvent>
+if $(ConfigurationName) NEQ ReleaseUnix (
+    "$(SolutionDir)External\NetRevisionTool.exe" /info /patch "$(ProjectDir)"
+    taskkill /F /IM "AreaServer.exe" 2&gt;nul 1&gt;nul
+    Exit 0
+)</PreBuildEvent>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PreBuildEvent>"$(SolutionDir)External\NetRevisionTool.exe" /info /patch "$(ProjectDir)"
-taskkill /F /IM "AreaServer.exe" 2&gt;nul 1&gt;nul
-Exit 0</PreBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PostBuildEvent>"$(SolutionDir)External\NetRevisionTool.exe" /restore "$(ProjectDir)"
-    </PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PreBuildEvent>"$(SolutionDir)External\NetRevisionTool.exe" /info /patch "$(ProjectDir)"
-taskkill /F /IM "AreaServer.exe" 2&gt;nul 1&gt;nul
-Exit 0</PreBuildEvent>
+  <PropertyGroup>
+    <PostBuildEvent>
+if $(ConfigurationName) NEQ ReleaseUnix (
+    "$(SolutionDir)External\NetRevisionTool.exe" /restore "$(ProjectDir)"
+)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
