@@ -202,7 +202,8 @@ namespace Shared.Models
                 cmd.Set("InventoryLevel", 0);
                 cmd.Set("posState", 1);
                 cmd.Set("channelId", -1);
-                // TODO: Change to packet Cmd_FirstPositon.
+                cmd.Set("Mito", character.MitoMoney);
+                // TODO: Move this to a more logical place.
                 cmd.Set("posX", -2157.2f + 4 * (new Random().Next() % 10));
                 cmd.Set("posY", -205.05 + 4 * (new Random().Next() % 10));
                 cmd.Set("posZ", 85.720001 + 4 * (new Random().Next() % 10));
@@ -210,23 +211,9 @@ namespace Shared.Models
 
                 cmd.Execute();
                 character.Id = (ulong)cmd.LastId;
+                
+                character = Retrieve(dbconn, character.Id); // TODO: Wow.. This should be against the law.
             }
-            /*using (var cmd = new InsertCommand("INSERT INTO `vehicles` {0}", dbconn))
-            {
-                cmd.Set("CharID", character.Id);
-                cmd.Set("color", character.ActiveCar.Color);
-                cmd.Set("carType", character.ActiveCar.CarType);
-
-                cmd.Execute();
-                character.ActiveVehicleId = (uint)cmd.LastId;
-            }
-            using (var cmd = new UpdateCommand("UPDATE `Characters` SET {0} WHERE `CID` = @charId", dbconn))
-            {
-                cmd.AddParameter("@charId", character.Id);
-                cmd.Set("CurrentCarId", character.ActiveVehicleId);
-
-                cmd.Execute();
-            }*/
         }
 
         public static void Update(MySqlConnection dbconn, Character character)
