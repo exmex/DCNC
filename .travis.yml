@@ -1,0 +1,15 @@
+language: csharp
+solution: src/NeoCity.sln
+install:
+  - nuget restore src/NeoCity.sln
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+script:
+  - xbuild /p:Configuration=Release src/NeoCity.sln
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./SharedTests/bin/Release/SharedTests.dll
+matrix:
+  include:
+    - dotnet: 1.0.1
+      mono: none
+      dist: trusty
+      env: DOTNETCORE=1
+    - mono: latest
