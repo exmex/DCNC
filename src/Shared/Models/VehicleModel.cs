@@ -88,6 +88,13 @@ namespace Shared.Models
             }
         }
 
+        public static bool Remove(MySqlConnection dbconn, ulong vehId)
+        {
+            var command = new MySqlCommand("DELETE FROM `Vehicles` WHERE CID = @vehId", dbconn);
+            command.Parameters.AddWithValue("@vehId", vehId);
+            return command.ExecuteNonQuery() == 1;
+        }
+
         public static int RetrieveCount(MySqlConnection dbconn, ulong charId)
         {
             var command = new MySqlCommand("SELECT COUNT(*) FROM Vehicles WHERE CharID = @cid", dbconn);

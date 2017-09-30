@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using MySql.Data.MySqlClient;
 using Shared.Database;
@@ -14,60 +15,246 @@ namespace Shared.Objects
 {
     public class Character
     {
-        public Vehicle ActiveCar;
-        public ushort Avatar;
-        public long BaseExp;
-        public ulong Cid;
-        public int City;
-        public int CreationDate;
-
-        public long CurExp;
-        public uint CurrentCarId;
-        public int Flags;
-        public int GarageLevel;
-        public int Guild;
-        public int InventoryLevel;
-        public int LastChannel;
-        public int LastDate;
-
-        //public ulong CID;
-        public string LastMessageFrom; // 0xB
-
-        public ushort Level;
-        public long Mileage;
-
-        public long MitoMoney;
-
+        /// <summary>
+        /// The character Id from DB
+        /// </summary>
+        public ulong Id;
+        
+        /// <summary>
+        /// Character Name
+        /// Unicode 21 Chars
+        /// </summary>
         public string Name;
-        public long NextExp;
+        
+        /// <summary>
+        /// ?
+        /// 11 (0xB) Chars
+        /// </summary>
+        public string LastMessageFrom;
+        
+        /// <summary>
+        /// Presumably the last date the character was played
+        /// </summary>
+        public int LastDate;
+        
+        /// <summary>
+        /// The Avatar the character is using
+        /// </summary>
+        public ushort Avatar;
+        
+        /// <summary>
+        /// The current level of character
+        /// </summary>
+        public ushort Level;
 
-        public int posState;
-        public int PosState;
-        public byte PType;
-        public uint PvpCnt;
-        public uint PvpPoint;
-        public uint PvpWinCnt;
-        public uint QuickCnt;
-        public uint QuickSlot1;
-        public uint QuickSlot2;
-        public int TeamCloseDate;
+        /// <summary>
+        /// All about the expierence of the user
+        /// </summary>
+        public ExpInfo ExperienceInfo;
+        
+        /// <summary>
+        /// How much money the character has
+        /// </summary>
+        public long MitoMoney;
+        
+        /// <summary>
+        /// The DB Id of the team the user is in
+        /// </summary>
         public long TeamId;
-        public int TeamJoinDate;
-        public int TeamLeaveDate;
+        
+        /// <summary>
+        /// The Image Id of the team 
+        /// </summary>
+        [Obsolete("Use Team")]
         public long TeamMarkId;
-        public string TeamName; // 0xD / 13
+        
+        /// <summary>
+        /// The name of the team
+        /// 13 (0xD) Chars
+        /// </summary>
+        [Obsolete("Use Team")]
+        public string TeamName;
+        
+        /// <summary>
+        /// Presumably the rank in the team the char has
+        /// </summary>
         public int TeamRank;
         
-        public float TotalDistance, PositionX, PositionY, PositionZ, Rotation;
-        public uint TPvpCnt;
-        public uint TPvpPoint;
-        public uint TPvpWinCnt;
-        public ulong Uid;
+        /// <summary>
+        /// The party type
+        /// 65 != Party is null?
+        /// </summary>
+        public byte PartyType;
         
-        // Do not send this here!
-        public User User;
-        // 20 pro "page" each page 1 level?
-        public InventoryItem[] InventoryItems;
+        /// <summary>
+        /// Presumably How much PvP he has done?
+        /// </summary>
+        public uint PvpCount;
+        
+        /// <summary>
+        /// Presumably how much Pvp Points
+        /// </summary>
+        public uint PvpPoint;
+        
+        /// <summary>
+        /// Presumably how many wins he got in PvP
+        /// </summary>
+        public uint PvpWinCount;
+        
+        /// <summary>
+        /// Presumably Team Pvp Count
+        /// <see cref="PvpCount"/>
+        /// </summary>
+        public uint TeamPvpCount;
+        
+        /// <summary>
+        /// Presumably Team Pvp Points
+        /// <see cref="PvpPoint"/>
+        /// </summary>
+        public uint TeamPvpPoint;
+        
+        /// <summary>
+        /// Presumably Team Pvp Wins
+        /// <see cref="PvpWinCount"/>
+        /// </summary>
+        public uint TeamPvpWinCount;
+        
+        /// <summary>
+        /// Presumably How many Quick services he had?
+        /// </summary>
+        public uint QuickCount;
+        
+        /// <summary>
+        /// Presumably the total distance traveled
+        /// </summary>
+        public float TotalDistance;
+        
+        /// <summary>
+        /// The current position & rotation
+        /// </summary>
+        public Vector4 Position;
+        
+        /// <summary>
+        /// The last channel Id he was in
+        /// </summary>
+        public int LastChannel;
+        
+        /// <summary>
+        /// The current city Id
+        /// 0 = Moon Palace
+        /// 1 = Koinonia
+        /// 2 = Cras
+        /// </summary>
+        public int City;
+
+        /// <summary>
+        /// The current position state
+        /// 0 = Moon Palace Introduction
+        /// 2 = Fresh spawn
+        /// 3 = ??
+        /// </summary>
+        public int PosState;
+        
+        /// <summary>
+        /// Db Id of the car he is driving
+        /// </summary>
+        public uint ActiveVehicleId;
+        
+        /// <summary>
+        /// TableIndex of Item he has in his first quick slot
+        /// </summary>
+        public uint QuickSlot1;
+        
+        /// <summary>
+        /// TableIndex of Item he has in his second quick slot
+        /// </summary>
+        public uint QuickSlot2;
+        
+        /// <summary>
+        /// Unix timestamp when he joined the team
+        /// </summary>
+        public int TeamJoinDate;
+        
+        /// <summary>
+        /// Unix timestamp when his team got closed
+        /// </summary>
+        public int TeamCloseDate;
+        
+        /// <summary>
+        /// Unix timestamp when he left his team
+        /// </summary>
+        public int TeamLeaveDate;
+        
+        /// <summary>
+        /// Zero-based inventory level (pages)
+        /// </summary>
+        public int InventoryLevel;
+
+        /// <summary>
+        /// Zero-based garage level (floors)
+        /// </summary>
+        public int GarageLevel;
+        
+        /// <summary>
+        /// Some kind of flags
+        /// nBattleTutorialCnt |= 0x4000000u
+        /// 
+        /// enum XiStrCharInfo::FlagType
+        /// {
+        ///     Beginner_Tutorial = 0x8000000,
+        ///     Battle_Tutorial = 0x4000000,
+        /// };
+        /// </summary>
+        public int Flags = 0x8000000;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Guild;
+        
+        /// <summary>
+        /// The DCGP Db Id
+        /// </summary>
+        public uint GPTeam;
+        
+        /// CharacterInfo End
+        
+        /// <summary>
+        /// Unix timestamp when the chararacter was created
+        /// </summary>
+        public int CreationDate;
+        
+        /// <summary>
+        /// Db Id of the user associated with this character
+        /// </summary>
+        public ulong Uid;
+
+        //private Vehicle _activeCar;
+
+        /// <summary>
+        /// The current active vehicle fetched from Db
+        /// NEW: Now points to a car in GarageVehicles
+        /// </summary>
+        public Vehicle ActiveCar;
+        /*{
+            get
+            { return _activeCar ?? (_activeCar = GarageVehicles.Find(vehicle => vehicle.CarID == ActiveVehicleId)); }
+        }*/
+
+        public Team Team;
+        
+        /// <summary>
+        /// Items in his inventory
+        /// Size: 20 * (InventoryLevel+1)
+        /// </summary>
+        public List<InventoryItem> InventoryItems;
+
+        /// <summary>
+        /// Visual Items in his inventory
+        /// </summary>
+        public List<InventoryVisualItem> InventoryVisualItems;
+
+        public List<Vehicle> GarageVehicles;
         
         /// <summary>
         /// All pending item modifications
@@ -75,11 +262,32 @@ namespace Shared.Objects
         /// </summary>
         private List<ItemMod> ItemModificationBuffer;
 
+        public ushort VehicleSerial;
+
         public Character()
         {
             ItemModificationBuffer = new List<ItemMod>();
+            InventoryItems = new List<InventoryItem>();
+            GarageVehicles = new List<Vehicle>();
+            ExperienceInfo = new ExpInfo();
+            
+            //ActiveCar = new Vehicle();
+
+            // Default vals for new chars
+            CreationDate = (int)DateTimeOffset.Now.ToUnixTimeSeconds();
+            LastDate = (int)DateTimeOffset.Now.ToUnixTimeSeconds();
+            
+            City = 1;
+            Level = 1;
+            PosState = 1;
+            LastChannel = -1;
         }
 
+        /// <summary>
+        /// Adds a new inventory modification
+        /// </summary>
+        /// <param name="item">The item that was modified</param>
+        /// <param name="moved">If the item was moved</param>
         public void AddItemMod(InventoryItem item, bool moved = false)
         {
             ItemModificationBuffer.Add(new ItemMod()
@@ -89,6 +297,11 @@ namespace Shared.Objects
             });
         }
 
+        /// <summary>
+        /// Flushes the pending inventory modifications
+        /// Sends ItemModListAnswer to client
+        /// </summary>
+        /// <param name="client">The client to send to</param>
         public void FlushItemModBuffer(Client client)
         {
             var mods = ItemModificationBuffer.ToArray();
@@ -100,43 +313,55 @@ namespace Shared.Objects
             }.CreatePacket());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
         public void Serialize(BinaryWriterExt writer)
         {
-            writer.Write(Cid);
+            writer.Write(Id);
             writer.WriteUnicodeStatic(Name, 21);
-            writer.WriteUnicodeStatic(LastMessageFrom, 0xB);
+            writer.WriteUnicodeStatic(LastMessageFrom, 11);
             writer.Write(LastDate);
             writer.Write(Avatar);
             writer.Write(Level);
-
-            writer.Write(CurExp);
-            writer.Write(NextExp);
-            writer.Write(BaseExp);
+            
+            writer.Write(ExperienceInfo);
 
             writer.Write(MitoMoney);
-            writer.Write(TeamId);
-            writer.Write(TeamMarkId);
-            writer.WriteUnicodeStatic(TeamName, 0xD);
-            writer.Write(TeamRank);
-            writer.Write(PType);
-            writer.Write(PvpCnt);
-            writer.Write(PvpWinCnt);
+            if (Team == null)
+            {
+                writer.Write(-1L);
+                writer.Write(0L);
+                writer.WriteUnicodeStatic("", 13);
+                writer.Write(0);
+            }
+            else
+            {
+                writer.Write(TeamId);
+                writer.Write(Team.TeamMarkId);
+                writer.WriteUnicodeStatic(Team.TeamName, 13);
+                writer.Write(TeamRank);
+            }
+            //writer.Write(TeamMarkId);
+            //writer.WriteUnicodeStatic(TeamName, 13);
+            //writer.Write(TeamRank);
+            writer.Write(PartyType);
+            writer.Write(PvpCount);
+            writer.Write(PvpWinCount);
             writer.Write(PvpPoint);
-            writer.Write(TPvpCnt);
-            writer.Write(TPvpWinCnt);
-            writer.Write(TPvpPoint);
-            writer.Write(QuickCnt);
+            writer.Write(TeamPvpCount);
+            writer.Write(TeamPvpWinCount);
+            writer.Write(TeamPvpPoint);
+            writer.Write(QuickCount);
             writer.Write(0); // unknown
             writer.Write(0); // unknown
-            writer.Write(TotalDistance);
-            writer.Write(PositionX);
-            writer.Write(PositionY);
-            writer.Write(PositionZ);
-            writer.Write(Rotation);
+            writer.Write(TotalDistance); // NOPE! TotalDistance says 62!
+            writer.Write(Position);
             writer.Write(LastChannel);
             writer.Write(City);
             writer.Write(PosState);
-            writer.Write(CurrentCarId);
+            writer.Write(ActiveVehicleId);
             writer.Write(QuickSlot1);
             writer.Write(QuickSlot2);
             writer.Write(TeamJoinDate);
@@ -148,51 +373,51 @@ namespace Shared.Objects
             writer.Write(new byte[42]); // filler
             writer.Write(Flags);
             writer.Write(Guild);
+            //writer.Write(new byte[38]); // filler
+            //writer.Write(GPTeam); // DCGP team
         }
 
         public void ReadFromDb(IDataReader reader)
         {
-            Cid = Convert.ToUInt64(reader["CID"]);
+            Id = Convert.ToUInt64(reader["CID"]);
             Uid = Convert.ToUInt64(reader["UID"]);
             Name = reader["Name"] as string;
-            if (!reader.IsDBNull(reader.GetOrdinal("TEAMNAME")))
+            /*if (!reader.IsDBNull(reader.GetOrdinal("TEAMNAME")))
                 TeamName = reader["TEAMNAME"] as string;
             else
-                TeamName = "";
+                TeamName = "";*/
             CreationDate = Convert.ToInt32(reader["CreationDate"]);
             MitoMoney = Convert.ToInt64(reader["Mito"]);
             Avatar = Convert.ToUInt16(reader["Avatar"]);
             Level = Convert.ToUInt16(reader["Level"]);
-            BaseExp = Convert.ToInt32(reader["BaseExp"]);
-            CurExp = Convert.ToInt32(reader["CurExp"]);
-            NextExp = Convert.ToInt32(reader["NextExp"]);
+            
+            ExperienceInfo.BaseExp = Convert.ToInt32(reader["BaseExp"]);
+            ExperienceInfo.CurExp = Convert.ToInt32(reader["CurExp"]);
+            ExperienceInfo.NextExp = Convert.ToInt32(reader["NextExp"]);
             City = Convert.ToInt32(reader["City"]);
-            CurrentCarId = Convert.ToUInt32(reader["CurrentCarID"]);
+            ActiveVehicleId = Convert.ToUInt32(reader["CurrentCarID"]);
             InventoryLevel = Convert.ToInt32(reader["InventoryLevel"]);
             
-            InventoryItems = new InventoryItem[(InventoryLevel+1)*20];
+            //InventoryItems = new InventoryItem[(InventoryLevel+1)*20];
             
             GarageLevel = Convert.ToInt32(reader["GarageLevel"]);
             TeamId = Convert.ToInt64(reader["TeamId"]);
-            PositionX = Convert.ToSingle(reader["posX"]);
-            PositionY = Convert.ToSingle(reader["posY"]);
-            PositionZ = Convert.ToSingle(reader["posZ"]);
-            Rotation = Convert.ToSingle(reader["posW"]);
+            Position = new Vector4(Convert.ToSingle(reader["posX"]), Convert.ToSingle(reader["posY"]), Convert.ToSingle(reader["posZ"]), Convert.ToSingle(reader["posW"]));
             LastChannel = Convert.ToInt32(reader["channelId"]);
-            posState = Convert.ToInt32(reader["posState"]);
+            PosState = Convert.ToInt32(reader["posState"]);
 
-            ActiveCar = new Vehicle();
+            /*ActiveCar = new Vehicle();
             if (!reader.IsDBNull(reader.GetOrdinal("baseColor")))
                 ActiveCar.BaseColor = Convert.ToUInt32(reader["baseColor"]);
             if(!reader.IsDBNull(reader.GetOrdinal("carType")))
-                ActiveCar.CarType = Convert.ToUInt32(reader["carType"]);
+                ActiveCar.CarType = Convert.ToUInt32(reader["carType"]);*/
 
-            if(!reader.IsDBNull(reader.GetOrdinal("TMARKID")))
+            /*if(!reader.IsDBNull(reader.GetOrdinal("TMARKID")))
                 TeamMarkId = Convert.ToInt64(reader["TMARKID"]);
             if(!reader.IsDBNull(reader.GetOrdinal("CLOSEDATE")))
                 TeamCloseDate = Convert.ToInt32(reader["CLOSEDATE"]);
             if(!reader.IsDBNull(reader.GetOrdinal("TEAMRANKING")))
-                TeamRank = Convert.ToInt32(reader["TEAMRANKING"]);
+                TeamRank = Convert.ToInt32(reader["TEAMRANKING"]);*/
         }
 
         public void WriteToDb(ref UpdateCommand cmd)
@@ -205,20 +430,20 @@ namespace Shared.Objects
             cmd.Set("Mito", MitoMoney);
             cmd.Set("Avatar", Avatar);
             cmd.Set("Level", Level);
-            cmd.Set("BaseExp", BaseExp);
-            cmd.Set("CurExp", CurExp);
-            cmd.Set("NextExp", NextExp);
+            cmd.Set("BaseExp", ExperienceInfo.BaseExp);
+            cmd.Set("CurExp", ExperienceInfo.CurExp);
+            cmd.Set("NextExp", ExperienceInfo.NextExp);
             cmd.Set("City", City);
-            cmd.Set("CurrentCarID", CurrentCarId);
+            cmd.Set("CurrentCarID", ActiveVehicleId);
             cmd.Set("InventoryLevel", InventoryLevel);
             cmd.Set("GarageLevel", GarageLevel);
             cmd.Set("TeamId", TeamId);
-            cmd.Set("posX", PositionX);
-            cmd.Set("posY", PositionY);
-            cmd.Set("posZ", PositionZ);
-            cmd.Set("posW", Rotation);
+            cmd.Set("posX", Position.X);
+            cmd.Set("posY", Position.Y);
+            cmd.Set("posZ", Position.Z);
+            cmd.Set("posW", Position.W);
             cmd.Set("channelId", LastChannel);
-            cmd.Set("posState", posState);
+            cmd.Set("posState", PosState);
             /*ActiveCar = new Vehicle
             {
             BaseColor = Convert.ToUInt32(cmd.Set("baseColor", ),
@@ -227,9 +452,8 @@ namespace Shared.Objects
         }
 
         /// <summary>
-        /// Caluclates expierence
+        /// Caluclates level from exp get
         /// </summary>
-        /// <param name="character">The character to calculate expierence from</param>
         /// <param name="exp">The exp to get</param>
         /// <param name="bLevelChangeOut">if the user leveledup</param>
         /// <param name="bUseBonus">If we should use a bonus</param>
@@ -280,7 +504,7 @@ namespace Shared.Objects
             }
 
             bLevelChangeOut = false;
-            var newExp = CurExp + exp;
+            var newExp = ExperienceInfo.CurExp + exp;
 
             ushort newLevel = 0;
             long newBaseExp = 0;
@@ -297,17 +521,17 @@ namespace Shared.Objects
             }
 
 #if DEBUG
-            Log.Debug($"CaclulateExp: CurExp: {CurExp}, Level: {Level}, BaseExp: {BaseExp}, NextExp {NextExp}");
+            Log.Debug($"CaclulateExp: CurExp: {ExperienceInfo.CurExp}, Level: {Level}, BaseExp: {ExperienceInfo.BaseExp}, NextExp {ExperienceInfo.NextExp}");
             Log.Debug($"NEW DATA CaclulateExp: CurExp: {newExp}, Level: {newLevel}, BaseExp: {newBaseExp}, NextExp {newNextExp}");
 #endif
             
-            CurExp = newExp;
+            ExperienceInfo.CurExp = newExp;
 
             if (Level < newLevel)
             {
                 Level = newLevel;
-                BaseExp = newBaseExp;
-                NextExp = newNextExp;
+                ExperienceInfo.BaseExp = newBaseExp;
+                ExperienceInfo.NextExp = newNextExp;
                 //XiCsCharInfo::ResetChaseFrequency(thisa);
                 bLevelChangeOut = true;
                 //XiCsCharInfo::StatUpdate(thisa);
@@ -840,25 +1064,40 @@ namespace Shared.Objects
             }*/
         }
 
-        public InventoryItem GiveItem(MySqlConnection dbconn, int tableIndex, int quantity)
+        /// <summary>
+        /// Gives the character the specified item and quantity
+        /// </summary>
+        /// <param name="dbconn">The database connection</param>
+        /// <param name="tableIndex">Table index of the item to give</param>
+        /// <param name="quantity">The amount</param>
+        /// <returns>InventoryItem on success, null on failure</returns>
+        public InventoryItem GiveItem(MySqlConnection dbconn, int tableIndex, uint quantity)
         {
-            uint invIdx = 0;
+            var invIdx = InventoryItems.Count;
+            /*int invIdx = 0;
             foreach (var item in InventoryItems)
             {
                 if (item == null)
                     break;
                 invIdx++;
-            }
+            }*/
 
-            var invItem = new InventoryItem(Cid, CurrentCarId, tableIndex, invIdx, quantity);
+            var invItem = new InventoryItem(Id, ActiveVehicleId, tableIndex, (uint)invIdx, quantity);
             if (!ItemModel.Create(dbconn, invItem)) return null;
             
             AddItemMod(invItem);
-            InventoryItems[invIdx] = invItem;
+            InventoryItems.Add(invItem);
             return invItem;
         }
 
-        public bool RemoveItem(MySqlConnection dbconn, uint slot, uint quantity)
+        /// <summary>
+        /// Removes the specified item from the character
+        /// </summary>
+        /// <param name="dbconn">The database connection</param>
+        /// <param name="slot">The slot the item is in</param>
+        /// <param name="quantity">The quantity to remove</param>
+        /// <returns>true on success, false on failure</returns>
+        public bool RemoveItem(MySqlConnection dbconn, int slot, uint quantity)
         {
             if (InventoryItems[slot] == null) return false;
             var itemInSlot = InventoryItems[slot];
@@ -867,9 +1106,10 @@ namespace Shared.Objects
             // Check if the item should be removed, or just decreased
             if (itemInSlot.StackNum - quantity == 0)
             {
-                if (!ItemModel.Remove(dbconn, Cid, slot))
+                if (!ItemModel.Remove(dbconn, Id, slot))
                     return false;
-                InventoryItems[slot] = null;
+                InventoryItems.Remove(itemInSlot);
+                //InventoryItems[slot] = null;
                 itemInSlot.StackNum = 0;
             }
             else

@@ -12,7 +12,7 @@ namespace Shared.Models
         public static List<Friend> Retrieve(MySqlConnection dbconn, ulong characterId)
         {
             var command = new MySqlCommand(
-                "SELECT f.*, c.Name, c.channelId, c.City, c.TeamId, c.Level, t.UTEAMNAME, t.TMARKID FROM `friends` as f INNER JOIN characters as c ON c.CID = f.FCID INNER JOIN teams as t ON t.TID = c.TeamId WHERE f.CID=@cid",
+                "SELECT f.*, c.Name, c.channelId, c.City, c.TeamId, c.Level, t.UTEAMNAME, t.TMARKID FROM `friends` as f LEFT JOIN characters as c ON c.CID = f.FCID LEFT JOIN teams as t ON t.TID = c.TeamId WHERE f.CID=@cid",
                 dbconn);
             command.Parameters.AddWithValue("@cid", characterId);
 
@@ -20,18 +20,28 @@ namespace Shared.Models
             using (DbDataReader reader = command.ExecuteReader())
             {
                 while (reader.Read())
-                    friends.Add(new Friend
-                    {
-                        ChannelId = (char) Convert.ToInt32(reader["channelId"]), //??
-                        CharacterId = Convert.ToInt64(reader["FCID"]),
-                        CharacterName = reader["Name"] as string,
-                        Level = Convert.ToUInt16(reader["Level"]),
-                        State = Convert.ToChar(reader["FSTATE"]),
-                        TeamId = Convert.ToInt64(reader["TeamId"]),
-                        TeamName = reader["UTEAMNAME"] as string,
-                        TeamMarkId = Convert.ToInt64(reader["TMARKID"]),
-                        LocationId = Convert.ToUInt16(reader["City"])
-                    });
+                {
+                    var item = new Friend();
+                    item.ChannelId = (char) Convert.ToInt32(reader["channelId"]);
+                    item.CharacterId = Convert.ToInt64(reader["FCID"]);
+                    item.CharacterName = reader["Name"] as string;
+                    item.Level = Convert.ToUInt16(reader["Level"]);
+                    item.State = Convert.ToChar(reader["FSTATE"]);
+                    if (!reader.IsDBNull(reader.GetOrdinal("TeamId")))
+                        item.TeamId = Convert.ToInt64(reader["TeamId"]);
+                    else
+                        item.TeamId = -1;
+                    if (!reader.IsDBNull(reader.GetOrdinal("UTEAMNAME")))
+                        item.TeamName = reader["UTEAMNAME"] as string;
+                    
+                    if (!reader.IsDBNull(reader.GetOrdinal("TMARKID")))
+                        item.TeamMarkId = Convert.ToInt64(reader["TMARKID"]);
+                    else
+                        item.TeamMarkId = -1;
+                    
+                    item.LocationId = Convert.ToUInt16(reader["City"]);
+                    friends.Add(item);
+                }
                 //SERVERID = Convert.ToInt32(reader["SERVERID"]),
                 //FCID = Convert.ToInt32(reader["FCID"]),
                 //FSTATE = (char)reader["FSTATE"]

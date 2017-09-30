@@ -1,44 +1,32 @@
 ﻿using System.IO;
+using System.Numerics;
 using System.Threading;
 using Shared.Network.AreaServer;
 using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_56B00
+    /// </summary>
     public class ChaseRequestAnswer : OutPacket
     {
-        /*
-        unsigned __int16 m_Serial;
-        XiVec4 m_StartPos;
-        XiVec4 m_EndPos;
-        int m_Type;
-        int m_courseId;
-        int m_firstHuvLevel;
-        int m_firstHuvId;
-        wchar_t m_PosName[100];
-        */
-        public ushort Unknown1 = 0; // Serial?
-        public float StartPosX;
-        public float StartPosY;
-        public float StartPosZ;
-        public float StartRot;
-        
-        public float EndPosX;
-        public float EndPosY;
-        public float EndPosZ;
-        public float EndRot;
+        public ushort VehicleSerial;
+        public Vector4 StartPos;
+        public Vector4 EndPos;
 
         public int CourseId;
         public int Type;
         public string PosName;
         public int FirstHuvLevel;
         public int FirstHuvId = 10001;
-        public byte[] Unknown2 = new byte[2];
         
         public override Packet CreatePacket()
         {
             return base.CreatePacket(Packets.ChasePropose);
         }
+        
+        public override int ExpectedSize() => 252;
 
         public override byte[] GetBytes()
         {
@@ -46,24 +34,17 @@ namespace Shared.Network.GameServer
             {
                 using (var bs = new BinaryWriterExt(ms))
                 {
-                    bs.Write(Unknown1);
-                    bs.Write(StartPosX); // Start X
-                    bs.Write(StartPosY); // Start Y
-                    bs.Write(StartPosZ); // Start Z
-                    bs.Write(StartRot); // Start W
+                    bs.Write(VehicleSerial); // Serial?
+                    bs.Write(StartPos);
+                    
+                    bs.Write(EndPos);
 
-                    bs.Write(EndPosX); // End X
-                    bs.Write(EndPosY); // End Y
-                    bs.Write(EndPosZ); // End Z
-                    bs.Write(EndRot); // End Rot
-
-                    bs.Write(CourseId); // CourseId
                     bs.Write(Type); // Type?
-                    bs.WriteUnicodeStatic(PosName, 100);
+                    bs.Write(CourseId); // CourseId
 
                     bs.Write(FirstHuvLevel); // HUV first level
                     bs.Write(FirstHuvId); // HUV first Id
-                    bs.Write(Unknown2); // Not sure.
+                    bs.WriteUnicodeStatic(PosName, 100);
                 }
                 return ms.ToArray();
             }

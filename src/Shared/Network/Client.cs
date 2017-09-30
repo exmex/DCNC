@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using Shared.Network.GameServer;
 using Shared.Objects;
 using Shared.Util;
@@ -145,7 +146,10 @@ namespace Shared.Network
                     Log.Info("Sending unnamed packet ({0} id {1}, 0x{1:X}).",
                         Packets.GetName(packet.Id), packet.Id);
                 
-                Log.Debug("HexDump {0}:{1}{2}", packet.Id, Environment.NewLine, hexDump);
+                if(bufferLength != 0)
+                    Log.Debug("HexDump {0} (Size: {1}):{2}{3}", packet.Id, bufferLength, Environment.NewLine, hexDump);
+                else
+                    Log.Debug("HexDump {0}:{1}{2}", packet.Id, Environment.NewLine, hexDump);
             }
 
             if (DefaultServer.DumpOutgoing)

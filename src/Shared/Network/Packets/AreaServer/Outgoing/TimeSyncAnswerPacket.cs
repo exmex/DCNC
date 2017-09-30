@@ -3,6 +3,9 @@ using Shared.Util;
 
 namespace Shared.Network.AreaServer
 {
+    /// <summary>
+    /// sub_5C950
+    /// </summary>
     public class TimeSyncAnswerPacket : OutPacket
     {
         public uint GlobalTime;
@@ -18,6 +21,8 @@ namespace Shared.Network.AreaServer
             */
             return ack;
         }
+
+        public override int ExpectedSize() => 10; 
 
         public override byte[] GetBytes()
         {

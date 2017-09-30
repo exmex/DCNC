@@ -25,9 +25,20 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseUnix|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\ReleaseUnix\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -74,12 +85,21 @@
     <Content Include="$(SolutionDir)server_icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PreBuildEvent>"$(SolutionDir)External\NetRevisionTool.exe" /info /patch "$(ProjectDir)"
 taskkill /F /IM "RankingServer.exe" 2&gt;nul 1&gt;nul
 Exit 0</PreBuildEvent>
   </PropertyGroup>
-  <PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PostBuildEvent>"$(SolutionDir)External\NetRevisionTool.exe" /restore "$(ProjectDir)"
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PreBuildEvent>"$(SolutionDir)External\NetRevisionTool.exe" /info /patch "$(ProjectDir)"
+taskkill /F /IM "RankingServer.exe" 2&gt;nul 1&gt;nul
+Exit 0</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PostBuildEvent>"$(SolutionDir)External\NetRevisionTool.exe" /restore "$(ProjectDir)"
     </PostBuildEvent>
   </PropertyGroup>

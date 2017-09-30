@@ -4,17 +4,19 @@ using Shared.Util;
 namespace Shared.Network.GameServer
 {
     /// <summary>
-    /// TODO: Wrong Packet Size. CMD(1401) CmdLen: : 14, AnalysisSize: 12
+    /// sub_52A8B0
     /// </summary>
     public class GetMyHancoinAnswer : OutPacket
     {
         public int Hancoins;
-        public int Mileage;
+        public long Mileage;
         
         public override Packet CreatePacket()
         {
             return base.CreatePacket(Packets.GetMyHancoinAck);
         }
+        
+        public override int ExpectedSize() => 14;
 
         public override byte[] GetBytes()
         {

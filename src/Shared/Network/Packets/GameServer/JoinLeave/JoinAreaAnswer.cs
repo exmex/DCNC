@@ -3,6 +3,9 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_524910
+    /// </summary>
     public class JoinAreaAnswer : OutPacket
     {
         public int AreaId;
@@ -12,6 +15,8 @@ namespace Shared.Network.GameServer
         {
             return base.CreatePacket(Packets.JoinAreaAck);
         }
+        
+        public override int ExpectedSize() => 10;
 
         public override byte[] GetBytes()
         {

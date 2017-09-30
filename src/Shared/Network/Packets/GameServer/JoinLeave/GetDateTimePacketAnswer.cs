@@ -5,6 +5,9 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_529A00
+    /// </summary>
     public class GetDateTimePacketAnswer : OutPacket
     {
         public uint Action;
@@ -31,6 +34,8 @@ namespace Shared.Network.GameServer
         {
             return base.CreatePacket(Packets.GetDateTimeAck);
         }
+        
+        public override int ExpectedSize() => 38;
 
         public override byte[] GetBytes()
         {

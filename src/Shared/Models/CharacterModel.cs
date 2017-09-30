@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Numerics;
 using MySql.Data.MySqlClient;
 using Shared.Database;
 using Shared.Objects;
@@ -12,66 +13,98 @@ namespace Shared.Models
     /// </summary>
     public static class CharacterModel
     {
+        public static Character GetCharacter(MySqlConnection dbconn, DbDataReader reader)
+        {
+            var character = new Character();
+            character.Id = Convert.ToUInt64(reader["CID"]);
+            character.Uid = Convert.ToUInt64(reader["UID"]);
+            character.Name = reader["Name"] as string;
+            character.CreationDate = Convert.ToInt32(reader["CreationDate"]);
+            character.MitoMoney = Convert.ToInt64(reader["Mito"]);
+            character.Avatar = Convert.ToUInt16(reader["Avatar"]);
+            character.Level = Convert.ToUInt16(reader["Level"]);
+            
+            character.ExperienceInfo.BaseExp = Convert.ToInt32(reader["BaseExp"]);
+            character.ExperienceInfo.CurExp = Convert.ToInt32(reader["CurExp"]);
+            character.ExperienceInfo.NextExp = Convert.ToInt32(reader["NextExp"]);
+            character.TotalDistance = Convert.ToInt32(reader["Mileage"]);
+            character.City = Convert.ToInt32(reader["City"]);
+            character.ActiveVehicleId = Convert.ToUInt32(reader["CurrentCarID"]);
+            character.InventoryLevel = Convert.ToInt32(reader["InventoryLevel"]);
+            character.GarageLevel = Convert.ToInt32(reader["GarageLevel"]);
+            character.TeamId = Convert.ToInt64(reader["TeamId"]);
+            character.Position = new Vector4(Convert.ToSingle(reader["posX"]), Convert.ToSingle(reader["posY"]), Convert.ToSingle(reader["posZ"]), Convert.ToSingle(reader["posW"]));
+            character.LastChannel = Convert.ToInt32(reader["channelId"]);
+            character.PosState = Convert.ToInt32(reader["posState"]);
+            return character;
+        }
+
+        public static int WriteCharacter(Character character, UpdateCommand cmd)
+        {
+            //cmd.Set("CID", Cid);
+            //cmd.Set("UID", Uid);
+            cmd.Set("Name", character.Name);
+            //cmd.Set("TEAMNAME", character. TeamName );
+            cmd.Set("CreationDate", character.CreationDate);
+            cmd.Set("Mito", character.MitoMoney);
+            cmd.Set("Avatar", character.Avatar);
+            cmd.Set("Level", character.Level);
+            cmd.Set("BaseExp", character.ExperienceInfo.BaseExp);
+            cmd.Set("CurExp", character.ExperienceInfo.CurExp);
+            cmd.Set("NextExp", character.ExperienceInfo.NextExp);
+            cmd.Set("Mileage", character.TotalDistance);
+            cmd.Set("City", character.City);
+            cmd.Set("CurrentCarID", character.ActiveVehicleId);
+            cmd.Set("InventoryLevel", character.InventoryLevel);
+            cmd.Set("GarageLevel", character.GarageLevel);
+            cmd.Set("TeamId", character.TeamId);
+            cmd.Set("posX", character.Position.X);
+            cmd.Set("posY", character.Position.Y);
+            cmd.Set("posZ", character.Position.Z);
+            cmd.Set("posW", character.Position.W);
+            cmd.Set("channelId", character.LastChannel);
+            cmd.Set("posState", character.PosState);
+
+            return cmd.Execute();
+        }
+        
         public static Character Retrieve(MySqlConnection dbconn, string characterName)
         {
             var command = new MySqlCommand(
-                "SELECT Characters.*, vehicles.carType, vehicles.baseColor, teams.TEAMNAME, teams.TMARKID, teams.TEAMRANKING, teams.CLOSEDATE FROM Characters LEFT JOIN teams ON characters.TeamId = teams.TID LEFT JOIN vehicles ON characters.CurrentCarID = vehicles.CID WHERE characters.Name = @char", dbconn);
+                "SELECT * FROM Characters WHERE characters.Name = @char", dbconn);
 
             command.Parameters.AddWithValue("@char", characterName);
 
-            var character = new Character();
+            Character character;
             using (DbDataReader reader = command.ExecuteReader())
             {
-                if (!reader.Read()) return null; 
-                character.ReadFromDb(reader);
+                if (!reader.Read()) return null;
+                character = GetCharacter(dbconn, reader);
             }
+            character.GarageVehicles = VehicleModel.Retrieve(dbconn, character.Id);
+            character.ActiveCar = character.GarageVehicles.Find(vehicle => vehicle.CarID == character.ActiveVehicleId);
+            character.Team = TeamModel.Retrieve(dbconn, character.TeamId);
             return character;
         }
 
         public static Character Retrieve(MySqlConnection dbconn, ulong cid)
         {
             var command = new MySqlCommand(
-                "SELECT Characters.*, vehicles.carType, vehicles.baseColor, teams.TEAMNAME, teams.TMARKID, teams.TEAMRANKING, teams.CLOSEDATE FROM Characters LEFT JOIN teams ON characters.TeamId = teams.TID LEFT JOIN vehicles ON characters.CurrentCarID = vehicles.CID WHERE characters.CID = @cid", dbconn);
+                "SELECT * FROM Characters WHERE characters.CID = @cid", dbconn);
 
             command.Parameters.AddWithValue("@cid", cid);
 
-            var character = new Character();
+            Character character;
 
             using (DbDataReader reader = command.ExecuteReader())
             {
                 if (!reader.Read()) return null;
-                character.ReadFromDb(reader);
+                character = GetCharacter(dbconn, reader);
             }
+            character.GarageVehicles = VehicleModel.Retrieve(dbconn, character.Id);
+            character.ActiveCar = character.GarageVehicles.Find(vehicle => vehicle.CarID == character.ActiveVehicleId);
+            character.Team = TeamModel.Retrieve(dbconn, character.TeamId);
             return character;
-        }
-
-        /// <summary>
-        /// TODO: Shouldn't we move this to the user class?
-        /// </summary>
-        /// <param name="dbconn"></param>
-        /// <param name="uid"></param>
-        /// <returns></returns>
-        public static List<Character> RetrieveUser(MySqlConnection dbconn, ulong uid)
-        {
-            var command = new MySqlCommand(
-                "SELECT Characters.*, vehicles.carType, vehicles.baseColor, teams.TEAMNAME, teams.TMARKID, teams.TEAMRANKING, teams.CLOSEDATE FROM Characters LEFT JOIN teams ON characters.TeamId = teams.TID LEFT JOIN vehicles ON characters.CurrentCarID = vehicles.CID WHERE characters.UID = @uid",
-                dbconn);
-
-            command.Parameters.AddWithValue("@uid", uid);
-
-            var chars = new List<Character>();
-
-            using (DbDataReader reader = command.ExecuteReader())
-            {
-                while (reader.Read())
-                {
-                    var character = new Character();
-                    character.ReadFromDb(reader);
-                    chars.Add(character);
-                }
-            }
-
-            return chars;
         }
         
         /// <summary>
@@ -95,12 +128,13 @@ namespace Shared.Models
                 return reader.HasRows;
             }
         }
-        
+
         /// <summary>
         /// Checks wether the userId owns the character name
         /// TODO: Maybe rename this to OwnsCharacter?
         /// </summary>
         /// <param name="dbconn">The mysql database connection</param>
+        /// <param name="characterName">the name of the character</param>
         /// <param name="uid">The id of the user</param>
         /// <returns></returns>
         public static ulong HasCharacter(MySqlConnection dbconn, string characterName, ulong uid)
@@ -138,7 +172,7 @@ namespace Shared.Models
         /// <param name="dbconn">The mysql connection</param>
         /// <param name="characterName">The character name to check</param>
         /// <returns>true if the name already exists, false otherwise</returns>
-        public static bool Exists(MySqlConnection dbconn, string characterName)
+        public static bool CheckNameExists(MySqlConnection dbconn, string characterName)
         {
             var command = new MySqlCommand(
                 "SELECT * FROM Characters WHERE Name = @charName", dbconn);
@@ -151,12 +185,10 @@ namespace Shared.Models
             }
         }
 
-        public static void CreateCharacter(MySqlConnection dbconn, Character character
+        public static void CreateCharacter(MySqlConnection dbconn, ref Character character
             /*ulong uid, string characterName, short avatar,
             uint carType, uint carColor*/)
         {
-            long insertedCharId = -1;
-            long insertedCarId = -1;
             using (var cmd = new InsertCommand("INSERT INTO `Characters` {0}", dbconn))
             {
                 cmd.Set("UID", character.Uid);
@@ -177,35 +209,36 @@ namespace Shared.Models
                 cmd.Set("posW", 90.967003 + 4 * (new Random().Next() % 10));
 
                 cmd.Execute();
-                insertedCharId = cmd.LastId;
+                character.Id = (ulong)cmd.LastId;
             }
-            using (var cmd = new InsertCommand("INSERT INTO `vehicles` {0}", dbconn))
+            /*using (var cmd = new InsertCommand("INSERT INTO `vehicles` {0}", dbconn))
             {
-                cmd.Set("CharID", insertedCharId);
+                cmd.Set("CharID", character.Id);
                 cmd.Set("color", character.ActiveCar.Color);
                 cmd.Set("carType", character.ActiveCar.CarType);
 
                 cmd.Execute();
-                insertedCarId = cmd.LastId;
+                character.ActiveVehicleId = (uint)cmd.LastId;
             }
             using (var cmd = new UpdateCommand("UPDATE `Characters` SET {0} WHERE `CID` = @charId", dbconn))
             {
-                cmd.AddParameter("@charId", insertedCharId);
-                cmd.Set("CurrentCarId", insertedCarId);
+                cmd.AddParameter("@charId", character.Id);
+                cmd.Set("CurrentCarId", character.ActiveVehicleId);
 
                 cmd.Execute();
-            }
+            }*/
         }
 
         public static void Update(MySqlConnection dbconn, Character character)
         {
             using (var cmd = new UpdateCommand("UPDATE `Characters` SET {0} WHERE `CID` = @charId", dbconn))
             {
-                cmd.AddParameter("@charId", character.Cid);
+                cmd.AddParameter("@charId", character.Id);
                 
-                var updateCommand = cmd;
-                character.WriteToDb(ref updateCommand);
-                cmd.Execute();
+                //var updateCommand = cmd;
+                WriteCharacter(character, cmd);
+                //character.WriteToDb(ref updateCommand);
+                //cmd.Execute();
             }
         }
 

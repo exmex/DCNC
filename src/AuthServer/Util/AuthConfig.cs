@@ -28,14 +28,14 @@ namespace AuthServer.Util
     {
         public int Port { get; protected set; }
 
-        public bool NewAccounts { get; protected set; }
+        public bool NewAccountsLogin { get; protected set; }
 
         public void Load()
         {
             Require("system/conf/auth.conf");
 
             Port = GetInt("port", 11005);
-            NewAccounts = GetBool("new_accounts", true);
+            NewAccountsLogin = GetBool("new_accounts_login", true);
         }
     }
 }

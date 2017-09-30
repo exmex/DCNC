@@ -4,6 +4,9 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_529600
+    /// </summary>
     public class MyCityPositionAnswer : OutPacket
     {
         public int City;
@@ -15,6 +18,8 @@ namespace Shared.Network.GameServer
         {
             return base.CreatePacket(Packets.MyCityPositionAck);
         }
+        
+        public override int ExpectedSize() => 31;
 
         public override byte[] GetBytes()
         {
@@ -26,19 +31,11 @@ namespace Shared.Network.GameServer
                     bs.Write(LastChannel);
                     bs.Write(Position);
                     bs.Write(PositionState);
+                    // Rice sends an extra byte for some reason??
+                    //ack.Writer.Write((byte)0);
                 }
                 return ms.ToArray();
             }
         }
-        
-        /*
-        ack.Writer.Write(packet.Sender.User.ActiveCharacter.City); // City ID
-        ack.Writer.Write(packet.Sender.User.ActiveCharacter.LastChannel); // Channel ID
-        ack.Writer.Write(packet.Sender.User.ActiveCharacter.PositionX); // x
-        ack.Writer.Write(packet.Sender.User.ActiveCharacter.PositionY); // y
-        ack.Writer.Write(packet.Sender.User.ActiveCharacter.PositionZ); // z
-        ack.Writer.Write(packet.Sender.User.ActiveCharacter.Rotation); // w
-        ack.Writer.Write(packet.Sender.User.ActiveCharacter.posState); // PosState
-        */
     }
 }

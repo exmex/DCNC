@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 
@@ -17,11 +18,70 @@ namespace Shared.Util.Commands
             Add("help", "Displays this help", HandleHelp);
             Add("exit", "Closes application/server", HandleExit);
             Add("status", "Displays application status", HandleStatus);
-            Add("sendpkt", "[packetid] [nullbyte count]", "Sends an empty packet with the specified packet id",
-                HandleSendPkt);
             Add("connections", "Displays all currently active connections", HandleConnections);
             
-            Add("crash", "Crashes the server", (command, args) => throw new Exception("Test Exception"));
+            Add("uploadlogs", "Uploads all current logs to pastebin", HandleUploadLogs);
+            
+#if DEBUG
+            Add("sendpkt", "[packetid] [nullbyte count]", "[DEBUG] Sends an empty packet with the specified packet id",
+                HandleSendPkt);
+            Add("crash", "[DEBUG] Crashes the server", (command, args) => throw new Exception("Test Exception"));
+#endif
+        }
+
+        private CommandResult HandleUploadLogs(string command, IList<string> args)
+        {
+            if (File.Exists(Directory.GetCurrentDirectory() + "/log/AuthServer.txt"))
+            {
+                Console.WriteLine("Uploading AuthServer.txt");
+                var url = PastebinApi.Publish(
+                    File.ReadAllText(Directory.GetCurrentDirectory() + "/log/AuthServer.txt"));
+                Console.WriteLine("AuthServer Log Pastebin: {0}", url);
+            }
+            else
+                Console.WriteLine("AuthServer.txt not found!");
+
+            if (File.Exists(Directory.GetCurrentDirectory() + "/log/AreaServer.txt"))
+            {
+                Console.WriteLine("Uploading AreaServer.txt");
+                var url = PastebinApi.Publish(
+                    File.ReadAllText(Directory.GetCurrentDirectory() + "/log/AreaServer.txt"));
+                Console.WriteLine("AreaServer Log Pastebin: {0}", url);
+            }
+            else
+                Console.WriteLine("AreaServer.txt not found!");
+
+            if (File.Exists(Directory.GetCurrentDirectory() + "/log/GameServer.txt"))
+            {
+                Console.WriteLine("Uploading GameServer.txt");
+                var url = PastebinApi.Publish(
+                    File.ReadAllText(Directory.GetCurrentDirectory() + "/log/GameServer.txt"));
+                Console.WriteLine("GameServer Log Pastebin: {0}", url);
+            }
+            else
+                Console.WriteLine("GameServer.txt not found!");
+
+            if (File.Exists(Directory.GetCurrentDirectory() + "/log/LobbyServer.txt"))
+            {
+                Console.WriteLine("Uploading LobbyServer.txt");
+                var url = PastebinApi.Publish(
+                    File.ReadAllText(Directory.GetCurrentDirectory() + "/log/LobbyServer.txt"));
+                Console.WriteLine("LobbyServer Log Pastebin: {0}", url);
+            }
+            else
+                Console.WriteLine("LobbyServer.txt not found!");
+
+            if (File.Exists(Directory.GetCurrentDirectory() + "/log/RankingServer.txt"))
+            {
+                Console.WriteLine("Uploading RankingServer.txt");
+                var url = PastebinApi.Publish(
+                    File.ReadAllText(Directory.GetCurrentDirectory() + "/log/RankingServer.txt"));
+                Console.WriteLine("RankingServer Log Pastebin: {0}", url);
+            }
+            else
+                Console.WriteLine("RankingServer.txt not found!");
+
+            return CommandResult.Okay;
         }
 
         /// <summary>

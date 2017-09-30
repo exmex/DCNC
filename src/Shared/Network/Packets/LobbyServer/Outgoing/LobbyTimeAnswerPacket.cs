@@ -4,6 +4,9 @@ using Shared.Util;
 
 namespace Shared.Network.LobbyServer
 {
+    /// <summary>
+    /// sub_53D320
+    /// </summary>
     public class LobbyTimeAnswerPacket : OutPacket
     {
         public int LocalTime;
@@ -19,6 +22,8 @@ namespace Shared.Network.LobbyServer
         {
             return base.CreatePacket(Packets.LobbyTimeAck);
         }
+
+        public override int ExpectedSize() => 10;
 
         public override byte[] GetBytes()
         {

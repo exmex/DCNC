@@ -7,13 +7,13 @@
         public readonly int GroupId;
 
         public readonly int LocalTime;
-        public readonly short Serial;
+        public readonly ushort VehicleSerial;
 
         public readonly string CharacterName;
 
         public EnterAreaPacket(Packet packet)
         {
-            Serial = packet.Reader.ReadInt16();
+            VehicleSerial = packet.Reader.ReadUInt16();
 
             CharacterName = packet.Reader.ReadUnicodeStatic(21);
             /*Username = packet.Reader.ReadUnicode();

@@ -4,15 +4,19 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_52E910
+    /// </summary>
     public class MyQuestListAnswer : OutPacket
     {
-
         public Quest[] Quests;
         
         public override Packet CreatePacket()
         {
             return base.CreatePacket(Packets.MyQuestListAck);
         }
+        
+        public override int ExpectedSize() => (14 * Quests.Length-1)+20;
 
         public override byte[] GetBytes()
         {

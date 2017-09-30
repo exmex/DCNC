@@ -4,6 +4,9 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_52751
+    /// </summary>
     public class InstantGoalPlaceAnswer : OutPacket
     {
         /*
@@ -29,6 +32,8 @@ namespace Shared.Network.GameServer
         {
             return base.CreatePacket(Packets.InstantGoalPlaceAck);
         }
+        
+        public override int ExpectedSize() => 44;
 
         public override byte[] GetBytes()
         {

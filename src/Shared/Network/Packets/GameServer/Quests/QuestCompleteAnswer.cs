@@ -3,6 +3,9 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_533B20
+    /// </summary>
     public class QuestCompleteAnswer : OutPacket
     {
         public uint TableIndex;
@@ -11,6 +14,8 @@ namespace Shared.Network.GameServer
         {
             return base.CreatePacket(Packets.QuestCompleteAck);
         }
+        
+        public override int ExpectedSize() => 6;
 
         public override byte[] GetBytes()
         {

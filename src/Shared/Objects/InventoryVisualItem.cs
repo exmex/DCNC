@@ -2,7 +2,7 @@
 
 namespace Shared.Objects
 {
-    public class VisualItem : BinaryWriterExt.ISerializable
+    public class InventoryVisualItem : BinaryWriterExt.ISerializable
     {
         public uint CarId;
         public int ItemState;

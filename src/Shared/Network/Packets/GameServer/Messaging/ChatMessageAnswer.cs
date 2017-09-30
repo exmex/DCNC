@@ -4,11 +4,17 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_539050
+    /// </summary>
     public class ChatMessageAnswer : OutPacket
     {
         /// <summary>
         /// Message Type
         /// Referenced as m_Name
+        /// Types:
+        /// - channel = Channel Message
+        /// - debug - Debug Messages
         /// </summary>
         public string MessageType;
         
@@ -22,12 +28,14 @@ namespace Shared.Network.GameServer
         /// The actual message
         /// ???
         /// </summary>
-        public string Message;
+        public string Message = "MESSAGE";
         
         public override Packet CreatePacket()
         {
             return base.CreatePacket(Packets.ChatMsgAck);
         }
+        
+        public override int ExpectedSize() => 2*(Message.Length+30);
 
         public override byte[] GetBytes()
         {

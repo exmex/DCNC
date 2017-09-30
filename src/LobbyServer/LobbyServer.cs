@@ -23,7 +23,7 @@ namespace LobbyServer
         /// <summary>
         ///     Instance of the actual server component.
         /// </summary>
-        private DefaultServer Server { get; set; }
+        public DefaultServer Server { get; set; }
 
         /// <summary>
         ///     Database

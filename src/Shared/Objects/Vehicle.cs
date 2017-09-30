@@ -27,6 +27,8 @@ namespace Shared.Objects
         public bool SBBOn;
         public uint SlotType;
         
+        public ulong CharacterId;
+
         public void Serialize(BinaryWriterExt writer)
         {
             writer.Write(CarID);
@@ -38,9 +40,11 @@ namespace Shared.Objects
             writer.Write(Mitron);
             writer.Write(Kmh);
             writer.Write(Color);
+            writer.Write(Color2);
             writer.Write(MitronCapacity);
             writer.Write(MitronEfficiency);
             writer.Write(AuctionOn);
+            writer.Write(SBBOn);
         }
         
         public void ReadFromDb(IDataRecord reader)
@@ -49,6 +53,7 @@ namespace Shared.Objects
             AuctionOn = false;
             BaseColor = Convert.ToUInt32(reader["baseColor"]);
             CarID = Convert.ToUInt32(reader["CID"]);
+            CharacterId = Convert.ToUInt64(reader["CharID"]);
             CarType = Convert.ToUInt32(reader["carType"]);
             Color = Convert.ToUInt32(reader["color"]);
             Color2 = 0;

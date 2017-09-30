@@ -1,8 +1,9 @@
-﻿using Shared.Models;
+﻿using System.Linq;
+using System.Security.Principal;
+using Shared.Models;
 using Shared.Network;
 using Shared.Network.AreaServer;
 using Shared.Objects;
-using Shared.Util;
 
 namespace AreaServer.Network.Handlers
 {
@@ -21,15 +22,28 @@ namespace AreaServer.Network.Handlers
         public static void EnterArea(Packet packet)
         {
             var enterAreaPacket = new EnterAreaPacket(packet);
-
-            // TODO: Figure out a better way to get the character name. This is unsafe!
-            packet.Sender.User = new User
+            
+            if (packet.Sender.User == null)
             {
-                ActiveCharacter = new Character()
+                var character = CharacterModel.Retrieve(AreaServer.Instance.Database.Connection, enterAreaPacket.CharacterName);
+                if (character == null)
                 {
-                    Name = enterAreaPacket.CharacterName,
+                    packet.Sender.KillConnection("Invalid charactername");
+                    return;
                 }
-            };
+                
+                var account = AccountModel.RetrieveFromSerial(AreaServer.Instance.Database.Connection, character.Uid, enterAreaPacket.VehicleSerial);
+                if (account == null)
+                {
+                    packet.Sender.KillConnection("Invalid serial");
+                    return;
+                }
+                
+                packet.Sender.User = account;
+                packet.Sender.User.ActiveCharacter = character;
+                
+                AreaServer.Instance.Server.ActiveSerials.Add(enterAreaPacket.VehicleSerial, packet.Sender.User);
+            }
 
             packet.Sender.Send(new EnterAreaAnswer
             {
@@ -41,14 +55,21 @@ namespace AreaServer.Network.Handlers
         [Packet(Packets.CmdMoveVehicle)]
         public static void MoveVehicle(Packet packet)
         {
-            var serial = packet.Reader.ReadUInt16();
+            var vehicleSerial = packet.Reader.ReadUInt16();
             var movement = packet.Reader.ReadBytes(112);
-
+            
+            var validSerial = AreaServer.Instance.Server.ActiveSerials.FirstOrDefault(pair => pair.Value == packet.Sender.User);
+            if (validSerial.Value == null || validSerial.Key != vehicleSerial)
+            {
+                packet.Sender.KillConnection("Vehicle serial didn't match!");
+                return;
+            }
+            
             var move = new Packet(Packets.CmdMoveVehicle); // 114 total length
-            move.Writer.Write(serial); // TODO: Use server-side serial!
+            move.Writer.Write(vehicleSerial);
             move.Writer.Write(movement);
 
-            AreaServer.Instance.Server.Broadcast(move);
+            AreaServer.Instance.Server.Broadcast(move, packet.Sender);
         }
     }
 }

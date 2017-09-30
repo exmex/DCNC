@@ -1,17 +1,27 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Shared.Network.AreaServer;
 using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_52F8A0
+    /// </summary>
     public class FriendListAnswer : OutPacket
     {
-        public Friend[] FriendList;
-        public int TotalItemNum;
+        public Friend[] FriendList = new Friend[0];
+        //public int TotalItemNum;
 
         public override Packet CreatePacket()
         {
             return base.CreatePacket(Packets.FriendListAck);
+        }
+
+        public override int ExpectedSize()
+        {
+            var totalFriends = Math.Min(FriendList.Length - 1, 12);
+            return (112 * totalFriends) + 122;
         }
 
         // TODO: Serious logic mistake here. Telling the client to wait for another batch of friends, but never sending this
@@ -21,18 +31,45 @@ namespace Shared.Network.GameServer
             {
                 using (var bs = new BinaryWriterExt(ms))
                 {
-                    var pktNum = TotalItemNum / 12 + 1; // Send maximum 12 friends per batch.
-                    for (uint pktIdx = 0; pktIdx < pktNum; ++pktIdx)
+                    var totalFriends = FriendList.Length;
+                    if (totalFriends > 12)
                     {
-                        uint sendItemCnt = 12;
-                        if (pktIdx + 1 == pktNum)
-                            sendItemCnt = (uint) TotalItemNum - 12 * pktIdx;
+                        var pktNum = totalFriends / 12 + 1; // Send maximum 12 friends per batch.
+                        for (uint pktIdx = 0; pktIdx < pktNum; ++pktIdx)
+                        {
+                            uint sendItemCnt = 12;
+                            if (pktIdx + 1 >= pktNum)
+                                sendItemCnt = (uint) totalFriends - 12 * pktIdx;
 
-                        bs.Write(sendItemCnt);
-                        if (pktIdx < pktNum)
-                            bs.Write(262145); // Send client that more packets coming after this one.
-                        else
-                            bs.Write(0x40000);
+                            bs.Write(sendItemCnt);
+                            if (pktIdx < pktNum)
+                                bs.Write(262145); // Send client that more packets coming after this one.
+                            else
+                                bs.Write(0x40000);
+                            // Fill friends list
+                            foreach (var friend in FriendList)
+                            {
+                                bs.WriteUnicodeStatic(friend.CharacterName, 21);
+                                bs.WriteUnicodeStatic(friend.TeamName, 13);
+                                bs.Write(friend.CharacterId);
+                                bs.Write(friend.TeamId);
+                                bs.Write(friend.TeamMarkId);
+                                bs.Write(friend.State);
+
+                                bs.Write(friend.Serial);
+                                bs.Write(friend.LocationType);
+                                bs.Write(friend.ChannelId);
+                                bs.Write(friend.LocationId);
+                                bs.Write(friend.Level);
+                                bs.Write(friend.CurCarGrade);
+                                bs.Write(friend.Serial);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        bs.Write(totalFriends);
+                        bs.Write(0x40000);
                         // Fill friends list
                         foreach (var friend in FriendList)
                         {
@@ -86,7 +123,7 @@ namespace Shared.Network.GameServer
         public char ChannelId;
         public long CharacterId;
         public string CharacterName;
-        public ushort CurCarGrade;
+        public uint CurCarGrade;
 
         public ushort Level;
         public ushort LocationId;

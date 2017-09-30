@@ -6,6 +6,9 @@ using Shared.Util;
 
 namespace Shared.Network.AuthServer
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class UserAuthAnswerPacket : OutPacket
     {
         /// <summary>
@@ -72,6 +75,8 @@ namespace Shared.Network.AuthServer
                 RankingServerPort = 11078
             };
         }
+
+        public override int ExpectedSize() => 78;
 
         public override Packet CreatePacket()
         {

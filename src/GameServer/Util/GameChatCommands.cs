@@ -56,10 +56,10 @@ namespace GameServer.Util
                 AccountModel.Update(GameServer.Instance.Database.Connection, client.User);
 
             var newStatusStr = client.User.Status == UserStatus.Muted ? "muted" : "unmuted";
-            sender.SendChatMessage($"User {client.User.Name} was {newStatusStr}");
+            sender.SendChatMessage($"User {client.User.Username} was {newStatusStr}");
 
-            if (sender.User.GMFlag)
-                sender.SendChatMessage($"You were {newStatusStr} by {sender.User.Name}");
+            if (sender.User.GmFlag)
+                sender.SendChatMessage($"You were {newStatusStr} by {sender.User.Username}");
             else
                 sender.SendChatMessage($"You were {newStatusStr} by a GM");
 
@@ -69,9 +69,9 @@ namespace GameServer.Util
         private static CommandResult ToggleGmStatusCommandHandler(DefaultServer server, Client sender, string command,
             IList<string> args)
         {
-            sender.User.GMFlag = !sender.User.GMFlag;
+            sender.User.GmFlag = !sender.User.GmFlag;
             var status = "invisible";
-            if (sender.User.GMFlag)
+            if (sender.User.GmFlag)
                 status = "visible";
 
             sender.SendChatMessage($"Your GM Status is now: {status}");
@@ -175,8 +175,8 @@ namespace GameServer.Util
             var client = GameServer.Instance.Server.GetClient(characterName);
             if (client?.User == null) return CommandResult.Fail;
 
-            client.KillConnection($"Kicked by {sender.User.Name}");
-            sender.SendChatMessage($"User {characterName} ({client.User.Name}) kicked!");
+            client.KillConnection($"Kicked by {sender.User.Username}");
+            sender.SendChatMessage($"User {characterName} ({client.User.Username}) kicked!");
 
             return CommandResult.Okay;
         }
@@ -201,11 +201,11 @@ namespace GameServer.Util
             client.User.ActiveCharacter.MitoMoney += amount;
             CharacterModel.Update(GameServer.Instance.Database.Connection, client.User.ActiveCharacter);
 
-            sender.SendChatMessage($"{amount} Mito given to {characterName} ({client.User.Name})");
+            sender.SendChatMessage($"{amount} Mito given to {characterName} ({client.User.Username})");
 
             client.Send(new CharUpdateAnswer()
             {
-                character = client.User.ActiveCharacter
+                Character = client.User.ActiveCharacter
             }.CreatePacket());
 
             return CommandResult.Okay;
@@ -236,11 +236,11 @@ namespace GameServer.Util
 
             CharacterModel.Update(GameServer.Instance.Database.Connection, client.User.ActiveCharacter);
 
-            sender.SendChatMessage($"{amount} EXP given to {characterName} ({client.User.Name})");
+            sender.SendChatMessage($"{amount} EXP given to {characterName} ({client.User.Username})");
 
             client.Send(new CharUpdateAnswer()
             {
-                character = client.User.ActiveCharacter
+                Character = client.User.ActiveCharacter
             }.CreatePacket());
 
             return CommandResult.Okay;
@@ -260,8 +260,8 @@ namespace GameServer.Util
             client.User.Status = UserStatus.Banned;
             AccountModel.Update(GameServer.Instance.Database.Connection, client.User);
 
-            client.KillConnection($"Banned by {sender.User.Name}");
-            sender.SendChatMessage($"User {characterName} ({client.User.Name}) banned!");
+            client.KillConnection($"Banned by {sender.User.Username}");
+            sender.SendChatMessage($"User {characterName} ({client.User.Username}) banned!");
 
             return CommandResult.Okay;
         }

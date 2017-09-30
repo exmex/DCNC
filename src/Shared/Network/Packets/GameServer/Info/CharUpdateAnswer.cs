@@ -4,13 +4,18 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_5282A0
+    /// </summary>
     public class CharUpdateAnswer : OutPacket
     {
-        public Character character;
+        public Character Character = new Character();
         public override Packet CreatePacket()
         {
             return base.CreatePacket(Packets.CharUpdateAck);
         }
+        
+        public override int ExpectedSize() => 323;
 
         public override byte[] GetBytes()
         {
@@ -18,7 +23,7 @@ namespace Shared.Network.GameServer
             {
                 using (var bs = new BinaryWriterExt(ms))
                 {
-                    character.Serialize(bs);
+                    Character.Serialize(bs);
                 }
                 return ms.ToArray();
             }

@@ -13,9 +13,11 @@ namespace Shared.Objects
         public float Mitron;
         public float Kmh;
         public uint Color;
+        public uint Color2;
         public float MitronCapacity;
         public float MitronEfficiency;
         public bool AuctionOn;
+        public bool SBBOn;
         
         public void Serialize(BinaryWriterExt writer)
         {
@@ -28,9 +30,11 @@ namespace Shared.Objects
             writer.Write(Mitron);
             writer.Write(Kmh);
             writer.Write(Color);
+            writer.Write(Color2);
             writer.Write(MitronCapacity);
             writer.Write(MitronEfficiency);
             writer.Write(AuctionOn);
+            writer.Write(SBBOn);
         }
     }
 }

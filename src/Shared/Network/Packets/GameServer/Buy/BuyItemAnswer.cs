@@ -3,16 +3,21 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_521AF0
+    /// </summary>
     public class BuyItemAnswer : OutPacket
     {
         public int ItemId;
-        public int Quantity;
+        public uint Quantity;
         public int Price;
         
         public override Packet CreatePacket()
         {
             return base.CreatePacket(Packets.BuyItemAck);
         }
+        
+        public override int ExpectedSize() => 14;
 
         public override byte[] GetBytes()
         {

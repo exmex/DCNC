@@ -15,7 +15,7 @@ namespace SharedTests.Packets
         {
             var packet = new EnterAreaPacket(Utilities.ConstructTestPacket("EnterArea.bin", Shared.Network.Packets.CmdEnterArea));
 
-            Assert.AreEqual(123, packet.Serial);
+            Assert.AreEqual(123, packet.VehicleSerial);
             StringAssert.AreEqualIgnoringCase("Administrator", packet.CharacterName);
             Assert.AreEqual(5, packet.AreaId);
             Assert.AreEqual(-1, packet.LocalTime);
@@ -91,8 +91,8 @@ namespace SharedTests.Packets
             Assert.AreEqual(34, packet.Signal, 34);
             Assert.AreEqual(0, packet.State, 0);
             Assert.AreEqual(0, packet.Time, 0);
-            Assert.AreEqual(-4345.89941f, packet.X);
-            Assert.AreEqual(1026.86694f, packet.Y);
+            Assert.AreEqual(-4345.89941f, packet.Position.X);
+            Assert.AreEqual(1026.86694f, packet.Position.Y);
         }
 
         [Test]

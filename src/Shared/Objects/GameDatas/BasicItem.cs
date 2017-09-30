@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace Shared.Objects
+namespace Shared.Objects.GameDatas
 {
     public class BasicItem
     {

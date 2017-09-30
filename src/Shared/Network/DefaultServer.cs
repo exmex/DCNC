@@ -255,5 +255,21 @@ namespace Shared.Network
                 if (exclude == null || client != exclude)
                     client.Send(packet);
         }
+        
+        public void Broadcast(Packet packet, Client[] exclude)
+        {
+            foreach (var client in GetClients())
+                if (!exclude.Contains(client))
+                    client.Send(packet);
+        }
+
+        public void BroadcastTeam(Team team, Packet packet)
+        {
+            foreach (var client in GetClients())
+            {
+                if(client.User?.ActiveCharacter?.TeamId == team.TeamId)
+                    client.Send(packet);
+            }
+        }
     }
 }

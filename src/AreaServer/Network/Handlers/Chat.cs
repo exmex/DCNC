@@ -29,17 +29,8 @@ namespace AreaServer.Network.Handlers
             ack.Writer.WriteUnicodeStatic(packet.Sender.User.ActiveCharacter.Name, 18);
             ack.Writer.WriteUnicode(message);
 
-            switch (type)
-            {
-                case "area":
-                    // TODO: Broadcast only to users area!
-                    AreaServer.Instance.Server.Broadcast(ack);
-                    break;
-
-                default:
-                    Log.Error("Undefined chat message type.");
-                    break;
-            }
+            if (type == "area")
+                AreaServer.Instance.Server.Broadcast(ack);
         }
     }
 }

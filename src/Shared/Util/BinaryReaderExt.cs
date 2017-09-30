@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Numerics;
 using System.Text;
 
 namespace Shared.Util
@@ -12,6 +14,25 @@ namespace Shared.Util
 
         public BinaryReaderExt(Stream input, Encoding encoding) : base(input, encoding)
         {
+        }
+
+        public Vector4 ReadVector4()
+        {
+            var vec = new Vector4();
+            vec.X = ReadSingle();
+            vec.Y = ReadSingle();
+            vec.Z = ReadSingle();
+            vec.W = ReadSingle();
+
+            return vec;
+        }
+
+        public Vector2 ReadVector2()
+        {
+            var vec = new Vector2();
+            vec.X = ReadSingle();
+            vec.Y = ReadSingle();
+            return vec;
         }
 
         public string ReadUnicode()

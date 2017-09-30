@@ -3,6 +3,9 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_524740
+    /// </summary>
     public class JoinChannelAnswer : OutPacket
     {
         public string ChannelName;
@@ -14,6 +17,8 @@ namespace Shared.Network.GameServer
         {
             return base.CreatePacket(Packets.JoinChannelAck);
         }
+        
+        public override int ExpectedSize() => 58;
 
         public override byte[] GetBytes()
         {

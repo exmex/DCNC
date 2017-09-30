@@ -4,12 +4,15 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_53C7A0
+    /// </summary>
     public class LoadCharThreadAnswer : OutPacket
     {
         public uint ServerId;
         public uint ServerStartTime;
-        public Character Character;
-        public Vehicle[] Vehicles;
+        public Character Character = new Character();
+        public Vehicle[] Vehicles = new Vehicle[0];
 
         public int CurrentCarId;
         
@@ -17,6 +20,8 @@ namespace Shared.Network.GameServer
         {
             return base.CreatePacket(Packets.LoadCharThreadAck);
         }
+        
+        public override int ExpectedSize() => (50 * Vehicles.Length-1) + 385;
 
         public override byte[] GetBytes()
         {

@@ -3,6 +3,9 @@ using Shared.Util;
 
 namespace Shared.Network.LobbyServer
 {
+    /// <summary>
+    /// sub_53D110
+    /// </summary>
     public class CheckCharacterNameAnswerPacket : OutPacket
     {
         // Availability. true = Available, false = Unavailable.
@@ -20,6 +23,8 @@ namespace Shared.Network.LobbyServer
         {
             return base.CreatePacket(Packets.CheckCharNameAck);
         }
+
+        public override int ExpectedSize() => 45;
 
         public override byte[] GetBytes()
         {

@@ -4,6 +4,9 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_527290
+    /// </summary>
     public class InstantGiveUpAnswer : OutPacket
     {
         public uint TableIndex;
@@ -12,6 +15,8 @@ namespace Shared.Network.GameServer
         {
             return base.CreatePacket(Packets.InstantGiveUpAck);
         }
+        
+        public override int ExpectedSize() => 6;
 
         public override byte[] GetBytes()
         {

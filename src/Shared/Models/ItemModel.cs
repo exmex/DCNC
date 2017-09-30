@@ -34,26 +34,28 @@ namespace Shared.Models
             var command = new MySqlCommand(
                 "SELECT * FROM items WHERE CharacterId = @cid",
                 dbconn);
-            command.Parameters.AddWithValue("@cid", character.Cid);
+            command.Parameters.AddWithValue("@cid", character.Id);
             
             using (DbDataReader reader = command.ExecuteReader())
             {
                 while (reader.Read())
                 {
                     var item = InventoryItem.ReadFromDb(reader);
-                    if (item.InventoryIndex > character.InventoryItems.Length)
+                    character.InventoryItems.Add(item);
+                    /*if (item.InventoryIndex > character.InventoryItems.Count)
                     {
                         Log.Error("Item slot <> Inventory length mismatch");
                         continue;
                     }
-                    if (character.InventoryItems[item.InventoryIndex] != null)
+                    if (character.InventoryItems[(int)item.InventoryIndex] != null)
                     {
                         Log.Error("Duplicated inventory item!");
                         continue;
                     }
                     
-                    character.InventoryItems[item.InventoryIndex] = item;
+                    character.InventoryItems[(int)item.InventoryIndex] = item;
                     //items.Add(item);
+                    */
                 }
             }
         }
@@ -87,7 +89,7 @@ namespace Shared.Models
             }
         }
 
-        public static bool Remove(MySqlConnection dbconn, ulong charId, uint slot)
+        public static bool Remove(MySqlConnection dbconn, ulong charId, int slot)
         {
             var command = new MySqlCommand("DELETE FROM `items` WHERE CharacterId = @cid AND InventoryIndex = @slot", dbconn);
             command.Parameters.AddWithValue("@slot", slot);

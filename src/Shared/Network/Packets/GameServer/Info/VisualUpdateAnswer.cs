@@ -4,6 +4,9 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_529FD0
+    /// </summary>
     public class VisualUpdateAnswer : OutPacket
     {
         public ushort Serial;
@@ -15,6 +18,8 @@ namespace Shared.Network.GameServer
         {
             return base.CreatePacket(Packets.VisualUpdateAck);
         }
+        
+        public override int ExpectedSize() => 61;
 
         public override byte[] GetBytes()
         {

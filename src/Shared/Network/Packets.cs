@@ -23,6 +23,8 @@ namespace Shared.Network
         public const ushort CreateCharAck = 83;
         public const ushort DeleteCharAck = 84;
         public const ushort BuyCarAck = 86;
+        public const ushort SellCarAck = 88;
+        public const ushort SelectCarAck = 90;
         public const ushort CheckInGameAck = 121;
         public const ushort LoadCharThreadAck = 124;
         public const ushort JoinChannelAck = 126;
@@ -59,19 +61,19 @@ namespace Shared.Network
 
         public const ushort AreaStatusAck = 683;
         public const ushort UdpCastTcsSignalAck = 706;
-        public const ushort FuelChargeReqAck = 724;
+        public const ushort FuelChargeRes = 724;
         public const ushort StatUpdateAck = 760;
         public const ushort AreaListAck = 781;
-        public const ushort FirstPositionAck = 783;
+        public const ushort MyCityPositionAck = 783; // MyPositionAck
         public const ushort GetDateTimeAck = 785;
-        public const ushort MyPositionAck = 789;
+        public const ushort GateListAck = 789; // GateListAck
         public const ushort PlayerInfoOldAck = 802;
         public const ushort MyTeamInfoAck = 841;
         public const ushort InstantStartAck = 993;
         public const ushort InstantGiveUpAck = 1000;
         public const ushort InstantGoalPlaceAck = 1002;
         public const ushort VisualUpdateAck = 1061;
-        public const ushort BuyVisualItemThreadAck = 1203;
+        public const ushort BuyVisualItemThreadAck = 1204;
         public const ushort GetMyHancoinAck = 1401;
         //public const ushort VisualItemListAck = 1801;
         public const ushort VisualItemListAck = 1201;
@@ -142,6 +144,7 @@ namespace Shared.Network
         public const ushort CmdLeaveChat = 144;
         public const ushort CmdChatMsg = 146;
         public const ushort CmdWhisper = 148;
+        public const ushort CmdPrivateChatMsg = 149;
         public const ushort CmdRecommendFriend = 152;
         public const ushort CmdReqCouponItem = 157;
         public const ushort CmdCarPos = 160;

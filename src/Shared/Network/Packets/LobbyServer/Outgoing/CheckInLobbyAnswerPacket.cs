@@ -3,6 +3,9 @@ using Shared.Util;
 
 namespace Shared.Network.LobbyServer
 {
+    /// <summary>
+    /// sub_53D0D0
+    /// </summary>
     public class CheckInLobbyAnswerPacket : OutPacket
     {
         /// <summary>
@@ -25,6 +28,8 @@ namespace Shared.Network.LobbyServer
         {
             return base.CreatePacket(Packets.CheckInLobbyAck);
         }
+        
+        public override int ExpectedSize() => 10;
 
         public override byte[] GetBytes()
         {

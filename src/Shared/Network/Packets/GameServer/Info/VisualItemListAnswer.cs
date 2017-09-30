@@ -1,15 +1,24 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using Shared.Objects;
 using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_52EFB0
+    /// </summary>
     public class VisualItemListAnswer : OutPacket
     {
+        public List<XiVisualItem> VisualItems = new List<XiVisualItem>();
+        
         public override Packet CreatePacket()
         {
             return base.CreatePacket(Packets.VisualItemListAck);
         }
+        
+        public override int ExpectedSize() => (120 * VisualItems.Count) + 130;
 
         public override byte[] GetBytes()
         {
@@ -21,11 +30,7 @@ namespace Shared.Network.GameServer
                     bs.Write(0);
                     bs.Write(new byte[120]);
                 }
-#if DEBUG
                 return ms.ToArray();
-#else
-                return new byte[0];
-#endif
             }
             /*
             var ack = new Packet(Packets.VisualItemListAck);

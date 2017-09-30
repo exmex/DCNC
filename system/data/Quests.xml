@@ -5,7 +5,7 @@
   <Quest id="q_00064" missiontype="main" tableindex="2" exp="100" mito="600" reward1="i_n_00016" reward2="0" reward3="0" />
   <Quest id="q_00008" missiontype="main" tableindex="3" exp="100" mito="600" reward1="i_s_000001" reward2="0" reward3="0" />
   <Quest id="q_00022" missiontype="main" tableindex="4" exp="100" mito="300" reward1="0" reward2="0" reward3="0" />
-  <Quest id="q_00009" missiontype="main" tableindex="5" exp="70" mito="300" reward1="i_d_sticker_l6" reward2="0" reward3="0" />
+  <Quest id="q_00009" missiontype="main" tableindex="5" exp="70" mito="300" reward1="i_d_sticker" reward2="0" reward3="0" />
   <Quest id="q_00010" missiontype="main" tableindex="6" exp="80" mito="300" reward1="0" reward2="0" reward3="0" />
   <Quest id="q_00011" missiontype="main" tableindex="7" exp="100" mito="450" reward1="i_n_c0025" reward2="0" reward3="0" />
   <Quest id="q_00006" missiontype="main" tableindex="8" exp="75" mito="450" reward1="0" reward2="0" reward3="0" />
@@ -20,14 +20,14 @@
   <Quest id="q_00170" missiontype="main" tableindex="17" exp="120" mito="0" reward1="0" reward2="0" reward3="0" />
   <Quest id="q_00016" missiontype="main" tableindex="18" exp="140" mito="450" reward1="0" reward2="0" reward3="0" />
   <Quest id="q_00067" missiontype="main" tableindex="19" exp="140" mito="450" reward1="0" reward2="0" reward3="0" />
-  <Quest id="q_00171" missiontype="main" tableindex="20" exp="140" mito="450" reward1="0" reward2="0" reward3="0" />
+  <Quest id="q_00017" missiontype="main" tableindex="20" exp="140" mito="450" reward1="0" reward2="0" reward3="0" />
   <Quest id="q_00018" missiontype="main" tableindex="21" exp="110" mito="450" reward1="0" reward2="0" reward3="0" />
   <Quest id="q_00019" missiontype="main" tableindex="22" exp="170" mito="450" reward1="0" reward2="0" reward3="0" />
   <Quest id="q_00020" missiontype="main" tableindex="23" exp="100" mito="450" reward1="0" reward2="0" reward3="0" />
   <Quest id="q_00021" missiontype="main" tableindex="24" exp="40" mito="300" reward1="0" reward2="0" reward3="0" />
   <Quest id="q_00172" missiontype="main" tableindex="25" exp="130" mito="400" reward1="0" reward2="0" reward3="0" />
   <Quest id="q_00069" missiontype="main" tableindex="26" exp="70" mito="300" reward1="0" reward2="0" reward3="0" />
-  <Quest id="q_00023" missiontype="main" tableindex="27" exp="255" mito="6000" reward1="0" reward2="0" reward3="0" />
+  <Quest id="q_00023" missiontype="main" tableindex="27" exp="255" mito="800" reward1="0" reward2="0" reward3="0" />
   <Quest id="q_00024" missiontype="main" tableindex="28" exp="105" mito="300" reward1="0" reward2="0" reward3="0" />
   <Quest id="q_00025" missiontype="main" tableindex="29" exp="195" mito="300" reward1="0" reward2="0" reward3="0" />
   <Quest id="q_00026" missiontype="main" tableindex="30" exp="170" mito="300" reward1="0" reward2="0" reward3="0" />
@@ -54,7 +54,7 @@
   <Quest id="q_00045" missiontype="main" tableindex="51" exp="180" mito="900" reward1="0" reward2="0" reward3="0" />
   <Quest id="q_00046" missiontype="main" tableindex="52" exp="220" mito="1000" reward1="0" reward2="0" reward3="0" />
   <Quest id="q_00047" missiontype="main" tableindex="53" exp="200" mito="1200" reward1="0" reward2="0" reward3="0" />
-  <Quest id="q_00048" missiontype="main" tableindex="54" exp="200" mito="25000" reward1="0" reward2="0" reward3="0" />
+  <Quest id="q_00048" missiontype="main" tableindex="54" exp="200" mito="1000" reward1="0" reward2="0" reward3="0" />
   <Quest id="q_00049" missiontype="main" tableindex="55" exp="270" mito="1200" reward1="0" reward2="0" reward3="0" />
   <Quest id="q_00050" missiontype="main" tableindex="56" exp="200" mito="1200" reward1="0" reward2="0" reward3="0" />
   <Quest id="q_00075" missiontype="main" tableindex="57" exp="260" mito="1300" reward1="0" reward2="0" reward3="0" />
@@ -218,6 +218,17 @@
   <Quest id="rq_00054" missiontype="rq_koi_12" tableindex="20011" exp="600" mito="2300" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
   <Quest id="rq_00055" missiontype="rq_koi_13" tableindex="20012" exp="650" mito="2500" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
   <Quest id="rq_00056" missiontype="rq_koi_14" tableindex="20013" exp="700" mito="2700" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
+  <Quest id="rq_00058" missiontype="rq_cras_01" tableindex="30000" exp="300" mito="100" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
+  <Quest id="rq_00059" missiontype="rq_cras_02" tableindex="30001" exp="350" mito="300" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
+  <Quest id="rq_00060" missiontype="rq_cras_03" tableindex="30002" exp="400" mito="500" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
+  <Quest id="rq_00061" missiontype="rq_cras_04" tableindex="30003" exp="450" mito="700" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
+  <Quest id="rq_00062" missiontype="rq_cras_05" tableindex="30004" exp="500" mito="900" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
+  <Quest id="rq_00063" missiontype="rq_cras_06" tableindex="30005" exp="550" mito="1100" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
+  <Quest id="rq_00064" missiontype="rq_cras_07" tableindex="30006" exp="600" mito="10000" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
+  <Quest id="rq_00065" missiontype="rq_cras_08" tableindex="30007" exp="650" mito="1300" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
+  <Quest id="rq_00066" missiontype="rq_cras_09" tableindex="30008" exp="700" mito="1500" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
+  <Quest id="rq_00067" missiontype="rq_cras_10" tableindex="30009" exp="750" mito="1700" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
+  <Quest id="rq_00068" missiontype="rq_cras_11" tableindex="30010" exp="1000" mito="1900" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
   <Quest id="nq_00001" missiontype="main" tableindex="50000" exp="0" mito="0" reward1="0" reward2="0" reward3="0" />
   <Quest id="nq_00002" missiontype="main" tableindex="50001" exp="0" mito="0" reward1="0" reward2="0" reward3="0" />
   <Quest id="nq_00003" missiontype="main" tableindex="50002" exp="0" mito="0" reward1="0" reward2="0" reward3="0" />
@@ -262,21 +273,4 @@
   <Quest id="rq_00057" missiontype="rq_moon_8" tableindex="10042" exp="1000" mito="2000" reward1="0" reward2="0" reward3="0" />
   <Quest id="eq_00001" missiontype="event_ini_1" tableindex="10043" exp="800" mito="17000" reward1="i_flag_ini" reward2="0" reward3="0" />
   <Quest id="eq_00002" missiontype="event_ini_2" tableindex="10044" exp="100" mito="1000" reward1="i_n_eventcoin" reward2="0" reward3="0" />
-  <Quest id="rq_00058" missiontype="rq_cras_01" tableindex="30000" exp="300" mito="100" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
-  <Quest id="rq_00059" missiontype="rq_cras_02" tableindex="30001" exp="350" mito="300" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
-  <Quest id="rq_00060" missiontype="rq_cras_03" tableindex="30002" exp="400" mito="500" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
-  <Quest id="rq_00061" missiontype="rq_cras_04" tableindex="30003" exp="450" mito="700" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
-  <Quest id="rq_00062" missiontype="rq_cras_05" tableindex="30004" exp="500" mito="900" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
-  <Quest id="rq_00063" missiontype="rq_cras_06" tableindex="30005" exp="550" mito="1100" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
-  <Quest id="rq_00064" missiontype="rq_cras_07" tableindex="30006" exp="600" mito="10000" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
-  <Quest id="rq_00065" missiontype="rq_cras_08" tableindex="30007" exp="650" mito="1300" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
-  <Quest id="rq_00066" missiontype="rq_cras_09" tableindex="30008" exp="700" mito="1500" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
-  <Quest id="rq_00067" missiontype="rq_cras_10" tableindex="30009" exp="750" mito="1700" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
-  <Quest id="rq_00068" missiontype="rq_cras_11" tableindex="30010" exp="1000" mito="1900" reward1="i_n_00096" reward2="i_n_00099" reward3="i_n_00100" />
-  <Quest id="eq_00003_omd" missiontype="eq_thirdanni_omd_01" tableindex="10045" exp="333" mito="333" reward1="i_n_00100" reward2="0" reward3="0" />
-  <Quest id="eq_00004_omd" missiontype="eq_thirdanni_omd_02" tableindex="10046" exp="333" mito="333" reward1="i_n_00100" reward2="0" reward3="0" />
-  <Quest id="eq_00005_omd" missiontype="eq_thirdanni_omd_03" tableindex="10047" exp="333" mito="333" reward1="giftbox_thirdanni" reward2="0" reward3="0" />
-  <Quest id="eq_00006_roo" missiontype="eq_thirdanni_roo_01" tableindex="10048" exp="333" mito="333" reward1="i_n_00100" reward2="0" reward3="0" />
-  <Quest id="eq_00007_roo" missiontype="eq_thirdanni_roo_02" tableindex="10049" exp="333" mito="333" reward1="i_n_00100" reward2="0" reward3="0" />
-  <Quest id="eq_00008_roo" missiontype="eq_thirdanni_roo_03" tableindex="10050" exp="333" mito="333" reward1="giftbox_thirdanni" reward2="0" reward3="0" />
 </Quests>

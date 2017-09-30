@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Shared.Database;
 using Shared.Objects;
+using Shared.Objects.GameDatas;
 using Shared.Util;
 using Shared.Util.Configuration;
 
@@ -14,9 +15,11 @@ namespace Shared
     public abstract class ServerMain
     {
         public const int ProtocolVersion = 10249;
-        
-        public static QuestTable Quests;
-        public static ItemTable Items;
+
+        public static List<VShopItemList.VShopItem> VisualItems;
+        public static List<VehicleList.VehicleData> Vehicles;
+        public static List<QuestTable.Quest> Quests;
+        public static List<BasicItem> Items;
         public static Dictionary<int, KeyValuePair<ushort, long>> LevelTable;
 
         /// <summary>

@@ -3,6 +3,9 @@ using Shared.Util;
 
 namespace Shared.Network.LobbyServer
 {
+    /// <summary>
+    /// sub_53D1A0
+    /// </summary>
     public class DeleteCharacterAnswerPacket : OutPacket
     {
         public string CharacterName;
@@ -11,6 +14,8 @@ namespace Shared.Network.LobbyServer
         {
             return base.CreatePacket(Packets.DeleteCharAck);
         }
+
+        public override int ExpectedSize() => 44;
 
         public override byte[] GetBytes()
         {

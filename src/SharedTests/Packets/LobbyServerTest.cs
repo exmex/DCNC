@@ -163,18 +163,18 @@ namespace SharedTests.Packets
                     new Character()
                     {
                         Name = "TestChar",
-                        Cid = Utilities.Rand.NextUInt32(),
+                        Id = Utilities.Rand.NextUInt32(),
                         Avatar = 2,
                         Level = 10,
-                        CurrentCarId = Utilities.Rand.NextUInt32(),
+                        ActiveVehicleId = Utilities.Rand.NextUInt32(),
                         CreationDate = Utilities.Rand.Next(),
                         TeamId = Utilities.Rand.NextUInt32(),
                         TeamMarkId = Utilities.Rand.NextUInt32(),
-                        ActiveCar = new Vehicle()
+                        /*ActiveCar = new Vehicle()
                         {
                             CarType = Utilities.Rand.NextUInt32(),
                             BaseColor = Utilities.Rand.NextUInt32()
-                        },
+                        },*/
                         TeamName = "TestTeam"
                     }
                 },
@@ -213,7 +213,7 @@ namespace SharedTests.Packets
                         StringAssert.AreEqualIgnoringCase(packet.Characters[i].Name, characterName);
 
                         var charId = bs.ReadUInt64();
-                        Assert.AreEqual(packet.Characters[i].Cid, charId);
+                        Assert.AreEqual(packet.Characters[i].Id, charId);
 
                         var avatar = bs.ReadInt32();
                         Assert.AreEqual(packet.Characters[i].Avatar, avatar);
@@ -222,7 +222,7 @@ namespace SharedTests.Packets
                         Assert.AreEqual(packet.Characters[i].Level, level);
 
                         var currentCarId = bs.ReadUInt32();
-                        Assert.AreEqual(packet.Characters[i].CurrentCarId, currentCarId);
+                        Assert.AreEqual(packet.Characters[i].ActiveVehicleId, currentCarId);
 
                         var carType = bs.ReadUInt32();
                         Assert.AreEqual(packet.Characters[i].ActiveCar.CarType, carType);

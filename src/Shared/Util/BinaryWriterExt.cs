@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 
 namespace Shared.Util
@@ -61,6 +62,20 @@ namespace Shared.Util
                 Write((ushort) str.Length);
 
             Write(buf);
+        }
+
+        public void Write(Vector4 vec)
+        {
+            Write(vec.X);
+            Write(vec.Y);
+            Write(vec.Z);
+            Write(vec.W);
+        }
+
+        public void Write(Vector2 vec)
+        {
+            Write(vec.X);
+            Write(vec.Y);
         }
         
         public void WriteUnicodeStatic(string str, int maxLength, bool nullTerminated = false)

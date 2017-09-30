@@ -19,14 +19,14 @@ namespace LobbyServer.Network.Handlers
             Log.Debug("UserInfo request. (Username: {0}, Ticket: {1})", userInfoPacket.Username, userInfoPacket.Ticket);
 
             if (userInfoPacket.Ticket != packet.Sender.User.Ticket ||
-                userInfoPacket.Username != packet.Sender.User.Name)
+                userInfoPacket.Username != packet.Sender.User.Username)
             {
                 Log.Error(
                     "Rejecting packet from {0}:{1} (user: {2} vs {3}, ticket {4} vs {5}) for invalid user-ticket combination.",
                     packet.Sender.EndPoint.Address.ToString(),
                     packet.Sender.EndPoint.Port,
                     userInfoPacket.Username,
-                    packet.Sender.User.Name,
+                    packet.Sender.User.Username,
                     userInfoPacket.Ticket,
                     packet.Sender.User.Ticket);
 
@@ -38,14 +38,11 @@ namespace LobbyServer.Network.Handlers
 
             // Send gamesettings
             packet.Sender.Send(new GameSettingsAnswer().CreatePacket());
-            
-            packet.Sender.User.Characters = CharacterModel.RetrieveUser(LobbyServer.Instance.Database.Connection,
-                packet.Sender.User.UID);
 
             packet.Sender.Send(new UserInfoAnswerPacket
             {
                 CharacterCount = packet.Sender.User.Characters.Count,
-                Username = packet.Sender.User.Name,
+                Username = packet.Sender.User.Username,
                 Characters = packet.Sender.User.Characters.ToArray()
             }.CreatePacket());
         }
@@ -56,9 +53,8 @@ namespace LobbyServer.Network.Handlers
             var checkInLobbyPacket = new CheckInLobbyPacket(packet);
             if (checkInLobbyPacket.ProtocolVersion != ServerMain.ProtocolVersion)
             {
-#if DEBUG
-                packet.Sender.SendError("Invalid protocol.");
-#else
+                packet.Sender.SendDebugError("Invalid protocol.");
+#if !DEBUG
                 packet.Sender.KillConnection("Client outdated!");
 #endif
                 return;
@@ -70,32 +66,33 @@ namespace LobbyServer.Network.Handlers
                 Permission = 0x0
             };
 
-            var user = AccountModel.GetSession(LobbyServer.Instance.Database.Connection, checkInLobbyPacket.Username,
+            var user = AccountModel.RetrieveFromSession(LobbyServer.Instance.Database.Connection, checkInLobbyPacket.Username,
                 checkInLobbyPacket.Ticket);
 
             Log.Debug("CheckInLobby {0} {1} {2} {3} {4}", checkInLobbyPacket.ProtocolVersion, checkInLobbyPacket.Ticket,
                 checkInLobbyPacket.Username, checkInLobbyPacket.Time,
                 BitConverter.ToString(Encoding.UTF8.GetBytes(checkInLobbyPacket.StringTicket)));
 
-            // Check is session is really valid, and the client is not tricking us somehow.
+            // Check if session is really valid, and the client is not tricking us somehow.
             if (user == null)
             {
                 Log.Error("Rejecting {0}:{1} (user {2} vs {3}, ticket {4} vs {5}) for invalid user-ticket combination.",
                     packet.Sender.EndPoint.Address.ToString(),
                     packet.Sender.EndPoint.Port,
                     checkInLobbyPacket.Username,
-                    packet.Sender.User.Name,
+                    packet.Sender.User.Username,
                     checkInLobbyPacket.Ticket,
                     packet.Sender.User.Ticket);
 #if DEBUG
                 packet.Sender.SendError("Invalid ticket-user combination.");
 #else
                 packet.Sender.Send(checkInLobbyAnswerPacket.CreatePacket());
-                packet.Sender.KillConnection("");
+                packet.Sender.KillConnection("Invalid ticket-user combination.");
 #endif
                 return;
             }
             packet.Sender.User = user;
+            packet.Sender.User.Characters = AccountModel.RetrieveCharacters(LobbyServer.Instance.Database.Connection, user.Id);
 
             // Send check in lobby answer.
             checkInLobbyAnswerPacket.Result = 0;
@@ -104,79 +101,6 @@ namespace LobbyServer.Network.Handlers
 
             // Send current lobby time.
             packet.Sender.Send(new LobbyTimeAnswerPacket().CreatePacket());
-        }
-
-        [Packet(Packets.CmdCheckCharName)]
-        public static void CheckCharacterName(Packet packet)
-        {
-            var checkCharacterNamePacket = new CheckCharacterNamePacket(packet);
-
-            var checkCharacterNameAnswerPacket = new CheckCharacterNameAnswerPacket
-            {
-                CharacterName = checkCharacterNamePacket.CharacterName,
-                Availability =
-                    !CharacterModel.Exists(LobbyServer.Instance.Database.Connection,
-                        checkCharacterNamePacket.CharacterName)
-            };
-            packet.Sender.Send(checkCharacterNameAnswerPacket.CreatePacket());
-        }
-
-        [Packet(Packets.CmdCreateChar)]
-        public static void CreateChar(Packet packet)
-        {
-            var createCharPacket = new CreateCharPacket(packet);
-
-            // TODO: Check if the values send by client are valid.
-
-            Log.Debug(createCharPacket.CharacterName + " " + createCharPacket.Avatar + " " +
-                      createCharPacket.CarType + " " + createCharPacket.Color);
-
-            var character = new Character()
-            {
-                Uid = packet.Sender.User.UID,
-                Name = createCharPacket.CharacterName,
-                Avatar = createCharPacket.Avatar,
-                ActiveCar = new Vehicle()
-                {
-                    CarType = createCharPacket.CarType,
-                    Color = createCharPacket.Color,
-                }
-            };
-            CharacterModel.CreateCharacter(LobbyServer.Instance.Database.Connection, character);
-
-            packet.Sender.Send(new CreateCharAnswerPacket
-            {
-                CharacterName = createCharPacket.CharacterName
-            }.CreatePacket());
-        }
-
-        [Packet(Packets.CmdDeleteChar)]
-        public static void DeleteCharacter(Packet packet)
-        {
-            var deleteCharacterPacket = new DeleteCharacterPacket(packet);
-
-            // Check if the user owns the character, if not don't do anything.
-            var cid = CharacterModel.HasCharacter(LobbyServer.Instance.Database.Connection,
-                deleteCharacterPacket.CharacterName,
-                packet.Sender.User.UID);
-            if (cid != 0)
-            {
-                CharacterModel.DeleteCharacter(LobbyServer.Instance.Database.Connection,
-                    cid, packet.Sender.User.UID);
-
-                packet.Sender.Send(new DeleteCharacterAnswerPacket
-                {
-                    CharacterName = deleteCharacterPacket.CharacterName
-                }.CreatePacket());
-
-                return;
-            }
-
-#if DEBUG
-            packet.Sender.SendError("This character doesn't belong to you!");
-#else
-            packet.Sender.KillConnection("Suspected hack.");
-#endif
         }
     }
 }

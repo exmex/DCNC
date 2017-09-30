@@ -93,7 +93,7 @@ namespace GameServer.Util
             if (!ushort.TryParse(args[1], out res))
                 return CommandResult.InvalidArgument;
 
-            if (!int.TryParse(args[2], out res2) || res2 > 256)
+            if (!int.TryParse(args[2], out res2))
                 return CommandResult.InvalidArgument;
 
             var packet = new Packet(res);
@@ -104,9 +104,13 @@ namespace GameServer.Util
 
         protected override CommandResult HandleConnections(string command, IList<string> args)
         {
+            var i = 0;
             foreach (var client in GameServer.Instance.Server.GetClients())
             {
-                Console.WriteLine($"{client.EndPoint.Address.ToString()}:{client.EndPoint.Port}");
+                Console.WriteLine(client.User != null
+                    ? $"{i} - {client.EndPoint} - {client.User.Username}"
+                    : $"{i} - {client.EndPoint}");
+                i++;
             }
             
             return CommandResult.Okay;

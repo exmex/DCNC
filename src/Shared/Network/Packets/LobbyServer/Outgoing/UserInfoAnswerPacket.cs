@@ -4,6 +4,9 @@ using Shared.Util;
 
 namespace Shared.Network.LobbyServer
 {
+    /// <summary>
+    /// sub_53E260
+    /// </summary>
     public class UserInfoAnswerPacket : OutPacket
     {
         /// <summary>
@@ -40,6 +43,8 @@ namespace Shared.Network.LobbyServer
         {
             return base.CreatePacket(Packets.UserInfoAck);
         }
+
+        public override int ExpectedSize() => (120*CharacterCount) + 194; 
         
         public override byte[] GetBytes()
         {
@@ -58,17 +63,19 @@ namespace Shared.Network.LobbyServer
                     foreach (var character in Characters)
                     {
                         bs.WriteUnicodeStatic(character.Name, 21);
-                        bs.Write(character.Cid);
+                        bs.Write(character.Id);
                         bs.Write((int) character.Avatar);
                         bs.Write((int) character.Level);
-                        bs.Write(character.CurrentCarId);
+                        bs.Write(character.ActiveVehicleId);
                         bs.Write(character.ActiveCar.CarType);
                         bs.Write(character.ActiveCar.BaseColor);
                         bs.Write(character.CreationDate);
                         bs.Write(character.TeamId);
                         bs.Write(character.TeamMarkId);
                         bs.WriteUnicodeStatic(character.TeamName, 13);
-                        bs.Write(0); // GuildType? (unsigned int nGuild;)
+                        bs.Write((short)0); // Crew rank 
+                        bs.Write((short)0); // GuildType? (unsigned int nGuild;)
+                        // Guild (0 = OMD, 1 = ROO)
                     }
                 }
                 return ms.ToArray();

@@ -4,6 +4,9 @@ using Shared.Util;
 
 namespace Shared.Network.AreaServer
 {
+    /// <summary>
+    /// sub_51DE00
+    /// </summary>
     public class UdpCastTcsSignalAnswerPacket : OutPacket
     {
         public int Signal;
@@ -19,6 +22,8 @@ namespace Shared.Network.AreaServer
             ack.Writer.Write(State);*/
             return ack;
         }
+
+        public override int ExpectedSize() => 14;
 
         public override byte[] GetBytes()
         {

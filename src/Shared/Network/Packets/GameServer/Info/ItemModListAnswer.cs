@@ -4,14 +4,19 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_52EB00
+    /// </summary>
     public class ItemModListAnswer : OutPacket
     {
-        public ItemMod[] Items;
-        
+        public ItemMod[] Items = new ItemMod[0];
+
         public override Packet CreatePacket()
         {
             return base.CreatePacket(Packets.ItemModListAck);
         }
+
+        public override int ExpectedSize() => (100 * Items.Length - 1) + 106;
 
         public override byte[] GetBytes()
         {

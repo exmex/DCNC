@@ -41,15 +41,5 @@ namespace Shared.Network.AuthServer
 
             //packet.Reader.ReadInt32(); // Unknown 4-Bytes (Maybe an int?)
         }
-
-        /// <summary>
-        ///     Method for handling the actual logic of the packet
-        /// </summary>
-        /// <param name="packet">The packet that got received</param>
-        /// <param name="connection">The mysql connection</param>
-        public static void OnPacket(Packet packet, MySqlConnection connection)
-        {
-            
-        }
     }
 }

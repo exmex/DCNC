@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace Shared.Objects
+namespace Shared.Objects.GameDatas
 {
     /// <summary>
     /// TODO: Combine Items.xml and UseItems.xml

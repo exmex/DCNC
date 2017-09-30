@@ -3,6 +3,9 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_52CAB0
+    /// </summary>
     public class CityLeaveCheckAnswer : OutPacket
     {
         public uint Result;
@@ -15,6 +18,8 @@ namespace Shared.Network.GameServer
         {
             return base.CreatePacket(Packets.CityLeaveCheckAck);
         }
+        
+        public override int ExpectedSize() => 520;
 
         public override byte[] GetBytes()
         {

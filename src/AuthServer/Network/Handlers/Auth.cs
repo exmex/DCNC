@@ -16,7 +16,10 @@ namespace AuthServer.Network.Handlers
         /// </summary>
         /// <param name="packet">The packet</param>
         [Packet(Packets.CmdServerMessage)]
-        public static void ServerMessage(Packet packet){ /*Ignored*/ }
+        public static void ServerMessage(Packet packet)
+        {
+            /*Ignored*/
+        }
 
         /// <summary>
         /// Packet when a user tries to login
@@ -36,50 +39,65 @@ namespace AuthServer.Network.Handlers
                 packet.Sender.SendError("Your client is outdated!");
             }
 
-            // Check if the account exists
-            if (!AccountModel.AccountExists(AuthServer.Instance.Database.Connection, authPacket.Username))
+            // Check if the account exists <-- Should be handled by Retrieve!
+            /*if (!AccountModel.AccountExists(AuthServer.Instance.Database.Connection, authPacket.Username))
             {
                 Log.Debug("Account {0} not found!", authPacket.Username);
                 packet.Sender.SendError("Invalid Username or password!");
                 return;
-            }
+            }*/
 
             // Retrieve the account
             var user = AccountModel.Retrieve(AuthServer.Instance.Database.Connection, authPacket.Username);
             if (user == null)
             {
-                Log.Debug("Account {0} not found!", authPacket.Username);
-                packet.Sender.SendError("Invalid Username or password!");
-                return;
+                if (!AuthServer.Instance.Config.Auth.NewAccountsLogin)
+                {
+                    Log.Debug("Account {0} not found!", authPacket.Username);
+                    packet.Sender.SendError("Invalid Username or password!");
+                    return;
+                }
+                
+                var uid = AccountModel.CreateAccount(AuthServer.Instance.Database.Connection,
+                    packet.Sender.EndPoint.Address.ToString(), authPacket.Username, authPacket.Password);
+                user = AccountModel.Retrieve(AuthServer.Instance.Database.Connection, (ulong)uid);
             }
 
-            if (user.Status == UserStatus.Banned)
+            // Check if user is banned
+            if (user.IsUserBanned())
             {
+                if (user.BanValidUntil != 0)
+                    packet.Sender.SendError($"Your account is suspended until {DateTimeOffset.FromUnixTimeSeconds(user.BanValidUntil)}");
+                else
+                    packet.Sender.SendError("Your account was banned!");
+                
                 packet.Sender.KillConnection("Banned user");
                 return;
             }
 
             // Check password
-            var passwordHashed = Password.GenerateSaltedHash(authPacket.Password, user.Salt);
-            if (passwordHashed != user.Password)
+            if(!user.CheckPassword(authPacket.Password))
             {
-                Log.Debug("Account {0} found but invalid password! (Entered PW: {1} (Salt: {2}) vs SaltedPW: {3})",
-                    authPacket.Username,
-                    passwordHashed, user.Salt, user.Password);
                 packet.Sender.SendError("Invalid Username or password!");
                 return;
             }
-
-            // Create new session ticket
-            var ticket = AccountModel.CreateSession(AuthServer.Instance.Database.Connection, authPacket.Username);
-
+            
+            // Create session ticket.
+            user.Ticket = user.CreateSessionTicket();
+            if (!AccountModel.SetSessionTicket(AuthServer.Instance.Database.Connection, user))
+            {
+                packet.Sender.SendError("There was an error logging you in.");
+                packet.Sender.KillConnection("Failed to create session ticket!");
+                return;
+            }
+            
             packet.Sender.Send(new UserAuthAnswerPacket
             {
-                Ticket = ticket,
+                Ticket = user.Ticket,
                 Servers = new Server[1]{
                     new Server
                     {
-                        ServerName = "Test",
+                        ServerName = "DCNC",
                         ServerId = 1,
                         PlayerCount = 0.0f,
                         MaxPlayers = 7000.0f,

@@ -3,15 +3,20 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_5211A0
+    /// </summary>
     public class SellCarAnswer : OutPacket
     {
-        public ulong CarId;
+        public int CarId; // Fixed to int, since packetSize is 10, not 14!
         public int SellPrice;
         
         public override Packet CreatePacket()
         {
             return base.CreatePacket(Packets.SellCarAck);
         }
+        
+        public override int ExpectedSize() => 10;
 
         public override byte[] GetBytes()
         {

@@ -3,6 +3,9 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_5290C0
+    /// </summary>
     public class WeatherAnswer : OutPacket
     {
         public enum Weather
@@ -30,6 +33,8 @@ namespace Shared.Network.GameServer
         {
             return base.CreatePacket(Packets.WeatherAck);
         }
+        
+        public override int ExpectedSize() => 6;
 
         public override byte[] GetBytes()
         {

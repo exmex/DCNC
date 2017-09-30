@@ -5,6 +5,7 @@ namespace Shared.Network.GameServer
 {
     /// <summary>
     /// sub_521CC00
+    /// TODO: Missing bytes!
     /// </summary>
     public class CheckStatAnswer : OutPacket
     {
@@ -81,6 +82,9 @@ namespace Shared.Network.GameServer
                     bs.Write(TotalDurability);
                     bs.Write(TotalAcceleration);
                     bs.Write(TotalBoost);
+
+                    bs.Write(new byte[40]);
+                    
                     // EnChantBonus
                     bs.Write(Speed);
                     bs.Write(Crash);
@@ -98,6 +102,7 @@ namespace Shared.Network.GameServer
             /*ack.Writer.Write(0); // Speed (Car) Testvalue:100 -> http://i.imgur.com/AndRGwK.png
             ack.Writer.Write(0); // Durability (Car) Testvalue:100 -> http://i.imgur.com/zuaxZu5.png
             ack.Writer.Write(0); // Acceleration (Car) Testvalue:100 -> http://i.imgur.com/97UkLkj.png
+            
             ack.Writer.Write(0); // Boost (Car) Testvalue:100 -> http://i.imgur.com/FQ9EYVO.png
             ack.Writer.Write(0); // Speed (Parts) Testvalue:300 -> http://i.imgur.com/FQ9EYVO.png
             ack.Writer.Write(0); // Durability (Parts) Testvalue:400 -> http://i.imgur.com/FQ9EYVO.png

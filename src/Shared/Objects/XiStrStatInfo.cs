@@ -26,6 +26,10 @@ namespace Shared.Objects
         public int TotalSpeed;
 
 
+        /// <summary>
+        /// TODO: Missing 32 Bytes!
+        /// </summary>
+        /// <param name="writer"></param>
         public void Serialize(BinaryWriterExt writer)
         {
             writer.Write(BasedSpeed);
@@ -48,6 +52,7 @@ namespace Shared.Objects
             writer.Write(TotalCrash);
             writer.Write(TotalAccel);
             writer.Write(TotalBoost);
+            writer.Write(new byte[32]);
         }
     }
 }

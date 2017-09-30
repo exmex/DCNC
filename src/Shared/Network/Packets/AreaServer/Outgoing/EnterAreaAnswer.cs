@@ -5,6 +5,7 @@ using Shared.Util;
 namespace Shared.Network.AreaServer
 {
 	/// <summary>
+	/// sub_51CAA0
 	/// </summary>
     public class EnterAreaAnswer : OutPacket
     {
@@ -36,6 +37,8 @@ namespace Shared.Network.AreaServer
             ack.Writer.Write(new byte[2]); // Missing information for this one.*/
 	        return ack;
         }
+	    
+	    public override int ExpectedSize() => 22;
 
 	    public override byte[] GetBytes()
 	    {

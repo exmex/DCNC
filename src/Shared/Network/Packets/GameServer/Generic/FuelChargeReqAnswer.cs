@@ -4,6 +4,9 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_534830
+    /// </summary>
     public class FuelChargeReqAnswer : OutPacket
     {
         /*
@@ -32,10 +35,12 @@ namespace Shared.Network.GameServer
 
         public override Packet CreatePacket()
         {
-            var packet = new Packet(Packets.FuelChargeReqAck);
+            var packet = new Packet(Packets.FuelChargeRes);
             packet.Writer.Write(GetBytes());
             return packet;
         }
+        
+        public override int ExpectedSize() => 54;
 
         public override byte[] GetBytes()
         {
@@ -55,7 +60,7 @@ namespace Shared.Network.GameServer
                     bs.Write(FuelEfficiency);
 
                     bs.Write(SaleFlag); // 1 = Item Discount 50%
-                    bs.Write(new byte[2]); // Not sure.
+                    bs.Write(new byte[4]); // Not sure.
                 }
                 return ms.ToArray();
             }

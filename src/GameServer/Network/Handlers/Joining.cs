@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Numerics;
+using Microsoft.SqlServer.Server;
 using Shared.Models;
 using Shared.Network;
 using Shared.Network.GameServer;
@@ -26,6 +28,12 @@ namespace GameServer.Network.Handlers
         {
             var serial = GameServer.Instance.Server.LastSerial++;
             GameServer.Instance.Server.ActiveSerials.Add(serial, packet.Sender.User);
+            packet.Sender.User.ActiveCharacter.VehicleSerial = serial;
+            if (!AccountModel.UpdateVehicleSerial(GameServer.Instance.Database.Connection, packet.Sender.User.Id, serial))
+            {
+                packet.Sender.KillConnection("Failed to update serial.");
+                return;
+            }
             
             packet.Sender.Send(new JoinChannelAnswer()
             {
@@ -56,92 +64,78 @@ namespace GameServer.Network.Handlers
             }.CreatePacket());
         }
 
+        /*[Packet(Packets.CmdGateList)]
+        public static void GateList(Packet packet)
+        {
+            
+        }*/
+        
         [Packet(Packets.CmdFirstPosition)] // TODO: Actual position and not just dummies
         public static void FirstPosition(Packet packet)
         {
-            packet.Sender.Send(new FirstPositionAnswer()
+            var character = packet.Sender.User.ActiveCharacter;
+            var ack = new MyCityPositionAnswer();
+            ack.PositionState = character.PosState;
+            if (packet.Sender.User.ActiveCharacter.PosState != 1)
+            {
+                if (packet.Sender.User.ActiveCharacter.PosState == 2)
+                {
+                    ack.City = character.City;
+                    ack.LastChannel = RandomProvider.Get().Next(0, 10);
+                    /*
+                    if ( *(_BYTE *)&BS_Global::ContentsFlag.Main.0 >> 8 )
+                        lpAckPkt->m_ChannelId = rand() % 2;
+                    */
+                    ack.Position = character.Position; // AreaPos?
+                }
+                else
+                {
+                    ack.City = 0;
+                    ack.LastChannel = packet.Sender.User.ActiveCharacter.LastChannel;
+                    ack.Position = new Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+                }
+            }
+            else
+            {
+                character.City = 1;
+                character.PosState = 1;
+                
+                ack.City = 1;
+                ack.Position.X = -2157.2f + 4.0f * RandomProvider.Get().Next(0, 10);
+                ack.Position.Y = -205.05f + 4.0f * RandomProvider.Get().Next(0, 10);
+                ack.Position.Z = 85.720001f + 4.0f * RandomProvider.Get().Next(0, 10);
+                ack.Position.W = 90.967003f + 4.0f * RandomProvider.Get().Next(0, 10);
+                ack.LastChannel = -1;
+            }
+                
+            // Check dormant event?
+            
+            packet.Sender.Send(ack.CreatePacket());
+
+            if (character.PosState == 1 && character.Level == 1)
+            {
+                // Recommend friend
+            }
+            
+            // Team notify
+            
+            /*packet.Sender.Send(new FirstPositionAnswer()
             {
                 City = packet.Sender.User.ActiveCharacter.City,
                 LastChannel = packet.Sender.User.ActiveCharacter.LastChannel,
-                PositionX = packet.Sender.User.ActiveCharacter.PositionX,
-                PositionY = packet.Sender.User.ActiveCharacter.PositionY,
-                PositionZ = packet.Sender.User.ActiveCharacter.PositionZ,
-                Rotation = packet.Sender.User.ActiveCharacter.Rotation,
-                PositionState = packet.Sender.User.ActiveCharacter.posState
-            }.CreatePacket());
+                Position = packet.Sender.User.ActiveCharacter.Position,
+                PositionState = packet.Sender.User.ActiveCharacter.PosState
+            }.CreatePacket());*/
         }
 
-        [Packet(Packets.CmdAreaList)] // TODO: Actual areas and not just dummies
+        [Packet(Packets.CmdAreaList)]
         public static void AreaList(Packet packet)
         {
             // client calls 2 functions (not using any packet data), returns  137 * (*(_DWORD *)(pktBuf + 2) - 1) + 143;
-            
-            //if ( *(_BYTE *)&BS_Global::ContentsFlag.Main.0 >> 8 )
-            /*var ack = new Packet(789); // GateList
-            ack.Writer.Write(1); // Gate Count
-            ack.Writer.Write(0); // Current
-            ack.Writer.Write(3000); // Max
-            ack.Writer.Write((short)0); // ???????
-            packet.Sender.Send(ack);
-            
-            // Missing: BS_PktChannelOwnershipListAck
-s            */
-
-            var ack = new AreaListAnswer();
-            ack.Areas = new Area[10];
-            
-            // TODO: Verify: Somehow the gameserver spits out an error here?!
-            
-            for (var i = 0; i < 10; i++)
-            {
-                if (ack.Areas[i] == null)
-                {
-                    Log.Error("FUCKKKKKKK!!!!!!!!!! " + i);
-                    return;
-                }
-                ack.Areas[i].AreaId = i;
-                ack.Areas[i].CurrentPlayers = 0;
-                ack.Areas[i].MaxPlayers = 100;
-                ack.Areas[i].ChannelState = 1;
-                ack.Areas[i].Tax = 0.0f;
-                ack.Areas[i].TeamId = 0;
-                ack.Areas[i].TeamMarkId = 0;
-                ack.Areas[i].TeamName = "Staff";
-                ack.Areas[i].Ranking = 0;
-                ack.Areas[i].Point = 0;
-                ack.Areas[i].WinCount = 0;
-                ack.Areas[i].MemberCount = 20;
-                ack.Areas[i].OwnerId = 1;
-                ack.Areas[i].OwnerName = "Admin";
-                ack.Areas[i].TotalExp = 0;
-            }
-            packet.Sender.Send(ack.CreatePacket());
-            /*
-                lpAck->AreaNum = 10;
-          for ( k = 0; k < 10; ++k )
-          {
-            lpAck->m_Area[k].AreaId = k;
-            lpAck->m_Area[k].Current = 0;
-            lpAck->m_Area[k].Open = g_battleBoard.m_lobby[k].m_ChannelState;
-            XiSmpTeamInfo::Init(&lpAck->m_Area[k].OwnTeam);
-            lpAck->m_Area[k].AccTax = (double)g_battleBoard.m_lobby[k].m_teamAccTax;
-            BS_CBattleLobby::GetMasterTeam(&g_battleBoard.m_lobby[k], &result);
-            v18 = 7;
-            if ( result.m_pObj )
-              XiSmpTeamInfo::FillFrom(&lpAck->m_Area[k].OwnTeam, (XiStrTeamInfo *)&result.m_pObj->TeamId);
-            v18 = -1;
-            if ( result.m_pObj )
-              XiCsTeam::Release(result.m_pObj);
-          } 
-                */
-
-            /* Pulled from Rice:
-            // client calls 2 functions (not using any packet data), returns  137 * (*(_DWORD *)(pktBuf + 2) - 1) + 143;
-            var ack = new RicePacket(781);
+            var ack = new Packet(Packets.AreaListAck);
             ack.Writer.Write(1);
             ack.Writer.Write(new byte[137]);
             packet.Sender.Send(ack);
-            */
         }
 
         /*
@@ -170,7 +164,8 @@ s            */
                 return;
             }
             
-            var team = TeamModel.Retrieve(GameServer.Instance.Database.Connection, character.TeamId);
+            // Even though we set it already it does seem to not work for some reason.
+            //var team = TeamModel.Retrieve(GameServer.Instance.Database.Connection, character.TeamId); 
             /*
             character.TeamId = team.TeamId;
             character.TeamName = team.TeamName;
@@ -179,27 +174,67 @@ s            */
             character.TeamRank = 1;*/ // <-- This all get set by CharacterModel already.
 
             var user = AccountModel.Retrieve(GameServer.Instance.Database.Connection, character.Uid);
-            AccountModel.SetActiveCharacter(GameServer.Instance.Database.Connection, user, character.Cid);
+            AccountModel.SetActiveCharacter(GameServer.Instance.Database.Connection, user, character.Id);
 
             packet.Sender.User = user;
-            packet.Sender.User.ActiveCharacterId = character.Cid;
+            packet.Sender.User.ActiveCharacterId = character.Id;
             packet.Sender.User.ActiveCharacter = character;
-            packet.Sender.User.ActiveCarId = character.CurrentCarId;
-            packet.Sender.User.ActiveTeam = team;
-            packet.Sender.User.Characters = CharacterModel.RetrieveUser(GameServer.Instance.Database.Connection, user.UID);
+            packet.Sender.User.ActiveCharacter.ActiveCar.CarID = character.ActiveVehicleId;
+            //packet.Sender.User.ActiveCharacter.Team = team;
+            packet.Sender.User.Characters = AccountModel.RetrieveCharacters(GameServer.Instance.Database.Connection, user.Id);
+            //packet.Sender.User.Characters = CharacterModel.RetrieveUser(GameServer.Instance.Database.Connection, user.Id);
 
-            var vehicles = VehicleModel.Retrieve(GameServer.Instance.Database.Connection, character.Cid);
+            var vehicles = VehicleModel.Retrieve(GameServer.Instance.Database.Connection, character.Id);
 
-            packet.Sender.User.ActiveCar = vehicles.Find(vehicle => vehicle.CarID == character.CurrentCarId);
+            packet.Sender.User.ActiveCharacter.ActiveCar = vehicles.Find(vehicle => vehicle.CarID == character.ActiveVehicleId);
             var ack = new LoadCharThreadAnswer()
             {
                 ServerId = 0,
                 ServerStartTime = 0,
                 Character = character,
                 Vehicles = vehicles.ToArray(),
-                CurrentCarId = (int)character.CurrentCarId,
+                CurrentCarId = (int)character.ActiveVehicleId,
             };
             packet.Sender.Send(ack.CreatePacket());
+            
+            packet.Sender.Send(new StatUpdateAnswer()
+            {
+                StatisticInfo = new XiStrStatInfo()
+                {
+                    BasedAccel = 0,
+                    BasedBoost = 0,
+                    BasedCrash = 0,
+                    BasedSpeed = 0,
+                    CharAccel = 0,
+                    CharBoost = 0,
+                    CharCrash = 0,
+                    CharSpeed = 0,
+                    EquipAccel = 0,
+                    EquipBoost = 0,
+                    EquipCrash = 0,
+                    EquipSpeed = 0,
+                    ItemUseAccel = 0,
+                    ItemUseBoost = 0,
+                    ItemUseCrash = 0,
+                    ItemUseSpeed = 0,
+                    TotalAccel = 0,
+                    TotalBoost = 0,
+                    TotalCrash = 0,
+                    TotalSpeed = 0,
+                },
+                EnchantBonus = new XiStrEnchantBonus()
+                {
+                    Speed = 0,
+                    Crash = 0,
+                    Accel = 0,
+                    Boost = 0,
+                    AddSpeed = 0,
+                    Drop = 0.0f,
+                    Exp = 0.0f,
+                    MitronCapacity = 0.0f,
+                    MitronEfficiency = 0.0f
+                }
+            }.CreatePacket());
 
             /*var character = Rice.Game.Character.Retrieve(characterName); // TODO: verify this
             var user = Rice.Game.User.Retrieve(character.UID);
@@ -273,6 +308,7 @@ s            */
         {
             var ack = new Packet(Packets.VisualItemListAck);
             ack.Writer.Write(262144); // ListUpdate (262144 = First packet from list queue, 262145 = sequential)
+            //packet.Sender.User.ActiveCharacter.InventoryVisualItems.Count
             ack.Writer.Write(0); // ItemNum
             ack.Writer.Write(new byte[120]); // Null VisualItem (120 bytes per XiStrMyVSItem)
             packet.Sender.Send(ack);
@@ -286,13 +322,13 @@ s            */
             
             foreach (var client in GameServer.Instance.Server.GetClients())
             {
-                if (client.User.ActiveCharacter == null || client.User.ActiveCarId != serial) continue;
+                if (client.User.ActiveCharacter == null || client.User.VehicleSerial != serial) continue;
                 
                 var character = client.User.ActiveCharacter;
                 var playerInfo = new XiPlayerInfo()
                 {
                     CharacterName = character.Name,
-                    Serial = (ushort)client.User.ActiveCarId, // TODO: Verify if the serial is the same as carid
+                    Serial = (ushort)client.User.VehicleSerial, // TODO: Verify if the serial is the same as carid
                     Age = 0
                 };
                 var res = new Packet(Packets.PlayerInfoOldAck);
@@ -301,9 +337,6 @@ s            */
                 packet.Sender.Send(res);
                 break;
             }
-            #if !DEBUG
-            Log.Unimplemented("Missing info for PlayerInfoReq");
-            #endif
         }
 
         /* Pulled from Rice:

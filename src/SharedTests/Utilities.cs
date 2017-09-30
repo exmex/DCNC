@@ -21,7 +21,7 @@ namespace SharedTests
             return oFileBytes;
         }
 
-        private static string GetTestFile(string filePath)
+        public static string GetTestFile(string filePath)
         {
             return Path.GetDirectoryName(Path.GetDirectoryName(TestContext.CurrentContext.TestDirectory)) + filePath;
         }

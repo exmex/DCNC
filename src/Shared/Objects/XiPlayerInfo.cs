@@ -1,4 +1,5 @@
-﻿using Shared.Util;
+﻿using System.Security;
+using Shared.Util;
 
 namespace Shared.Objects
 {
@@ -15,8 +16,19 @@ namespace Shared.Objects
         public long TeamMarkId;
         public string TeamName;
         public ushort TeamNLevel;
-        public XiVisualItem VisualItem;
+        public XiVisualItem VisualItem = new XiVisualItem();
         public float UseTime;
+
+        public XiPlayerInfo()
+        {
+        }
+
+        public XiPlayerInfo(Character character)
+        {
+            CharacterName = character.Name;
+            //Serial
+            Age = 0;
+        }
 
         /*
         struct XiPlayerInfo
@@ -40,7 +52,7 @@ namespace Shared.Objects
             writer.WriteUnicodeStatic(CharacterName, 13, true);
             writer.Write(Serial);
             writer.Write(Age);
-            writer.Write(new byte[186]); // filler
+            writer.Write(new byte[186]);
         }
     }
 }

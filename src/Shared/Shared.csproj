@@ -22,12 +22,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseUnix|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\ReleaseUnix\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
@@ -36,6 +46,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -72,6 +83,7 @@
     <Compile Include="Network\Packets\GameServer\Buy\BuyItemPacket.cs" />
     <Compile Include="Network\Packets\GameServer\Buy\BuyVisualItemThreadAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Buy\BuyVisualItemThreadPacket.cs" />
+    <Compile Include="Network\Packets\GameServer\Buy\SellCarAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Buy\SellItemAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Buy\SellItemPacket.cs" />
     <Compile Include="Network\Packets\GameServer\Chase\ChaseRequestAnswer.cs" />
@@ -106,7 +118,7 @@
     <Compile Include="Network\Packets\GameServer\JoinLeave\CheckInGamePacket.cs" />
     <Compile Include="Network\Packets\GameServer\JoinLeave\CityLeaveCheckAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\JoinLeave\CityLeaveCheckPacket.cs" />
-    <Compile Include="Network\Packets\GameServer\JoinLeave\FirstPositionAnswer.cs" />
+    <Compile Include="Network\Packets\GameServer\JoinLeave\MyCityPositionAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\JoinLeave\GetDateTimePacket.cs" />
     <Compile Include="Network\Packets\GameServer\JoinLeave\GetDateTimePacketAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\JoinLeave\JoinAreaAnswer.cs" />
@@ -126,6 +138,7 @@
     <Compile Include="Network\Packets\GameServer\Quests\QuestRewardPacket.cs" />
     <Compile Include="Network\Packets\GameServer\Quests\QuestStartAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Quests\QuestStartPacket.cs" />
+    <Compile Include="Network\Packets\GameServer\SelectCarAnswer.cs" />
     <Compile Include="Network\Packets\OutPacket.cs" />
     <Compile Include="Network\Packets\LobbyServer\Incoming\CheckCharacterNamePacket.cs" />
     <Compile Include="Network\Packets\LobbyServer\Incoming\CheckInLobbyPacket.cs" />
@@ -140,12 +153,19 @@
     <Compile Include="Network\Packets\LobbyServer\Outgoing\LobbyTimeAnswerPacket.cs" />
     <Compile Include="Network\Packets\LobbyServer\Outgoing\UserInfoAnswerPacket.cs" />
     <Compile Include="Objects\Character.cs" />
+    <Compile Include="Objects\ExpInfo.cs" />
+    <Compile Include="Objects\GameDatas\BasicItem.cs" />
+    <Compile Include="Objects\GameDatas\GameData.cs" />
+    <Compile Include="Objects\GameDatas\ItemTable.cs" />
+    <Compile Include="Objects\GameDatas\QuestTable.cs" />
+    <Compile Include="Objects\GameDatas\UseItemTable.cs" />
+    <Compile Include="Objects\GameDatas\VehicleList.cs" />
+    <Compile Include="Objects\GameDatas\VShopItemList.cs" />
     <Compile Include="Objects\InventoryItem.cs" />
     <Compile Include="Models\TeamModel.cs" />
-    <Compile Include="Objects\ItemSerialize.cs" />
-    <Compile Include="Objects\QuestSerialize.cs" />
     <Compile Include="Objects\Server.cs" />
     <Compile Include="Objects\VehicleInfo.cs" />
+    <Compile Include="Objects\InventoryVisualItem.cs" />
     <Compile Include="Objects\XiCarAttr.cs" />
     <Compile Include="Objects\XiStrCarInfo.cs" />
     <Compile Include="Objects\XiStrEnchantBonus.cs" />
@@ -191,7 +211,7 @@
     <Folder Include="Network\Packets\Ranking\Outgoing\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <PreBuildEvent>"$(SolutionDir)External\NetRevisionTool.exe" /info /patch "$(ProjectDir)"
 taskkill /F /IM "AuthServer.exe" 2&gt;nul 1&gt;nul
 taskkill /F /IM "LobbyServer.exe" 2&gt;nul 1&gt;nul
@@ -200,7 +220,20 @@ taskkill /F /IM "GameServer.exe" 2&gt;nul 1&gt;nul
 taskkill /F /IM "RankingServer.exe" 2&gt;nul 1&gt;nul
 Exit 0</PreBuildEvent>
   </PropertyGroup>
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <PostBuildEvent>"$(SolutionDir)External\NetRevisionTool.exe" /restore "$(ProjectDir)"
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <PreBuildEvent>"$(SolutionDir)External\NetRevisionTool.exe" /info /patch "$(ProjectDir)"
+taskkill /F /IM "AuthServer.exe" 2&gt;nul 1&gt;nul
+taskkill /F /IM "LobbyServer.exe" 2&gt;nul 1&gt;nul
+taskkill /F /IM "AreaServer.exe" 2&gt;nul 1&gt;nul
+taskkill /F /IM "GameServer.exe" 2&gt;nul 1&gt;nul
+taskkill /F /IM "RankingServer.exe" 2&gt;nul 1&gt;nul
+Exit 0</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <PostBuildEvent>"$(SolutionDir)External\NetRevisionTool.exe" /restore "$(ProjectDir)"
     </PostBuildEvent>
   </PropertyGroup>

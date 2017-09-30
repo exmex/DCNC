@@ -5,19 +5,24 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
-    // TODO: Wrong Packet Size. CMD(467) CmdLen: : 240, AnalysisSize: 62
+    /// <summary>
+    /// PKTSIZE: Wrong Packet Size. CMD(467) CmdLen: : 240, AnalysisSize: 62
+    /// sub_5402E0
+    /// </summary>
     public class RoomNotifyChangeAnswer: OutPacket
     {
-        public ushort Age; // ???
+        public ushort Age; // ??? // <-- Long maybe?
         public ushort Serial; // ???
         
-        public XiCarAttr CarAttr;
-        public XiPlayerInfo PlayerInfo;
+        public XiCarAttr CarAttr = new XiCarAttr();
+        public XiPlayerInfo PlayerInfo = new XiPlayerInfo();
         
         public override Packet CreatePacket()
         {
             return base.CreatePacket(Packets.RoomNotifyChangeAck);
         }
+        
+        public override int ExpectedSize() => 240;
 
         public override byte[] GetBytes()
         {

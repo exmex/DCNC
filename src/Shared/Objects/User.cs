@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using Shared.Database;
+using Shared.Models;
+using Shared.Util;
 
 namespace Shared.Objects
 {
@@ -13,13 +15,47 @@ namespace Shared.Objects
         Muted = 3
     }
 
+    public enum UserPermission : int
+    {
+        Administrator = 0x8000, // 32768
+        PowerUser = 0x4000, // 16384
+        RemoteClientUser = 0x2000, // 8192
+        Developer = 0x1000, // 4096
+        User = 0x0,
+    }
+
     public class User
     {
-        public Vehicle ActiveCar;
-        public uint ActiveCarId;
+        /// <summary>
+        /// The Vehicle the user is currently using
+        /// TOOD: Move to Character
+        /// </summary>
+        /*[Obsolete("Use Character.Vehicle")]
+        //public Vehicle ActiveCar;*/
+
+        /// <summary>
+        /// The Db Vehicle Id the user is currently using
+        /// TODO: Move to Character.
+        /// </summary>
+        /*[Obsolete("Use Character.Vehicle.Id")]
+        public uint ActiveCarId;*/
+
+        /// <summary>
+        /// The Character the user is currently using
+        /// </summary>
         public Character ActiveCharacter;
+
+        /// <summary>
+        /// The Character Db Id the user is currently using
+        /// </summary>
         public ulong ActiveCharacterId;
-        public Team ActiveTeam;
+
+        /// <summary>
+        /// The active team the user is in
+        /// TODO: Move to Character
+        /// </summary>
+        /*[Obsolete("Use Character.Team")]
+        public Team ActiveTeam;*/
 
         /// <summary>
         ///     The permission flags
@@ -32,39 +68,89 @@ namespace Shared.Objects
         /// </summary>
         public int Permission;
 
-        public bool GMFlag;
+        /// <summary>
+        /// Used for GM commands
+        /// </summary>
+        public bool GmFlag;
 
+        /// <summary>
+        /// Full list of all characters of this user
+        /// </summary>
         public List<Character> Characters;
+        
+        /// <summary>
+        /// IP
+        /// </summary>
         public string CreateIp;
-        public string Name;
+
+        /// <summary>
+        /// The users Username
+        /// </summary>
+        public string Username;
+
+        /// <summary>
+        /// The users hashed password
+        /// </summary>
         public string Password;
+
+        /// <summary>
+        /// The users salt hash
+        /// <see cref="AccountModel.SaltSize"/>
+        /// </summary>
         public string Salt;
+
+        /// <summary>
+        /// The status of the account
+        /// </summary>
         public UserStatus Status;
+
+        /// <summary>
+        /// The current session ticket
+        /// </summary>
         public uint Ticket;
-        public ulong UID;
 
-        public static User Empty => new User {Status = UserStatus.Normal};
+        /// <summary>
+        /// The Id in database
+        /// </summary>
+        public ulong Id;
 
-        public static User ReadFromDb(DbDataReader reader)
+        /// <summary>
+        /// Unix Timestamp for temporary bans 
+        /// </summary>
+        public long BanValidUntil;
+
+        public static User Empty => new User {Status = UserStatus.Invalid};
+
+        public ushort VehicleSerial;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public uint CreateSessionTicket()
         {
-            return new User
-            {
-                UID = Convert.ToUInt64(reader["UID"]),
-                Name = reader["Username"] as string,
-                Password = reader["Password"] as string,
-                Salt = reader["Salt"] as string,
-                Permission = Convert.ToInt32(reader["Permission"]),
-                Ticket = Convert.ToUInt32(reader["Ticket"]),
-                Status = (UserStatus) Convert.ToByte(reader["Status"]),
-                CreateIp = reader["CreateIP"] as string,
-                ActiveCharacterId = Convert.ToUInt64(reader["LastActiveChar"]),
-            };
+            return RandomProvider.Get().NextUInt32();
         }
 
-        public void WriteToDb(ref UpdateCommand cmd)
+        /// <summary>
+        /// Hashed and then checks the specified password with the value from DB
+        /// </summary>
+        /// <param name="plainTextPassword">The password in plaintext</param>
+        /// <returns>true if password is correct, false otherwise</returns>
+        public bool CheckPassword(string plainTextPassword)
         {
-            cmd.Set("Status", (byte)Status);
-            cmd.Set("Permission", Permission);
+            var passwordHashed = Util.Password.GenerateSaltedHash(plainTextPassword, Salt);
+            return passwordHashed == Password;
+        }
+
+        public bool IsUserBanned()
+        {
+            if (Status != UserStatus.Banned) return false;
+            
+            if (BanValidUntil == 0) // Forever
+                return true;
+                
+            return BanValidUntil > DateTimeOffset.Now.ToUnixTimeSeconds();
         }
     }
 }

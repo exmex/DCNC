@@ -10,6 +10,11 @@ namespace Shared.Network
             return null;
         }
 
+        public virtual int ExpectedSize()
+        {
+            return 0;
+        }
+
         protected Packet CreatePacket(ushort packetId)
         {
             var ack = new Packet(packetId);

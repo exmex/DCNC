@@ -3,6 +3,9 @@ using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
+    /// <summary>
+    /// sub_523DB0
+    /// </summary>
     public class CheckInGameAnswer : OutPacket
     {
         public uint Result;
@@ -11,6 +14,8 @@ namespace Shared.Network.GameServer
         {
             return base.CreatePacket(Packets.CheckInGameAck);
         }
+        
+        public override int ExpectedSize() => 6;
 
         public override byte[] GetBytes()
         {

@@ -5,14 +5,18 @@ using Shared.Util;
 namespace Shared.Network.GameServer
 {
     /// <summary>
+    /// sub_52EAC0
     /// </summary>
     public class ItemListAnswer : OutPacket
     {
-        public InventoryItem[] InventoryItems;
+        public InventoryItem[] InventoryItems = new InventoryItem[0];
+        
         public override Packet CreatePacket()
         {
             return base.CreatePacket(Packets.ItemListAck);
         }
+        
+        public override int ExpectedSize() => (96 * InventoryItems.Length-1) + 106;
 
         public override byte[] GetBytes()
         {

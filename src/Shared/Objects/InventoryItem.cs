@@ -57,13 +57,13 @@ namespace Shared.Objects
         {
         }
 
-        public InventoryItem(ulong characterId, uint carId, int tableIndex, uint slot, int quantity = 1, float durability = 1f)
+        public InventoryItem(ulong characterId, uint carId, int tableIndex, uint slot, uint quantity = 1, float durability = 1f)
         {
             CharacterId = characterId;
             CarId = carId;
             TableIndex = tableIndex;
 
-            StackNum = (uint)quantity;
+            StackNum = quantity;
 
             InventoryIndex = slot;
             Durability = durability;

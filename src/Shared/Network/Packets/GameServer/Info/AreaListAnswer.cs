@@ -22,13 +22,19 @@ namespace Shared.Network.GameServer
         public string OwnerName;
         public long TotalExp;
     };
+    
+    /// <summary>
+    /// sub_53B740
+    /// </summary>
     public class AreaListAnswer : OutPacket
     {
-        public Area[] Areas;
+        public Area[] Areas = new Area[0];
         public override Packet CreatePacket()
         {
             return base.CreatePacket(Packets.AreaListAck);
         }
+        
+        public override int ExpectedSize() => (137 * Areas.Length-1) + 143;
 
         public override byte[] GetBytes()
         {
@@ -36,6 +42,7 @@ namespace Shared.Network.GameServer
             {
                 using (var bs = new BinaryWriterExt(ms))
                 {
+                    bs.Write(Areas.Length-1);
                     foreach (var area in Areas)
                     {
                         bs.Write(area.AreaId);

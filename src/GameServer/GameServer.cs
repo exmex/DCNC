@@ -6,6 +6,7 @@ using GameServer.Util;
 using Shared;
 using Shared.Network;
 using Shared.Objects;
+using Shared.Objects.GameDatas;
 using Shared.Util;
 
 namespace GameServer
@@ -48,6 +49,8 @@ namespace GameServer
             if (_running)
                 throw new Exception("Server is already running.");
 
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
             int x, y, width, height;
             Win32.GetWindowPosition(out x, out y, out width, out height);
             Win32.SetWindowPosition(width + 5, 0, width, height);
@@ -76,13 +79,52 @@ namespace GameServer
             {
                 Log.Debug("Quest Table Load failed.");
             }*/
+            
+            Log.Info("Loading Vehicles..");
+            if (File.Exists("system/data/Vehicles.xml"))
+            {
+                try
+                {
+                    Vehicles = GameData.LoadVehicleData("system/data/vehicles.xml");
+                }
+                catch (Exception)
+                {
+#if !DEBUG
+                    throw new Exception("Vehicle Data corrupt");
+#else
+                    throw;
+#endif
+                }
+            }
+
+            Log.Info("Loading VShop Items..");
+            if (File.Exists("system/data/VShopItems.xml"))
+            {
+                try
+                {
+                    VisualItems = GameData.LoadVShopItems("system/data/VShopItems.xml");
+                }
+                catch (Exception)
+                {
+#if !DEBUG
+                    throw new Exception("VShop Items corrupt!");
+#else
+                    throw;
+#endif
+                }
+            }
+            else
+            {
+                throw new FileNotFoundException("VShopItem data not found!");
+            }
+            Log.Info("VShop Items loaded with {0:D} entries", VisualItems.Count);
 
             Log.Info("Loading Quest Table");
             if (File.Exists("system/data/Quests.xml"))
             {
                 try
                 {
-                    Quests = QuestTable.Load("system/data/Quests.xml");
+                    Quests = GameData.LoadQuests("system/data/Quests.xml");
                 }
                 catch (Exception)
                 {
@@ -97,7 +139,7 @@ namespace GameServer
             {
                 throw new FileNotFoundException("Quest data not found!");
             }
-            Log.Info("Quest Table loaded with {0:D} entries", Quests.QuestList.Count);
+            Log.Info("Quest Table loaded with {0:D} entries", Quests.Count);
             
             // ################# ITEMS ################ //
             Log.Info("Loading Item Table");
@@ -105,18 +147,22 @@ namespace GameServer
             {
                 try
                 {
-                    Items = ItemTable.Load("system/data/Items.xml");
+                    Items = GameData.LoadItems("system/data/Items.xml", "system/data/UseItems.xml");
                 }
                 catch (Exception)
                 {
+#if !DEBUG
                     throw new Exception("Items data corrupt!");
+#else
+                    throw;
+#endif
                 }
             }
             else
             {
                 throw new FileNotFoundException("Items data not found!");
             }
-            Log.Info("Item Table loaded with {0:D} entries", Items.ItemList.Count);
+            Log.Info("Item Table loaded with {0:D} entries", Items.Count);
             
             
             /*reader = new TdfReader();
@@ -150,6 +196,9 @@ namespace GameServer
 
             ConsoleUtil.RunningTitle();
             _running = true;
+            
+            watch.Stop();
+            Log.Info("Ready after {0}ms", watch.ElapsedMilliseconds);
 
             // Commands
             var commands = new GameConsoleCommands();
