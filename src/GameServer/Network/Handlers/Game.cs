@@ -557,7 +557,7 @@ namespace GameServer.Network.Handlers
         {
             var ack = new GetMyHancoinAnswer
             {
-                Hancoins = 10000,
+                Hancoins = packet.Sender.User.ActiveCharacter.Hancoin,
                 Mileage = 100
             };
 

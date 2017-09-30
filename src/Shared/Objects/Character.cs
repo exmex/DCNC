@@ -223,6 +223,11 @@ namespace Shared.Objects
         /// Unix timestamp when the chararacter was created
         /// </summary>
         public int CreationDate;
+
+        /// <summary>
+        /// Pay2Win currency
+        /// </summary>
+        public int Hancoin;
         
         /// <summary>
         /// Db Id of the user associated with this character

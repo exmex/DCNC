@@ -33,7 +33,7 @@ namespace LobbyServer
         /// <summary>
         ///     Configuration
         /// </summary>
-        private LobbyConf Config { get; set; }
+        public LobbyConf Config { get; set; }
 
         /// <summary>
         ///     Loads all necessary components and starts the server.

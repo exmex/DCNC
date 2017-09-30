@@ -27,12 +27,16 @@ namespace LobbyServer.Util
     public class LobbyConfFile : ConfFile
     {
         public int Port { get; protected set; }
+        public int NewCharacterMito { get; protected set; }
+        public int NewCharacterHancoin { get; protected set; }
 
         public void Load()
         {
             Require("system/conf/lobby.conf");
 
             Port = GetInt("port", 11011);
+            NewCharacterMito = GetInt("newCharacterMito", 10000);
+            NewCharacterHancoin = GetInt("newCharacterHancoin", 10000);
         }
     }
 }

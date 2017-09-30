@@ -54,7 +54,10 @@ namespace LobbyServer.Network.Handlers
             {
                 Uid = packet.Sender.User.Id,
                 Name = createCharPacket.CharacterName,
-                Avatar = createCharPacket.Avatar
+                Avatar = createCharPacket.Avatar,
+                MitoMoney = LobbyServer.Instance.Config.Lobby.NewCharacterMito,
+                Hancoin = LobbyServer.Instance.Config.Lobby.NewCharacterHancoin,
+                
             };
             CharacterModel.CreateCharacter(LobbyServer.Instance.Database.Connection, ref character);
             
