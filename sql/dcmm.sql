@@ -135,9 +135,10 @@ CREATE TABLE `users` (
   `Ticket` int(20) unsigned NOT NULL,
   `Status` tinyint(4) NOT NULL DEFAULT '1',
   `CreateIP` varchar(15) NOT NULL DEFAULT '127.0.0.1',
-  `CreateDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `CreateDate` bigint(20) NOT NULL DEFAULT '0',
   `LastActiveChar` int(6) DEFAULT '0',
-  `Serial` int(6) unsigned DEFAULT NULL,
+  `VehicleSerial` int(6) unsigned DEFAULT '0',
+  `BanValidUntil` bigint(20) DEFAULT '0',
   PRIMARY KEY (`UID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
