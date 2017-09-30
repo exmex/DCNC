@@ -1,21 +1,19 @@
 using System.IO;
+using System.Numerics;
 using Shared.Util;
 
 namespace Shared.Network.GameServer
 {
-    public class FirstPositionAnswer : OutPacket
+    public class MyCityPositionAnswer : OutPacket
     {
         public int City;
         public int LastChannel;
-        public float PositionX;
-        public float PositionY;
-        public float PositionZ;
-        public float Rotation;
+        public Vector4 Position;
         public int PositionState;
         
         public override Packet CreatePacket()
         {
-            return base.CreatePacket(Packets.FirstPositionAck);
+            return base.CreatePacket(Packets.MyCityPositionAck);
         }
 
         public override byte[] GetBytes()
@@ -26,10 +24,7 @@ namespace Shared.Network.GameServer
                 {
                     bs.Write(City);
                     bs.Write(LastChannel);
-                    bs.Write(PositionX);
-                    bs.Write(PositionY);
-                    bs.Write(PositionZ);
-                    bs.Write(Rotation);
+                    bs.Write(Position);
                     bs.Write(PositionState);
                 }
                 return ms.ToArray();
