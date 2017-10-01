@@ -11,7 +11,7 @@ namespace AreaServer.Network.Handlers
             var vehicleSerial = packet.Reader.ReadUInt16();
             var movement = packet.Reader.ReadBytes(112);
             
-            var validSerial = AreaServer.Instance.Server.ActiveSerials.FirstOrDefault(pair => pair.Value == packet.Sender.User);
+            var validSerial = DefaultServer.ActiveSerials.FirstOrDefault(pair => pair.Value == packet.Sender.User);
             if (validSerial.Value == null || validSerial.Key != vehicleSerial)
             {
                 packet.Sender.KillConnection("Vehicle serial didn't match!");

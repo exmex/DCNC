@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using Shared.Models;
 using Shared.Network.GameServer;
 using Shared.Objects;
 using Shared.Util;
@@ -52,6 +53,11 @@ namespace Shared.Network
             {
                 KillConnection(ex);
             }
+        }
+
+        ~Client()
+        {
+            KillConnection();
         }
 
         public IPEndPoint EndPoint => _tcp.Client.RemoteEndPoint as IPEndPoint;
@@ -230,6 +236,16 @@ namespace Shared.Network
                 Log.Info("Killing off client. {0}", reason);
             }
             _tcp.Close();
+
+            // Cleanup VehicleSerial
+            if (User != null)
+            {
+                if (DefaultServer.ActiveSerials.ContainsKey(User.VehicleSerial) &&
+                    DefaultServer.ActiveSerials[User.VehicleSerial] == User)
+                {
+                    DefaultServer.ActiveSerials.Remove(User.VehicleSerial);
+                }
+            }
         }
 
         public void SendChatMessage(string message)

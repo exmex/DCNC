@@ -30,7 +30,7 @@ namespace AreaServer.Network.Handlers
                 packet.Sender.User = account;
                 packet.Sender.User.ActiveCharacter = character;
                 
-                AreaServer.Instance.Server.ActiveSerials.Add(enterAreaPacket.VehicleSerial, packet.Sender.User);
+                DefaultServer.ActiveSerials.Add(enterAreaPacket.VehicleSerial, packet.Sender.User);
             }
 
             packet.Sender.Send(new EnterAreaAnswer

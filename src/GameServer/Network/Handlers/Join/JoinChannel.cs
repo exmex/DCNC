@@ -10,7 +10,7 @@ namespace GameServer.Network.Handlers.Join
         public static void Handle(Packet packet)
         {
             var serial = GameServer.Instance.Server.LastSerial++;
-            GameServer.Instance.Server.ActiveSerials.Add(serial, packet.Sender.User);
+            DefaultServer.ActiveSerials.Add(serial, packet.Sender.User);
             packet.Sender.User.ActiveCharacter.VehicleSerial = serial;
             if (!AccountModel.UpdateVehicleSerial(GameServer.Instance.Database.Connection, packet.Sender.User.Id, serial))
             {

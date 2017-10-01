@@ -55,7 +55,7 @@ namespace Shared.Network
         public static bool DumpOutgoing { get; set; }
 
         public ushort LastSerial = 0;
-        public Dictionary<ushort, User> ActiveSerials = new Dictionary<ushort, User>();
+        public static Dictionary<ushort, User> ActiveSerials = new Dictionary<ushort, User>();
 
 #if DEBUG
         public static readonly List<ushort> PacketDumpBlacklist = new List<ushort>()
@@ -141,13 +141,13 @@ namespace Shared.Network
         private void OnAccept(IAsyncResult result)
         {
             var tcpClient = _listener.EndAcceptTcpClient(result);
-            var riceClient = new Client(tcpClient, this, _exchangeRequired);
+            var client = new Client(tcpClient, this, _exchangeRequired);
 
 #if DEBUG
             Log.Info("Accepted client from {0} on {1}", tcpClient.Client.RemoteEndPoint, _port);
 #endif
 
-            _clients.Add(riceClient);
+            _clients.Add(client);
             _listener.BeginAcceptTcpClient(OnAccept, _listener);
         }
 
