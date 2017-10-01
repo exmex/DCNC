@@ -9,7 +9,7 @@ namespace Shared.Network.GameServer
     /// </summary>
     public class SelectCarAnswer : OutPacket
     {
-        public Vehicle Vehicle;
+        public Vehicle Vehicle = new Vehicle();
         
         public override Packet CreatePacket()
         {

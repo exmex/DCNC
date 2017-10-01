@@ -63,20 +63,8 @@ namespace Shared.Objects
         public long TeamId;
         
         /// <summary>
-        /// The Image Id of the team 
-        /// </summary>
-        [Obsolete("Use Team")]
-        public long TeamMarkId;
-        
-        /// <summary>
-        /// The name of the team
-        /// 13 (0xD) Chars
-        /// </summary>
-        [Obsolete("Use Team")]
-        public string TeamName;
-        
-        /// <summary>
         /// Presumably the rank in the team the char has
+        /// TODO: Rename to Crew
         /// </summary>
         public int TeamRank;
         
@@ -208,9 +196,9 @@ namespace Shared.Objects
         public int Flags = 0x8000000;
         
         /// <summary>
-        /// 
+        /// Guild/Team (0 = OMD, 1 = ROO)
         /// </summary>
-        public int Guild;
+        public short Guild;
         
         /// <summary>
         /// The DCGP Db Id
@@ -246,6 +234,9 @@ namespace Shared.Objects
             { return _activeCar ?? (_activeCar = GarageVehicles.Find(vehicle => vehicle.CarID == ActiveVehicleId)); }
         }*/
 
+        /// <summary>
+        /// The team the user is in
+        /// </summary>
         public Team Team;
         
         /// <summary>
@@ -285,7 +276,7 @@ namespace Shared.Objects
             City = 1;
             Level = 1;
             PosState = 1;
-            LastChannel = -1;
+            LastChannel = -1; // This could cause the Issue #26
         }
 
         /// <summary>
@@ -318,6 +309,14 @@ namespace Shared.Objects
             }.CreatePacket());
         }
 
+        public void SetStartPosition()
+        {
+            Position.X = -2157.2f + 4 * (new Random().Next() % 10); 
+            Position.Y = -205.05f + 4.0f * (new Random().Next() % 10); 
+            Position.Z = 85.720001f + 4.0f * (new Random().Next() % 10); 
+            Position.W = 90.967003f + 4.0f * (new Random().Next() % 10);
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -344,8 +343,8 @@ namespace Shared.Objects
             else
             {
                 writer.Write(TeamId);
-                writer.Write(Team.TeamMarkId);
-                writer.WriteUnicodeStatic(Team.TeamName, 13);
+                writer.Write(Team.MarkId);
+                writer.WriteUnicodeStatic(Team.Name, 13);
                 writer.Write(TeamRank);
             }
             //writer.Write(TeamMarkId);
@@ -377,7 +376,7 @@ namespace Shared.Objects
             writer.Write(GarageLevel);
             writer.Write(new byte[42]); // filler
             writer.Write(Flags);
-            writer.Write(Guild);
+            writer.Write((int)Guild);
             //writer.Write(new byte[38]); // filler
             //writer.Write(GPTeam); // DCGP team
         }

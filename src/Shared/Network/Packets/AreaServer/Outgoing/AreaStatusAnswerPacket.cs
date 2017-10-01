@@ -9,7 +9,7 @@ namespace Shared.Network.AreaServer
         ///     The user count for 100 areas
         /// sub_51E070
         /// </summary>
-        public uint[] UserCount;
+        public uint[] UserCount = new uint[0];
 
         public override Packet CreatePacket()
         {

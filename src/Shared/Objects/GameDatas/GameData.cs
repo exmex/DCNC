@@ -33,7 +33,6 @@ namespace Shared.Objects.GameDatas
             }
             
             serializer = new XmlSerializer(typeof(UseItemTable));
-            UseItemTable useItems;
             using (var reader = new StreamReader(useItemFileName))
             {
                 var items = (UseItemTable) serializer.Deserialize(reader);

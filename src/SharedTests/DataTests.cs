@@ -8,6 +8,7 @@ namespace SharedTests
     [TestFixture]
     public class DataTests
     {
+        // TODO: This still fails.
         [Test]
         public static void TestItems()
         {

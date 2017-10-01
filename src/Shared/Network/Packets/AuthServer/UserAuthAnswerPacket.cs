@@ -76,7 +76,7 @@ namespace Shared.Network.AuthServer
             };
         }
 
-        public override int ExpectedSize() => 78;
+        public override int ExpectedSize() => 218; //78; -- Only when Result is not 0
 
         public override Packet CreatePacket()
         {
@@ -92,7 +92,7 @@ namespace Shared.Network.AuthServer
                     bs.Write(Ticket);
                     bs.Write(Result);
                     bs.Write(Time);
-                    bs.Write(new byte[64]); // Filler. Unused? ("STicket")
+                    bs.Write(new byte[64]); // Filler. Unused? ("STicket") <-- 78 ?!
                     bs.Write(ServerListId);
                     bs.Write(ServerCount);
                     for (var i = 0; i < Servers.Length; i++)

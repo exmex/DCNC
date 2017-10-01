@@ -50,7 +50,8 @@ namespace Shared.Network.AreaServer
 				    bs.Write(1); // Result
 				    bs.Write(LocalTime);
 				    bs.Write(Environment.TickCount);
-				    bs.Write(new byte[6]);
+				    //bs.Write(new byte[6]);
+				    bs.Write(new byte[4]);
 			    }
 			    return ms.ToArray();
 		    }

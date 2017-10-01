@@ -169,13 +169,16 @@ namespace SharedTests.Packets
                         ActiveVehicleId = Utilities.Rand.NextUInt32(),
                         CreationDate = Utilities.Rand.Next(),
                         TeamId = Utilities.Rand.NextUInt32(),
-                        TeamMarkId = Utilities.Rand.NextUInt32(),
-                        /*ActiveCar = new Vehicle()
+                        ActiveCar = new Vehicle() // Normally this points to an object in GarageVehicles.
                         {
                             CarType = Utilities.Rand.NextUInt32(),
                             BaseColor = Utilities.Rand.NextUInt32()
-                        },*/
-                        TeamName = "TestTeam"
+                        },
+                        Team = new Team
+                        {
+                            Name = "TestTeam",
+                            MarkId = Utilities.Rand.NextInt64()
+                        }
                     }
                 },
                 Username = "Test"
@@ -237,10 +240,13 @@ namespace SharedTests.Packets
                         Assert.AreEqual(packet.Characters[i].TeamId, tid);
 
                         var teamMarkId = bs.ReadInt64();
-                        Assert.AreEqual(packet.Characters[i].TeamMarkId, teamMarkId);
+                        Assert.AreEqual(packet.Characters[i].Team.MarkId, teamMarkId);
 
                         var teamName = bs.ReadUnicodeStatic(13);
-                        StringAssert.AreEqualIgnoringCase("TestTeam", teamName);
+                        var expectedName = packet.Characters[i].Team.Name;
+                        if (expectedName.Length > 13)
+                            expectedName = expectedName.Substring(0, 13);
+                        StringAssert.AreEqualIgnoringCase(expectedName, teamName);
                     }
                 }
             }

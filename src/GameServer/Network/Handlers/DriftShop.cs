@@ -110,8 +110,8 @@ namespace GameServer.Network.Handlers
                     Level = packet.Sender.User.ActiveCharacter.Level,
                     Exp = 0, // ??
                     TeamId = packet.Sender.User.ActiveCharacter.TeamId,
-                    TeamMarkId = packet.Sender.User.ActiveCharacter.TeamMarkId,
-                    TeamName = packet.Sender.User.ActiveCharacter.TeamName,
+                    TeamMarkId = packet.Sender.User.ActiveCharacter.Team.MarkId,
+                    TeamName = packet.Sender.User.ActiveCharacter.Team.Name,
                     TeamNLevel = 0,
                     VisualItem = new XiVisualItem()
                     {

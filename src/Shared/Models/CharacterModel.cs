@@ -22,6 +22,7 @@ namespace Shared.Models
             character.CreationDate = Convert.ToInt32(reader["CreationDate"]);
             character.MitoMoney = Convert.ToInt64(reader["Mito"]);
             character.Avatar = Convert.ToUInt16(reader["Avatar"]);
+            character.Guild = Convert.ToInt16(reader["Guild"]);
             character.Level = Convert.ToUInt16(reader["Level"]);
             
             character.ExperienceInfo.BaseExp = Convert.ToInt32(reader["BaseExp"]);
@@ -194,20 +195,16 @@ namespace Shared.Models
                 cmd.Set("UID", character.Uid);
                 cmd.Set("Name", character.Name);
                 cmd.Set("Avatar", character.Avatar);
-                cmd.Set("CurrentCarId", -1); // Invalidate this.
-                cmd.Set("City", 1);
+                // The CarId will be updated once we have inserted the car into the db
+                cmd.Set("CurrentCarId", -1);
+                cmd.Set("City", character.City);
                 cmd.Set("CreationDate", DateTimeOffset.Now.ToUnixTimeSeconds());
-                cmd.Set("Level", 1);
-                cmd.Set("GarageLevel", 0);
-                cmd.Set("InventoryLevel", 0);
-                cmd.Set("posState", 1);
-                cmd.Set("channelId", -1);
+                cmd.Set("Level", character.Level);
+                cmd.Set("GarageLevel", character.GarageLevel);
+                cmd.Set("InventoryLevel", character.InventoryLevel);
+                cmd.Set("posState", character.PosState);
+                cmd.Set("channelId", character.LastChannel);
                 cmd.Set("Mito", character.MitoMoney);
-                // TODO: Move this to a more logical place.
-                cmd.Set("posX", -2157.2f + 4 * (new Random().Next() % 10));
-                cmd.Set("posY", -205.05 + 4 * (new Random().Next() % 10));
-                cmd.Set("posZ", 85.720001 + 4 * (new Random().Next() % 10));
-                cmd.Set("posW", 90.967003 + 4 * (new Random().Next() % 10));
 
                 cmd.Execute();
                 character.Id = (ulong)cmd.LastId;

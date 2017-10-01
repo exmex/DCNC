@@ -100,7 +100,7 @@ namespace LobbyServer.Network.Handlers
 #if DEBUG
             packet.Sender.SendError("This character doesn't belong to you!");
 #else
-            packet.Sender.KillConnection("Suspected hack.");
+            packet.Sender.KillConnection("Tried to delete a character he doesn't own");
 #endif
         }
     }

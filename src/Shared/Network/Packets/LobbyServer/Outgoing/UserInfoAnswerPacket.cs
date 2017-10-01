@@ -71,11 +71,20 @@ namespace Shared.Network.LobbyServer
                         bs.Write(character.ActiveCar.BaseColor);
                         bs.Write(character.CreationDate);
                         bs.Write(character.TeamId);
-                        bs.Write(character.TeamMarkId);
-                        bs.WriteUnicodeStatic(character.TeamName, 13);
-                        bs.Write((short)0); // Crew rank 
-                        bs.Write((short)0); // GuildType? (unsigned int nGuild;)
-                        // Guild (0 = OMD, 1 = ROO)
+                        if (character.Team != null)
+                        {
+                            bs.Write(character.Team.MarkId);
+                            bs.WriteUnicodeStatic(character.Team.Name, 13);
+                            bs.Write((short)character.TeamRank);
+                        }
+                        else
+                        {
+                            bs.Write(0L);
+                            bs.WriteUnicodeStatic("", 13);
+                            bs.Write((short)0); // Crew rank 
+                        }
+                        bs.Write((short)character.Guild); // GuildType? (unsigned int nGuild;)
+                        
                     }
                 }
                 return ms.ToArray();

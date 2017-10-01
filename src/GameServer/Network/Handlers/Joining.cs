@@ -328,7 +328,7 @@ namespace GameServer.Network.Handlers
                 var playerInfo = new XiPlayerInfo()
                 {
                     CharacterName = character.Name,
-                    Serial = (ushort)client.User.VehicleSerial, // TODO: Verify if the serial is the same as carid
+                    Serial = (ushort)client.User.VehicleSerial,
                     Age = 0
                 };
                 var res = new Packet(Packets.PlayerInfoOldAck);

@@ -72,6 +72,12 @@ namespace SharedTests
             };
 
             CharacterModel.CreateCharacter(DbConnection.Connection, ref character);
+            character.ActiveVehicleId = (uint)VehicleModel.Create(DbConnection.Connection, new Vehicle()
+            {
+                CarType = 1,
+                Color = 0,
+            }, character.Id);
+            CharacterModel.Update(DbConnection.Connection, character);
 
             character = null;
             character = CharacterModel.Retrieve(DbConnection.Connection, "GigaToni");

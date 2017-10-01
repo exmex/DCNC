@@ -30,6 +30,9 @@ namespace Shared.Objects
       XiStrCharName LeaderName;
     };
     */
+    /// <summary>
+    /// TODO: Rename to Crew 
+    /// </summary>
     public class Team : BinaryWriterExt.ISerializable
     {
         /// <summary>
@@ -40,25 +43,25 @@ namespace Shared.Objects
         /// <summary>
         /// The Image Id of the team 
         /// </summary>
-        public long TeamMarkId;
+        public long MarkId;
         
         /// <summary>
         /// The name of the team
         /// Unicode 13 (0xD) Chars
         /// </summary>
-        public string TeamName;
+        public string Name;
         
         /// <summary>
         /// The description of the team
         /// Unicode 61 (0x3D) Chars
         /// </summary>
-        public string TeamDesc;
+        public string Description;
         
         /// <summary>
         /// The URL of the Team
         /// ASCII 33 (0x21) Chars
         /// </summary>
-        public string TeamUrl; // char 33
+        public string Url; // char 33
         
         /// <summary>
         /// The Unix Timestamp the team was created
@@ -94,17 +97,17 @@ namespace Shared.Objects
         /// Char 1 =
         /// 
         /// </summary>
-        public string TeamState; // char 2
+        public string State; // char 2
         
         /// <summary>
         /// 
         /// </summary>
-        public uint TeamRanking;
+        public uint Ranking;
         
         /// <summary>
         /// 
         /// </summary>
-        public uint TeamPoint;
+        public uint Point;
         
         /// <summary>
         /// 
@@ -119,12 +122,12 @@ namespace Shared.Objects
         /// <summary>
         /// Possibly the total EXP of all team members combined
         /// </summary>
-        public long TeamTotalExp;
+        public long TotalExp;
         
         /// <summary>
         /// Possibly the total Mito of all team members combined
         /// </summary>
-        public long TeamTotalMoney;
+        public long TotalMoney;
         
         /// <summary>
         /// 
@@ -157,7 +160,7 @@ namespace Shared.Objects
         public Team()
         {
             TeamId = -1L;
-            TeamMarkId = -1L;
+            MarkId = -1L;
             OwnerId = -1L;
             LeaderId = -1L;
         }
@@ -171,21 +174,21 @@ namespace Shared.Objects
         public void Serialize(BinaryWriterExt writer)
         {
             writer.Write(TeamId);
-            writer.Write(TeamMarkId);
-            writer.WriteUnicodeStatic(TeamName, 13);
-            writer.WriteUnicodeStatic(TeamDesc, 61);
-            writer.WriteAsciiStatic(TeamUrl, 33);
+            writer.Write(MarkId);
+            writer.WriteUnicodeStatic(Name, 13);
+            writer.WriteUnicodeStatic(Description, 61);
+            writer.WriteAsciiStatic(Url, 33);
             writer.Write(CreateDate);
             writer.Write(CloseDate);
             writer.Write(BanishDate);
             writer.WriteAsciiStatic(OwnChannel, 24);
-            writer.WriteAsciiStatic(TeamState, 2);
-            writer.Write(TeamRanking);
-            writer.Write(TeamPoint);
+            writer.WriteAsciiStatic(State, 2);
+            writer.Write(Ranking);
+            writer.Write(Point);
             writer.Write(ChannelWinCnt);
             writer.Write(MemberCnt);
-            writer.Write(TeamTotalExp);
-            writer.Write(TeamTotalMoney);
+            writer.Write(TotalExp);
+            writer.Write(TotalMoney);
             writer.Write(Version);
             writer.Write(OwnerId);
             writer.Write(LeaderId);

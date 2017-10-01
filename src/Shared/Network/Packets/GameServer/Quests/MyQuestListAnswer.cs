@@ -9,7 +9,7 @@ namespace Shared.Network.GameServer
     /// </summary>
     public class MyQuestListAnswer : OutPacket
     {
-        public Quest[] Quests;
+        public Quest[] Quests = new Quest[0];
         
         public override Packet CreatePacket()
         {
