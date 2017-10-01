@@ -96,9 +96,7 @@ namespace Shared.Models
             
             using (DbDataReader reader = command.ExecuteReader())
             {
-                if (!reader.Read()) return null;
-                
-                return GetUser(reader);
+                return !reader.Read() ? null : GetUser(reader);
             }
         }
 

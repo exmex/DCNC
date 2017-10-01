@@ -3,10 +3,10 @@ using Shared.Network.AreaServer;
 
 namespace AreaServer.Network.Handlers
 {
-    public static class Traffic
+    public class UdpCastTcsSignal
     {
         [Packet(Packets.CmdUdpCastTcsSignal)]
-        public static void UdpCastTcsSignal(Packet packet)
+        public static void Handle(Packet packet)
         {
             var udpCastTcsSignalPacket = new UdpCastTcsSignalPacket(packet);
 
@@ -17,25 +17,8 @@ namespace AreaServer.Network.Handlers
                 State = udpCastTcsSignalPacket.State
             }.CreatePacket());
         }
-
-        [Packet(Packets.CmdUdpCastTcs)]
-        public static void UdpCastTcs(Packet packet)
-        {
-            // Traffic?
-        }
-
-        [Packet(Packets.CmdRegisterAgent)]
-        public static void RegisterAgent(Packet packet)
-        {
-        }
-
-        [Packet(Packets.CmdUdpCastTraffic)]
-        public static void CastTraffic(Packet packet)
-        {
-        }
     }
 }
-
 /*
   unsigned __int16 m_TrafficCarId;
   unsigned __int16 m_Owner;

@@ -3,13 +3,13 @@ using Shared.Util;
 
 namespace AreaServer.Network.Handlers
 {
-    public static class Chat
+    public static class AreaChat
     {
         /// <summary>
         /// </summary>
         /// <param name="packet"></param>
         [Packet(Packets.CmdAreaChat)]
-        public static void AreaChat(Packet packet)
+        public static void Handle(Packet packet)
         {
             if (packet.Sender.User == null)
             {

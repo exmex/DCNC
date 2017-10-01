@@ -6,26 +6,10 @@ using Shared.Util;
 
 namespace LobbyServer.Network.Handlers
 {
-    public class Characters
+    public static class CreateCharacter
     {
-        [Packet(Packets.CmdCheckCharName)]
-        public static void CheckCharacterName(Packet packet)
-        {
-            var checkCharacterNamePacket = new CheckCharacterNamePacket(packet);
-
-            var nameTaken = CharacterModel.CheckNameExists(LobbyServer.Instance.Database.Connection,
-                checkCharacterNamePacket.CharacterName);
-
-            var checkCharacterNameAnswerPacket = new CheckCharacterNameAnswerPacket
-            {
-                CharacterName = checkCharacterNamePacket.CharacterName,
-                Availability = !nameTaken,
-            };
-            packet.Sender.Send(checkCharacterNameAnswerPacket.CreatePacket());
-        }
-
         [Packet(Packets.CmdCreateChar)]
-        public static void CreateChar(Packet packet)
+        public static void Handle(Packet packet)
         {
             var createCharPacket = new CreateCharPacket(packet);
 
@@ -73,35 +57,6 @@ namespace LobbyServer.Network.Handlers
                 CharacterId = character.Id,
                 ActiveVehicleId = (int)character.ActiveVehicleId,
             }.CreatePacket());
-        }
-
-        [Packet(Packets.CmdDeleteChar)]
-        public static void DeleteCharacter(Packet packet)
-        {
-            var deleteCharacterPacket = new DeleteCharacterPacket(packet);
-
-            // Check if the user owns the character, if not don't do anything.
-            var cid = CharacterModel.HasCharacter(LobbyServer.Instance.Database.Connection,
-                deleteCharacterPacket.CharacterName,
-                packet.Sender.User.Id);
-            if (cid != 0)
-            {
-                CharacterModel.DeleteCharacter(LobbyServer.Instance.Database.Connection,
-                    cid, packet.Sender.User.Id);
-
-                packet.Sender.Send(new DeleteCharacterAnswerPacket
-                {
-                    CharacterName = deleteCharacterPacket.CharacterName
-                }.CreatePacket());
-
-                return;
-            }
-
-#if DEBUG
-            packet.Sender.SendError("This character doesn't belong to you!");
-#else
-            packet.Sender.KillConnection("Tried to delete a character he doesn't own");
-#endif
         }
     }
 }

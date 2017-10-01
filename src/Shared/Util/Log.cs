@@ -100,7 +100,9 @@ namespace Shared.Util
 
         public static void Debug(string format, params object[] args)
         {
+#if DEBUG
             WriteLine(LogLevel.Debug, format, args);
+#endif
         }
 
         public static void Debug(object obj)

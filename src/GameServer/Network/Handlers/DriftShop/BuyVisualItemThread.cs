@@ -7,24 +7,12 @@ using Shared.Util;
 
 namespace GameServer.Network.Handlers
 {
-    public class DriftShop
+    public class BuyVisualItemThread
     {
-/*
-[Info] - Received unhandled packet UpgradeCar (CmdUpgradeCarThread id 91, 0x5B) on 11021.
-[Debug] - HexDump  UpgradeCar (CmdUpgradeCarThread id 91, 0x5B):
-000000: 15 00 00 00 10 27 00 00 00 00 00 00 00 00 00 00  · · · · · ' · · · · · · · · · ·
-000016: 00  ·
-*/
-        [Packet(Packets.CmdUpgradeCarThread)]
-        public static void UpgradeCarThread(Packet packet)
-        {
-            // TODO: Implement Uprgade Car.
-        }
-
         //bool __cdecl PacketSend::Send_BuyVisualItem(BS_PacketDispatch *lpDispatch, XiCsItem *pItem, int Period, int Mito, int Hancoin, int BonusMito, int Mileage) <-- Type 1
         //bool __cdecl PacketSend::Send_BuyVisualItem(BS_PacketDispatch *lpDispatch, XiCsVSItem *pItem, int Period, int Mito, int Hancoin, int BonusMito, int Mileage) <-- Type 0
         [Packet(Packets.CmdBuyVisualItemThread)]
-        public static void BuyVisualItemThread(Packet packet)
+        public static void Handle(Packet packet)
         {
             var buyVisualItemPacket = new BuyVisualItemThreadPacket(packet);
 

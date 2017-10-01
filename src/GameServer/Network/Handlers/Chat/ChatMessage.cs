@@ -5,21 +5,10 @@ using Shared.Util;
 
 namespace GameServer.Network.Handlers
 {
-    public class Messages
+    public class ChatMessage
     {
-        //PrivateChatMsg
-        [Packet(Packets.CmdPrivateChatMsg)]
-        public static void PrivateChatMsg(Packet packet)
-        {
-            // TODO: It's somehow missing the user?!
-            var message = packet.Reader.ReadUnicodePrefixed();
-            packet.Sender.SendError("User not found.");
-            
-            //GameServer.Instance.Server.GetClient();
-        }
-        
         [Packet(Packets.CmdChatMsg)]
-        public static void ChatMessage(Packet packet)
+        public static void Handle(Packet packet)
         {
             var chatMsgPacket = new ChatMessagePacket(packet);
 
