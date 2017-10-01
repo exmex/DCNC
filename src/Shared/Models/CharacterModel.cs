@@ -211,8 +211,6 @@ namespace Shared.Models
 
                 cmd.Execute();
                 character.Id = (ulong)cmd.LastId;
-                
-                character = Retrieve(dbconn, character.Id); // TODO: Wow.. This should be against the law.
             }
         }
 
