@@ -21,6 +21,13 @@ namespace GameServer.Network.Handlers.Join
             var clients = (List<Client>)GameServer.Instance.Server.GetClients(pinfoReq.VehicleSerials);
                 
             var ack = new PlayerInfoOldAnswer();
+            if (clients == null || clients.Count == 0)
+            {
+                Log.Error("PlayerInfoReq: No client was found.");
+                
+                packet.Sender.Send(ack.CreatePacket());
+                return;
+            }
             var firstClient = clients[0];
 
             if (firstClient.User.ActiveCharacter == null) // Make sure we have loaded a char for first client
