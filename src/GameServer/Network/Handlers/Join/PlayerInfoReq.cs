@@ -23,7 +23,7 @@ namespace GameServer.Network.Handlers.Join
             var ack = new PlayerInfoOldAnswer();
             if (clients == null || clients.Count == 0)
             {
-                Log.Error("PlayerInfoReq: No client was found.");
+                Log.Error($"PlayerInfoReq: Requested serial {pinfoReq.VehicleSerials[0]} no client was found.");
                 
                 packet.Sender.Send(ack.CreatePacket());
                 return;

@@ -11,7 +11,7 @@ namespace GameServer.Network.Handlers.Join
         {
             var serial = GameServer.Instance.Server.LastSerial++;
             DefaultServer.ActiveSerials.Add(serial, packet.Sender.User);
-            packet.Sender.User.ActiveCharacter.VehicleSerial = serial;
+            packet.Sender.User.VehicleSerial = serial;
             if (!AccountModel.UpdateVehicleSerial(GameServer.Instance.Database.Connection, packet.Sender.User.Id, serial))
             {
                 packet.Sender.KillConnection("Failed to update serial.");

@@ -32,6 +32,7 @@ namespace GameServer.Network.Handlers
                 packet.Sender.SendError("Character not found");
                 return;
             }
+            var user = AccountModel.Retrieve(GameServer.Instance.Database.Connection, character.Uid);
             
             var ack = new GameCharInfoAnswer
             {
@@ -39,7 +40,7 @@ namespace GameServer.Network.Handlers
                 Vehicle = character.ActiveCar,
                 StatisticInfo = new XiStrStatInfo(),
                 Team = character.Team,
-                Serial = character.VehicleSerial,
+                Serial = user.VehicleSerial,
                 //LocType = 'A',
                 ChId = (char)character.LastChannel, //'A',
                 //LocId = 1

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
+using Shared.Network.GameServer;
 using Shared.Objects;
 using Shared.Util;
 
@@ -242,23 +243,47 @@ namespace Shared.Network
             }
         }
 
+        /// <summary>
+        /// Gets a client from it's char name
+        /// </summary>
+        /// <param name="characterName">The character name to fetch</param>
+        /// <returns>A client or null</returns>
         public Client GetClient(string characterName)
         {
             return _clients.FirstOrDefault(client => client?.User?.ActiveCharacter?.Name == characterName);
         }
 
+        /// <summary>
+        /// Gets a client from it's vehicle serial
+        /// </summary>
+        /// <param name="vehicleSerial">The vehicle serial to fetch</param>
+        /// <returns>A client or null</returns>
         public Client GetClient(ushort vehicleSerial)
         {
             return _clients.FirstOrDefault(client => client?.User?.VehicleSerial == vehicleSerial);
         }
 
+        /// <summary>
+        /// Gets multiple clients based on it's vehicle serials
+        /// </summary>
+        /// <param name="vehicleSerial">An array of vehicle serials to fetch</param>
+        /// <returns>A collection of clients or possbly null?</returns>
         public IEnumerable<Client> GetClients(ushort[] vehicleSerial)
         {
             return _clients.FindAll(client => client.User != null && vehicleSerial.Contains(client.User.VehicleSerial));
         }
 
+        /// <summary>
+        /// Gets all clients connected to the server
+        /// </summary>
+        /// <returns>A collection of all clients connected to the server</returns>
         public IEnumerable<Client> GetClients() => _clients.ToArray();
 
+        /// <summary>
+        /// Broadcasts a packet to all clients on the server, excluding exclude if specified
+        /// </summary>
+        /// <param name="packet">The packet to broadcast</param>
+        /// <param name="exclude">The client to exclude</param>
         public void Broadcast(Packet packet, Client exclude = null)
         {
             foreach (var client in GetClients())
@@ -266,6 +291,11 @@ namespace Shared.Network
                     client.Send(packet);
         }
         
+        /// <summary>
+        /// Broadcasts a packet to all clients on the server, excluding exclude if specified
+        /// </summary>
+        /// <param name="packet">The packet to broadcast</param>
+        /// <param name="exclude">An array of clients that should be exluded</param>
         public void Broadcast(Packet packet, Client[] exclude)
         {
             foreach (var client in GetClients())
@@ -273,11 +303,57 @@ namespace Shared.Network
                     client.Send(packet);
         }
 
-        public void BroadcastTeam(Team team, Packet packet)
+        /// <summary>
+        /// Broadcasts a packet to all clients in the specified team/crew
+        /// </summary>
+        /// <param name="team">The team/crew to broadcast to</param>
+        /// <param name="packet">The packet to broadcast</param>
+        public void Broadcast(Team team, Packet packet)
         {
             foreach (var client in GetClients())
             {
                 if(client.User?.ActiveCharacter?.TeamId == team.TeamId)
+                    client.Send(packet);
+            }
+        }
+        
+        /*
+        /// <summary>
+        /// Broadcasts a packet to all clients in the specified party
+        /// </summary>
+        /// <param name="party"></param>
+        /// <param name="packet"></param>
+        public void Broadcast(Party party, Packet packet)
+        {
+            
+        }
+        */
+
+        /// <summary>
+        /// Broadcasts a packet to all clients in the same area as areaId
+        /// TODO: Currently broadcasts everywhere.
+        /// </summary>
+        /// <param name="areaId"></param>
+        /// <param name="packet"></param>
+        public void BroadcastArea(int areaId, Packet packet)
+        {
+            foreach (var client in GetClients())
+            {
+                client.Send(packet);
+            }
+        }
+        
+        /// <summary>
+        /// Broadcasts a packet to all clients in the same channel as channelId
+        /// TODO: Currently broadcasts everywhere.
+        /// </summary>
+        /// <param name="channelId"></param>
+        /// <param name="packet"></param>
+        public void BroadcastChannel(int channelId, Packet packet)
+        {
+            foreach (var client in GetClients())
+            {
+                if(client.User?.ActiveCharacter?.LastChannel == channelId)
                     client.Send(packet);
             }
         }

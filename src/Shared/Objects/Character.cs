@@ -258,8 +258,6 @@ namespace Shared.Objects
         /// </summary>
         private List<ItemMod> ItemModificationBuffer;
 
-        public ushort VehicleSerial;
-
         public Character()
         {
             ItemModificationBuffer = new List<ItemMod>();

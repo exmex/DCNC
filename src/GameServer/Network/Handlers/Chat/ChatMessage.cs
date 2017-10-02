@@ -36,11 +36,12 @@ namespace GameServer.Network.Handlers
             switch (chatMsgPacket.MessageType)
             {
                 case "room":
-                    GameServer.Instance.Server.Broadcast(ackPkt); // TODO: broadcast only to users in same area
+                    GameServer.Instance.Server.BroadcastArea(0, ackPkt);
                     break;
 
                 case "channel":
-                    GameServer.Instance.Server.Broadcast(ackPkt);
+                    if(packet.Sender?.User?.ActiveCharacter != null)
+                        GameServer.Instance.Server.BroadcastChannel(packet.Sender.User.ActiveCharacter.LastChannel, ackPkt);
                     break;
 
                 case "party":
@@ -53,7 +54,7 @@ namespace GameServer.Network.Handlers
                 case "team":
                     if (packet.Sender.User.ActiveCharacter.Team != null)
                     {
-                        GameServer.Instance.Server.BroadcastTeam(packet.Sender.User.ActiveCharacter.Team, ackPkt); // TODO: broadcast only to users in same crew
+                        GameServer.Instance.Server.Broadcast(packet.Sender.User.ActiveCharacter.Team, ackPkt); // TODO: broadcast only to users in same crew
                     }
                     else
                         packet.Sender.SendError("Not a member of the crew.");
