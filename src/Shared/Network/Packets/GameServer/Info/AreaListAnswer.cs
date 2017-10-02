@@ -34,7 +34,7 @@ namespace Shared.Network.GameServer
             return base.CreatePacket(Packets.AreaListAck);
         }
         
-        public override int ExpectedSize() => (137 * Areas.Length-1) + 143;
+        public override int ExpectedSize() => (137 * Areas.Length) + 143;
 
         public override byte[] GetBytes()
         {
@@ -42,7 +42,7 @@ namespace Shared.Network.GameServer
             {
                 using (var bs = new BinaryWriterExt(ms))
                 {
-                    bs.Write(Areas.Length-1);
+                    bs.Write(Areas.Length);
                     foreach (var area in Areas)
                     {
                         bs.Write(area.AreaId);

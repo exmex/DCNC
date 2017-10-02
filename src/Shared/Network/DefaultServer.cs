@@ -244,7 +244,17 @@ namespace Shared.Network
 
         public Client GetClient(string characterName)
         {
-            return _clients.Find(client => client?.User?.ActiveCharacter?.Name == characterName);
+            return _clients.FirstOrDefault(client => client?.User?.ActiveCharacter?.Name == characterName);
+        }
+
+        public Client GetClient(ushort vehicleSerial)
+        {
+            return _clients.FirstOrDefault(client => client?.User?.VehicleSerial == vehicleSerial);
+        }
+
+        public IEnumerable<Client> GetClients(ushort[] vehicleSerial)
+        {
+            return _clients.FindAll(client => client.User != null && vehicleSerial.Contains(client.User.VehicleSerial));
         }
 
         public IEnumerable<Client> GetClients() => _clients.ToArray();

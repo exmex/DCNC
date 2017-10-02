@@ -16,7 +16,7 @@ namespace Shared.Network.GameServer
             return base.CreatePacket(Packets.MyQuestListAck);
         }
         
-        public override int ExpectedSize() => (14 * Quests.Length-1)+20;
+        public override int ExpectedSize() => (14 * Quests.Length)+20;
 
         public override byte[] GetBytes()
         {

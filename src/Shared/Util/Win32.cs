@@ -5,6 +5,9 @@ namespace Shared.Util
 {
     public static class Win32
     {
+        [DllImport("kernel32.dll")]
+        static extern uint GetTickCount();
+        
         private const int SWP_NOZORDER = 0x4;
         private const int SWP_NOACTIVATE = 0x10;
 

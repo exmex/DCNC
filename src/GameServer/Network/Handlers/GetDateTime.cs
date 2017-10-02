@@ -14,8 +14,10 @@ namespace GameServer.Network.Handlers
         [Packet(Packets.CmdGetDateTime)]
         public static void Handle(Packet packet)
         {
-            var unixTimeNow = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1, 0, 0, 0));
-            var now = DateTime.UtcNow.ToLocalTime();
+            /*var unixTimeNow = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1, 0, 0, 0));
+            var now = DateTime.UtcNow.ToLocalTime();*/
+            var now = DateTimeOffset.Now;
+            var unixTimeNow = now.ToUnixTimeSeconds();
 
             var getDateTimePacket = new GetDateTimePacket(packet);
 
@@ -24,7 +26,7 @@ namespace GameServer.Network.Handlers
                 Action = getDateTimePacket.Action,
                 GlobalTime = getDateTimePacket.GlobalTime,
                 LocalTime = getDateTimePacket.LocalTime,
-                TotalSeconds = (int) unixTimeNow.TotalSeconds,
+                TotalSeconds = (int) now.ToUnixTimeSeconds(),
                 ServerTickTime = 0,
                 ServerTick = 0,
                 DayOfYear = (short) now.DayOfYear,
@@ -52,6 +54,7 @@ namespace GameServer.Network.Handlers
               *(_BYTE *)(msg + 34) = ptm->tm_hour;
               *(_BYTE *)(msg + 35) = ptm->tm_min;
               *(_BYTE *)(msg + 36) = ptm->tm_sec;
+              *(_BYTE *)(msg + 37) = 0;
              */
         }
     }

@@ -28,6 +28,17 @@ namespace Shared.Network
             Id = id;
             Reader = new BinaryReaderExt(new MemoryStream(Buffer));
         }
+        
+        
+        public void SendBack(Packet packet)
+        {
+            Sender.Send(packet);
+        }
+
+        public void SendBackError(string format, params object[] args)
+        {
+            Sender.SendError(format, args);
+        }
     }
 
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = true)]

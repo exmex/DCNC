@@ -103,6 +103,8 @@
     <Compile Include="Network\Packets\GameServer\Info\ItemModListAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Info\MyTeamInfoAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Info\MyTeamInfoPacket.cs" />
+    <Compile Include="Network\Packets\GameServer\Info\PlayerInfoOldAnswer.cs" />
+    <Compile Include="Network\Packets\GameServer\Info\PlayerInfoReqPacket.cs" />
     <Compile Include="Network\Packets\GameServer\Info\StatUpdateAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Info\VisualItemListAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Info\VisualUpdateAnswer.cs" />
