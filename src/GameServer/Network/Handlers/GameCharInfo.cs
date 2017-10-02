@@ -2,6 +2,7 @@
 using Shared.Network;
 using Shared.Network.GameServer;
 using Shared.Objects;
+using Shared.Util;
 
 namespace GameServer.Network.Handlers
 {
@@ -24,11 +25,13 @@ namespace GameServer.Network.Handlers
 
             // TODO: Combine this into 1 MySQL Query.
             var character = CharacterModel.Retrieve(GameServer.Instance.Database.Connection,
-                //"GigaToni2");
                 gameCharInfoPacket.CharacterName);
-            /*character.ActiveCar =
-                VehicleModel.Retrieve(GameServer.Instance.Database.Connection, (uint) character.CurrentCarId);*/
-            //var activeTeam = TeamModel.Retrieve(GameServer.Instance.Database.Connection, character.TeamId);
+            if (character == null)
+            {
+                Log.Error($"Character {gameCharInfoPacket.CharacterName} was not found in DB!");
+                packet.Sender.SendError("Character not found");
+                return;
+            }
             
             var ack = new GameCharInfoAnswer
             {
