@@ -14,10 +14,41 @@ namespace GameServer.Network.Handlers.Join
         {
             /* 
             amPerl: No known scenarios where the requested info count is > 1
-            We'll see about that. For now just sending multiple if we have multiple.
             */
             
             var pinfoReq = new PlayerInfoReqPacket(packet);
+            if (pinfoReq.VehicleSerials.Length != 1)
+            {
+                Log.Error($"Sent PlayerInfoReq with {pinfoReq.VehicleSerials.Length} serials!");
+                return;
+            }
+            
+            var client =  GameServer.Instance.Server.GetClient(pinfoReq.VehicleSerials[0]);
+            if (client?.User?.ActiveCharacter == null) // Make sure we have loaded a char
+            {
+                Log.Error("firstClient.User.ActiveCharacter == null");
+                
+#if !DEBUG
+                packet.Sender.KillConnection("Character for CmdPlayerInfoReq not found");
+#else
+                packet.Sender.SendError("Character not loaded!");
+                packet.Sender.Send(new PlayerInfoOldAnswer().CreatePacket());
+#endif
+                return;
+            }
+            
+            var ack = new PlayerInfoOldAnswer
+            {
+                PlayerInfo = new XiPlayerInfo()
+                {
+                    CharacterName = client.User.ActiveCharacter.Name,
+                    Serial = (ushort) client.User.VehicleSerial,
+                    Age = 0
+                }
+            };
+            packet.Sender.Send(ack.CreatePacket());
+
+            /*
             var clients = (List<Client>)GameServer.Instance.Server.GetClients(pinfoReq.VehicleSerials);
                 
             var ack = new PlayerInfoOldAnswer();
@@ -25,16 +56,26 @@ namespace GameServer.Network.Handlers.Join
             {
                 Log.Error($"PlayerInfoReq: Requested serial {pinfoReq.VehicleSerials[0]} no client was found.");
                 
+#if !DEBUG
+                packet.Sender.KillConnection("Character for CmdGameCharInfo not found");
+#else
+                packet.Sender.SendError("Vehicle for serial not found");
                 packet.Sender.Send(ack.CreatePacket());
+#endif
                 return;
             }
             var firstClient = clients[0];
 
             if (firstClient.User.ActiveCharacter == null) // Make sure we have loaded a char for first client
             {
-                Log.Error("Clients character info was invalid.");
+                Log.Error("firstClient.User.ActiveCharacter == null");
                 
+#if !DEBUG
+                packet.Sender.KillConnection("Character for CmdPlayerInfoReq not found");
+#else
+                packet.Sender.SendError("Character not loaded!");
                 packet.Sender.Send(ack.CreatePacket());
+#endif
                 return;
             }
             
@@ -44,6 +85,7 @@ namespace GameServer.Network.Handlers.Join
                 Serial = (ushort)firstClient.User.VehicleSerial,
                 Age = 0
             };
+            
             clients.RemoveAt(0); // Make sure we don't have a first player info anymore
             ack.PlayerInfos = new XiPlayerInfo[clients.Count];
             for (var i = 0; i < clients.Count; i++)
@@ -52,8 +94,12 @@ namespace GameServer.Network.Handlers.Join
 
                 if (client.User.ActiveCharacter == null) // Make sure we have loaded a char
                 {
-                    Log.Error("Clients character info was invalid.");
-                
+                    Log.Error("client.User.ActiveCharacter == null");
+#if !DEBUG
+                    packet.Sender.KillConnection("Character for CmdPlayerInfoReq not found");
+                    return;
+#else
+                    packet.Sender.SendError("Character not loaded!");
                     ack.PlayerInfos[i] = ack.PlayerInfo = new XiPlayerInfo()
                     {
                         CharacterName = "InvalidChar",
@@ -61,6 +107,7 @@ namespace GameServer.Network.Handlers.Join
                         Age = 0
                     };
                     continue;
+#endif
                 }
                 
                 ack.PlayerInfos[i] = ack.PlayerInfo = new XiPlayerInfo()
@@ -69,8 +116,8 @@ namespace GameServer.Network.Handlers.Join
                     Serial = (ushort)client.User.VehicleSerial,
                     Age = 0
                 };          
-            }
-            
+            }*/
+
             /* Send only one:
             var serial = packet.Reader.ReadUInt16(); // amPerl: No known scenarios where the requested info count is > 1
             
@@ -105,7 +152,7 @@ namespace GameServer.Network.Handlers.Join
             
             packet.Sender.Send(ack.CreatePacket());
             */
-            
+
             // Old leaked Server sends also BS_PktStickerInfoRes
         }
         

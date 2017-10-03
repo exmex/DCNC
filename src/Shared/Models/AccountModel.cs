@@ -28,6 +28,7 @@ namespace Shared.Models
             user.CreateIp = reader["CreateIP"] as string;
             user.ActiveCharacterId = Convert.ToUInt64(reader["LastActiveChar"]);
             user.BanValidUntil = Convert.ToInt64(reader["BanValidUntil"]);
+            user.VehicleSerial = Convert.ToUInt16(reader["VehicleSerial"]);
             return user;
         }
 
@@ -168,10 +169,18 @@ namespace Shared.Models
         
         public static bool UpdateVehicleSerial(MySqlConnection dbconn, ulong userId, ushort serial)
         {
+            using (var mc = new MySqlCommand(
+                "UPDATE `Users` SET `VehicleSerial` = 0 WHERE `VehicleSerial` = @vehicleSerial",
+                dbconn))
+            {
+                mc.Parameters.AddWithValue("@vehicleSerial", serial);
+
+                mc.ExecuteNonQuery();
+            }
+            
             using (var mc = new MySqlCommand("UPDATE `Users` SET `VehicleSerial` = @vehicleSerial WHERE `UID` = @userId",
                 dbconn))
             {
-                var ticketKey = RandomProvider.Get().NextUInt32();
 
                 mc.Parameters.AddWithValue("@userId", userId);
                 mc.Parameters.AddWithValue("@vehicleSerial", serial);

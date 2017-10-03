@@ -1,6 +1,7 @@
 ﻿using Shared.Models;
 using Shared.Network;
 using Shared.Network.AreaServer;
+using Shared.Util;
 
 namespace AreaServer.Network.Handlers
 {
@@ -11,7 +12,7 @@ namespace AreaServer.Network.Handlers
         {
             var enterAreaPacket = new EnterAreaPacket(packet);
             
-            if (packet.Sender.User == null)
+            if (packet.Sender.User == null || packet.Sender.User.VehicleSerial != enterAreaPacket.VehicleSerial)
             {
                 var character = CharacterModel.Retrieve(AreaServer.Instance.Database.Connection, enterAreaPacket.CharacterName);
                 if (character == null)
@@ -29,8 +30,17 @@ namespace AreaServer.Network.Handlers
                 
                 packet.Sender.User = account;
                 packet.Sender.User.ActiveCharacter = character;
-                
-                DefaultServer.ActiveSerials.Add(enterAreaPacket.VehicleSerial, packet.Sender.User);
+
+                if (DefaultServer.ActiveSerials.ContainsKey(enterAreaPacket.VehicleSerial))
+                {
+                    if (packet.Sender.User.VehicleSerial != enterAreaPacket.VehicleSerial)
+                    {
+                        packet.Sender.KillConnection($"[{packet.Sender.User.VehicleSerial} vs {enterAreaPacket.VehicleSerial}] Still wrong user.");
+                        return;
+                    }
+
+                }else
+                    DefaultServer.ActiveSerials.Add(enterAreaPacket.VehicleSerial, packet.Sender.User);
             }
 
             packet.Sender.Send(new EnterAreaAnswer

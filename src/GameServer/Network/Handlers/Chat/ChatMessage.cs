@@ -57,7 +57,7 @@ namespace GameServer.Network.Handlers
                         GameServer.Instance.Server.Broadcast(packet.Sender.User.ActiveCharacter.Team, ackPkt); // TODO: broadcast only to users in same crew
                     }
                     else
-                        packet.Sender.SendError("Not a member of the crew.");
+                        packet.Sender.SendError("Not a member of a crew.");
                     break;
 
                 default:
