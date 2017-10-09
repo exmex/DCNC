@@ -55,8 +55,11 @@ namespace GameServer
             Win32.GetWindowPosition(out x, out y, out width, out height);
             Win32.SetWindowPosition(width + 5, 0, width, height);
 
-            ConsoleUtil.WriteHeader("Game Server", ConsoleColor.DarkGreen);
+            ConsoleUtil.WriteHeader($"Game Server ({Shared.Util.Version.GetVersion()})", ConsoleColor.DarkGreen);
             ConsoleUtil.LoadingTitle();
+
+            Log.Info("Server startup requested");
+            Log.Info($"Server Version {Shared.Util.Version.GetVersion()}");
 
             NavigateToRoot();
 

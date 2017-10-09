@@ -47,8 +47,11 @@ namespace LobbyServer
             Win32.GetWindowPosition(out x, out y, out width, out height);
             Win32.SetWindowPosition(0, height + 5, width, height);
 
-            ConsoleUtil.WriteHeader("Lobby Server", ConsoleColor.DarkGreen);
+            ConsoleUtil.WriteHeader($"Lobby Server ({Shared.Util.Version.GetVersion()})", ConsoleColor.DarkGreen);
             ConsoleUtil.LoadingTitle();
+
+            Log.Info("Server startup requested");
+            Log.Info($"Server Version {Shared.Util.Version.GetVersion()}");
 
             NavigateToRoot();
 

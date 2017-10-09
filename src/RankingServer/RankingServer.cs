@@ -47,8 +47,11 @@ namespace RankingServer
             Win32.GetWindowPosition(out x, out y, out width, out height);
             Win32.SetWindowPosition(0, 0, width, height);
 
-            ConsoleUtil.WriteHeader("Ranking Server", ConsoleColor.DarkGreen);
+            ConsoleUtil.WriteHeader($"Ranking Server ({Shared.Util.Version.GetVersion()})", ConsoleColor.DarkGreen);
             ConsoleUtil.LoadingTitle();
+
+            Log.Info("Server startup requested");
+            Log.Info($"Server Version {Shared.Util.Version.GetVersion()}");
 
             NavigateToRoot();
 

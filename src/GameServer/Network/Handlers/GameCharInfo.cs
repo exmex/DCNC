@@ -29,7 +29,10 @@ namespace GameServer.Network.Handlers
             if (character == null)
             {
                 Log.Error($"Character {gameCharInfoPacket.CharacterName} was not found in DB!");
-                packet.Sender.SendError("Character not found");
+                packet.Sender.SendDebugError("Character not found");
+#if !DEBUG
+                packet.Sender.KillConnection("Character for CmdGameCharInfo not found");
+#endif
                 return;
             }
             var user = AccountModel.Retrieve(GameServer.Instance.Database.Connection, character.Uid);
