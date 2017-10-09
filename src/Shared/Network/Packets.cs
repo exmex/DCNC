@@ -60,6 +60,7 @@ namespace Shared.Network
         public const ushort GameCharInfoAck = 661;
 
         public const ushort AreaStatusAck = 683;
+        public const ushort UdpCastTcsAck = 701;
         public const ushort UdpCastTcsSignalAck = 706;
         public const ushort FuelChargeRes = 724;
         public const ushort StatUpdateAck = 760;

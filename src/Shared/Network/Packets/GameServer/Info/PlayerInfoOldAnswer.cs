@@ -22,7 +22,7 @@ namespace Shared.Network.GameServer
             {
                 using (var bs = new BinaryWriterExt(ms))
                 {
-                    bs.Write(PlayerInfos.Length);
+                    bs.Write(PlayerInfos.Length+1);
                     bs.Write(PlayerInfo);
                     foreach (var playerInfo in PlayerInfos)
                     {

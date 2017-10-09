@@ -1,0 +1,35 @@
+//--------------------------------------
+//--- 010 Editor v6.0.2 Binary Template
+//
+// File:
+// Author:
+// Revision:
+// Purpose:
+//--------------------------------------
+typedef struct MoveVehiclePkt
+{
+    ushort Serial;
+    ushort Age;
+    ushort Sort;
+    ushort Body;
+    ushort Color1;
+    ushort Color2;
+    ushort Color3;
+    ushort Color4;
+    ushort lvalSortBody;
+    ushort lvalSortColor;
+    //long llval;
+    int GlobalTime;
+    float PosX;
+    float PosY;
+    float PosZ;
+    float PosW;
+    float VeloX;
+    float VeloY;
+    float VeloZ;
+    float VeloW;
+    ushort Progress;
+    char data[44];
+};
+
+MoveVehiclePkt pkt;
