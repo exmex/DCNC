@@ -42,9 +42,7 @@ namespace Shared.Util
         {
             get
             {
-#if __MonoCS__ // "In" is CStreamReader when running normally
-// (TextReader on Windows) and SynchronizedReader
-// when running in background.
+#if __MonoCS__
                 return (Console.In is System.IO.StreamReader);
 #else
                 return Environment.UserInteractive;
