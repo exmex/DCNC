@@ -43,6 +43,8 @@ namespace GameServer.Network.Handlers
             const bool useBonus500Mita = false;
             character.CalculateExp(questReward.Experience, out levelUp, useBonus,
                 useBonus500Mita);
+				
+			character.Mito += questReward.Mito;
 
             CharacterModel.Update(GameServer.Instance.Database.Connection, character);
             
