@@ -38,34 +38,7 @@ namespace Shared.Network.GameServer
                     bs.Write(CarAttr.___u0.__s1.lvalSortBody);
                     bs.Write(CarAttr.___u0.__s1.lvalColor);
                     bs.Write(CarAttr.___u0.llval);
-                    bs.WriteUnicodeStatic(PlayerInfo.CharacterName, 21);
-                    bs.Write(PlayerInfo.Serial);
-                    bs.Write(PlayerInfo.Age);
-                    bs.Write(PlayerInfo.CharacterId);
-                    bs.Write(PlayerInfo.Level);
-                    bs.Write(PlayerInfo.Exp);
-                    bs.Write(PlayerInfo.TeamId);
-                    bs.Write(PlayerInfo.TeamMarkId);
-                    bs.WriteUnicodeStatic(PlayerInfo.TeamName, 14);
-                    bs.Write(PlayerInfo.TeamNLevel);
-                    bs.Write(PlayerInfo.VisualItem.Neon);
-                    bs.Write(PlayerInfo.VisualItem.Plate);
-                    bs.Write(PlayerInfo.VisualItem.Decal);
-                    bs.Write(PlayerInfo.VisualItem.DecalColor);
-                    bs.Write(PlayerInfo.VisualItem.AeroBumper);
-                    bs.Write(PlayerInfo.VisualItem.AeroIntercooler);
-                    bs.Write(PlayerInfo.VisualItem.AeroSet);
-                    bs.Write(PlayerInfo.VisualItem.MufflerFlame);
-                    bs.Write(PlayerInfo.VisualItem.Wheel);
-                    bs.Write(PlayerInfo.VisualItem.Spoiler);
-                    bs.Write(PlayerInfo.VisualItem.Reserve[0]);
-                    bs.Write(PlayerInfo.VisualItem.Reserve[1]);
-                    bs.Write(PlayerInfo.VisualItem.Reserve[2]);
-                    bs.Write(PlayerInfo.VisualItem.Reserve[3]);
-                    bs.Write(PlayerInfo.VisualItem.Reserve[4]);
-                    bs.Write(PlayerInfo.VisualItem.Reserve[5]);
-                    bs.WriteUnicodeStatic(PlayerInfo.VisualItem.PlateString, 9);
-                    bs.Write(PlayerInfo.UseTime);
+                    bs.Write(PlayerInfo);
                 }
                 return ms.ToArray();
             }
