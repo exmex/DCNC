@@ -11,6 +11,14 @@ namespace GameServer.Network.Handlers
         public static void Handle(Packet packet)
         {
             var questStartPacket = new QuestStartPacket(packet);
+			
+			if(QuestModel.QuestStarted(GameServer.Instance.Database.Connection, 
+				packet.Sender.User.ActiveCharacterId, (uint)questStartPacket.TableIndex))
+			{
+				packet.Sender.SendDebugError("Quest already started!");
+				packet.Sender.KillConnection("Quest was already started!");
+				return;
+			}
 
             QuestModel.Add(GameServer.Instance.Database.Connection, new Quest
             {

@@ -95,6 +95,20 @@ namespace Shared.Models
                 cmd.Execute();
             }
         }
+		
+        public static bool QuestStarted(MySqlConnection dbconn, ulong cid, uint qid)
+        {
+            var command = new MySqlCommand(
+                "SELECT * FROM Quests WHERE CID = @cid AND QuestId = @qid", dbconn);
+
+            command.Parameters.AddWithValue("@cid", cid);
+            command.Parameters.AddWithValue("@qid", qid);
+
+            using (DbDataReader reader = command.ExecuteReader())
+            {
+                return reader.HasRows;
+            }
+        }
 
         public static void Update(MySqlConnection dbconn, int serverId, ulong characterId, uint questId, int state)
         {

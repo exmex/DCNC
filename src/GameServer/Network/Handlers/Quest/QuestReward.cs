@@ -44,7 +44,7 @@ namespace GameServer.Network.Handlers
             character.CalculateExp(questReward.Experience, out levelUp, useBonus,
                 useBonus500Mita);
 				
-            character.Mito += questReward.Mito;
+            character.MitoMoney += questReward.Mito;
 
             CharacterModel.Update(GameServer.Instance.Database.Connection, character);
             
