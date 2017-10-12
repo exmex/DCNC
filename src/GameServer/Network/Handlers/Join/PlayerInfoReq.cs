@@ -39,12 +39,7 @@ namespace GameServer.Network.Handlers.Join
             
             var ack = new PlayerInfoOldAnswer
             {
-                PlayerInfo = new XiPlayerInfo()
-                {
-                    CharacterName = client.User.ActiveCharacter.Name,
-                    Serial = (ushort) client.User.VehicleSerial,
-                    Age = 0
-                }
+                PlayerInfo = new XiPlayerInfo(client.User.VehicleSerial, client.User.ActiveCharacter)
             };
             packet.Sender.Send(ack.CreatePacket());
 

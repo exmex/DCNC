@@ -90,17 +90,8 @@ namespace GameServer.Network.Handlers
                 Serial = 0,
                 Age = 0,
                 CarAttr = new XiCarAttr(),
-                PlayerInfo = new XiPlayerInfo()
+                PlayerInfo = new XiPlayerInfo(packet.Sender.User.VehicleSerial, packet.Sender.User.ActiveCharacter)
                 {
-                    CharacterName = packet.Sender.User.ActiveCharacter.Name,
-                    Serial = 0,
-                    Age = 4,
-                    Level = packet.Sender.User.ActiveCharacter.Level,
-                    Exp = 0, // ??
-                    TeamId = packet.Sender.User.ActiveCharacter.TeamId,
-                    TeamMarkId = packet.Sender.User.ActiveCharacter.Team.MarkId,
-                    TeamName = packet.Sender.User.ActiveCharacter.Team.Name,
-                    TeamNLevel = 0,
                     VisualItem = new XiVisualItem()
                     {
                         Neon = 1,

@@ -196,5 +196,13 @@ namespace Shared.Objects
             writer.WriteUnicodeStatic(LeaderName, 21);
             writer.Write(new byte[293]);
         }
+
+        public void SerializeShort(BinaryWriterExt writer)
+        {
+            writer.Write(TeamId);
+            writer.Write(MarkId);
+            writer.WriteUnicodeStatic(Name, 14);
+            writer.Write((ushort)0); // NLevel?
+        }
     }
 }
