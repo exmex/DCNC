@@ -271,9 +271,9 @@ namespace Shared.Objects
             CreationDate = (int)DateTimeOffset.Now.ToUnixTimeSeconds();
             LastDate = (int)DateTimeOffset.Now.ToUnixTimeSeconds();
             
-            City = 1;
+            City = 0; // 0 in SKID_CHARATER db
             Level = 1;
-            PosState = 1;
+            PosState = 0; // 0 in SKID_CHARATER db
             LastChannel = -1; // This could cause the Issue #26
         }
 
@@ -348,7 +348,7 @@ namespace Shared.Objects
             //writer.Write(TeamMarkId);
             //writer.WriteUnicodeStatic(TeamName, 13);
             //writer.Write(TeamRank);
-            writer.Write(PartyType);
+            writer.Write(PartyType); // possibly 65 when admin or cheatable
             writer.Write(PvpCount);
             writer.Write(PvpWinCount);
             writer.Write(PvpPoint);
