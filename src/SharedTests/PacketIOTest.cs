@@ -90,7 +90,7 @@ namespace SharedTests
                 Assert.AreEqual(216, ms.ToArray().Length);
             }
             
-            var team = new Team();
+            var team = new Crew();
             using (var ms = new MemoryStream())
             {
                 using (var bs = new BinaryWriterExt(ms))

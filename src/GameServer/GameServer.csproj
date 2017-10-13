@@ -74,6 +74,7 @@
     <Compile Include="Network\Handlers\Dealership\BuyCar.cs" />
     <Compile Include="Network\Handlers\Dealership\SellCar.cs" />
     <Compile Include="Network\Handlers\DriftShop\BuyVisualItemThread.cs" />
+    <Compile Include="Network\Handlers\DriftShop\OriginalBuyVSItem.cs" />
     <Compile Include="Network\Handlers\DriftShop\UpgradeCarThread.cs" />
     <Compile Include="Network\Handlers\DriveInfoUpdate.cs" />
     <Compile Include="Network\Handlers\FuelChargeReq.cs" />

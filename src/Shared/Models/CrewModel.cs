@@ -6,11 +6,11 @@ using Shared.Objects;
 
 namespace Shared.Models
 {
-    public static class TeamModel
+    public static class CrewModel
     {
-        public static Team GetTeam(DbDataReader reader)
+        public static Crew GetTeam(DbDataReader reader)
         {
-            var team = new Team();
+            var team = new Crew();
             
             team.Id = Convert.ToInt64(reader["TID"]);
             team.MarkId = Convert.ToInt64(reader["TMARKID"]);
@@ -38,20 +38,20 @@ namespace Shared.Models
             return team;
         }
         
-        public static Team Retrieve(MySqlConnection dbconn, long tid)
+        public static Crew Retrieve(MySqlConnection dbconn, long tid)
         {
             var command = new MySqlCommand("SELECT * FROM Teams WHERE TID = @tid", dbconn);
 
             command.Parameters.AddWithValue("@tid", tid);
 
-            Team team;
+            Crew crew;
             using (DbDataReader reader = command.ExecuteReader())
             {
                 if (!reader.Read()) return null;
-                team = GetTeam(reader);
+                crew = GetTeam(reader);
             }
 
-            return team;
+            return crew;
         }
 
         public static bool CheckNameExists(MySqlConnection dbconn, string teamName)
@@ -67,23 +67,23 @@ namespace Shared.Models
             }
         }
 
-        public static bool Create(MySqlConnection dbconn, ref Team team)
+        public static bool Create(MySqlConnection dbconn, ref Crew crew)
         {
             var result = false;
             using (var cmd = new InsertCommand("INSERT INTO `teams` {0}", dbconn))
             {
-                cmd.Set("TMARKID", team.MarkId);
-                cmd.Set("TEAMNAME", team.Name);
-                cmd.Set("UTEAMNAME", team.Name);
+                cmd.Set("TMARKID", crew.MarkId);
+                cmd.Set("TEAMNAME", crew.Name);
+                cmd.Set("UTEAMNAME", crew.Name);
                 cmd.Set("TEAMLEVEL", 0); // Why doesn't this get saved in Team?
-                cmd.Set("TEAMPOINT", team.Point);
-                cmd.Set("CID", team.OwnerId);
-                cmd.Set("CNAME", team.OwnerName);
-                cmd.Set("MEMBERCNT", team.MemberCnt);
+                cmd.Set("TEAMPOINT", crew.Point);
+                cmd.Set("CID", crew.OwnerId);
+                cmd.Set("CNAME", crew.OwnerName);
+                cmd.Set("MEMBERCNT", crew.MemberCnt);
                 cmd.Set("CREATEDATE", DateTimeOffset.Now.ToUnixTimeSeconds());
 
                 result = cmd.Execute() == 1;
-                team.Id = cmd.LastId;
+                crew.Id = cmd.LastId;
             }
             return result;
         }

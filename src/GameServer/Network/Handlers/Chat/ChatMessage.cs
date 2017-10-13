@@ -52,9 +52,9 @@ namespace GameServer.Network.Handlers
                     break;
 
                 case "team":
-                    if (packet.Sender.User.ActiveCharacter.Team != null)
+                    if (packet.Sender.User.ActiveCharacter.Crew != null)
                     {
-                        GameServer.Instance.Server.Broadcast(packet.Sender.User.ActiveCharacter.Team, ackPkt); // TODO: broadcast only to users in same crew
+                        GameServer.Instance.Server.Broadcast(packet.Sender.User.ActiveCharacter.Crew, ackPkt);
                     }
                     else
                         packet.Sender.SendError("Not a member of a crew.");

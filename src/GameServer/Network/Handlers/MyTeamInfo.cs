@@ -17,7 +17,7 @@ namespace GameServer.Network.Handlers
                 Action = myTeamInfoPacket.Action,
                 CharacterId = user.ActiveCharacterId,
                 Rank = 0,
-                Team = user.ActiveCharacter.Team,
+                Crew = user.ActiveCharacter.Crew,
                 Age = 0
             };
 

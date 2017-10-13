@@ -167,7 +167,7 @@
     <Compile Include="Objects\GameDatas\VehicleList.cs" />
     <Compile Include="Objects\GameDatas\VShopItemList.cs" />
     <Compile Include="Objects\InventoryItem.cs" />
-    <Compile Include="Models\TeamModel.cs" />
+    <Compile Include="Models\CrewModel.cs" />
     <Compile Include="Objects\Server.cs" />
     <Compile Include="Objects\VehicleInfo.cs" />
     <Compile Include="Objects\InventoryVisualItem.cs" />
@@ -178,7 +178,7 @@
     <Compile Include="Objects\XiPlayerInfo.cs" />
     <Compile Include="Objects\XiStrMyItemMod.cs" />
     <Compile Include="Objects\XiStrStatInfo.cs" />
-    <Compile Include="Objects\Team.cs" />
+    <Compile Include="Objects\Crew.cs" />
     <Compile Include="Objects\Vehicle.cs" />
     <Compile Include="Objects\XiStrIcon.cs" />
     <Compile Include="Objects\XiStrQuest.cs" />

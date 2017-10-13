@@ -306,7 +306,7 @@ namespace Shared.Models
                 character.GarageVehicles = VehicleModel.Retrieve(dbconn, character.Id);
                 character.ActiveCar =
                     character.GarageVehicles.Find(vehicle => vehicle.CarId == character.ActiveVehicleId);
-                character.Team = TeamModel.Retrieve(dbconn, character.TeamId);
+                character.Crew = CrewModel.Retrieve(dbconn, character.CrewId);
             }
 
             return chars;

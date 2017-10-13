@@ -33,7 +33,7 @@ namespace Shared.Objects
     /// <summary>
     /// TODO: Rename to Crew 
     /// </summary>
-    public class Team : BinaryWriterExt.ISerializable
+    public class Crew : BinaryWriterExt.ISerializable
     {
         /// <summary>
         /// The DB Id of the team the user is in
@@ -159,7 +159,7 @@ namespace Shared.Objects
         /// </summary>
         public string LeaderName;
 
-        public Team()
+        public Crew()
         {
             Id = -1L;
             MarkId = -1L;

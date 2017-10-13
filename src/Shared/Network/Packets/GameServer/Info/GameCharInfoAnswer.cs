@@ -15,7 +15,7 @@ namespace Shared.Network.GameServer
         public Character Character;
         public Vehicle Vehicle;
         public XiStrStatInfo StatisticInfo;
-        public Team Team;
+        public Crew Crew;
         public uint Serial; // ushort (2)?
         public int LocType = 2;
         public char ChId;
@@ -26,7 +26,7 @@ namespace Shared.Network.GameServer
             Character = new Character();
             Vehicle = new Vehicle();
             StatisticInfo = new XiStrStatInfo();
-            Team = new Team();
+            Crew = new Crew();
         }
 
         public override Packet CreatePacket()
@@ -75,10 +75,10 @@ namespace Shared.Network.GameServer
                     Character.Serialize(bs); // 321 here, 363 in rice.
                     Vehicle.Serialize(bs);
                     StatisticInfo.Serialize(bs); // 112 vs 80 -> 32 bytes missing?
-                    if (Team == null) // Character is in not team.
+                    if (Crew == null) // Character is in not team.
                         bs.Write(new byte[664]);
                     else
-                        Team.Serialize(bs);
+                        Crew.Serialize(bs);
                     
                     // field_10
                     bs.Write(new byte[12]);

@@ -306,13 +306,13 @@ namespace Shared.Network
         /// <summary>
         /// Broadcasts a packet to all clients in the specified team/crew
         /// </summary>
-        /// <param name="team">The team/crew to broadcast to</param>
+        /// <param name="crew">The team/crew to broadcast to</param>
         /// <param name="packet">The packet to broadcast</param>
-        public void Broadcast(Team team, Packet packet)
+        public void Broadcast(Crew crew, Packet packet)
         {
             foreach (var client in GetClients())
             {
-                if(client.User?.ActiveCharacter?.TeamId == team.Id)
+                if(client.User?.ActiveCharacter?.CrewId == crew.Id)
                     client.Send(packet);
             }
         }

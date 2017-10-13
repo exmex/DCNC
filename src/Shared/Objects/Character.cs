@@ -60,13 +60,17 @@ namespace Shared.Objects
         /// <summary>
         /// The DB Id of the team the user is in
         /// </summary>
-        public long TeamId;
+        public long CrewId;
         
         /// <summary>
         /// Presumably the rank in the team the char has
         /// TODO: Rename to Crew
+        /// 0 = ?
+        /// 1 = Crew Master
+        /// 2 = ?
+        /// 3 = ?
         /// </summary>
-        public int TeamRank;
+        public int CrewRank;
         
         /// <summary>
         /// The party type
@@ -237,7 +241,7 @@ namespace Shared.Objects
         /// <summary>
         /// The team the user is in
         /// </summary>
-        public Team Team;
+        public Crew Crew;
         
         /// <summary>
         /// Items in his inventory
@@ -331,7 +335,7 @@ namespace Shared.Objects
             writer.Write(ExperienceInfo);
 
             writer.Write(MitoMoney);
-            if (Team == null)
+            if (Crew == null)
             {
                 writer.Write(-1L);
                 writer.Write(0L);
@@ -340,10 +344,10 @@ namespace Shared.Objects
             }
             else
             {
-                writer.Write(Team.Id);
-                writer.Write(Team.MarkId);
-                writer.WriteUnicodeStatic(Team.Name, 13);
-                writer.Write(TeamRank);
+                writer.Write(Crew.Id);
+                writer.Write(Crew.MarkId);
+                writer.WriteUnicodeStatic(Crew.Name, 13);
+                writer.Write(CrewRank);
             }
             
             writer.Write(PartyType); // possibly 65 when admin or cheatable
@@ -387,12 +391,12 @@ namespace Shared.Objects
             writer.Write(ActiveCar.CarType);
             writer.Write(ActiveCar.BaseColor);
             writer.Write(CreationDate);
-            writer.Write(TeamId);
-            if (Team != null)
+            writer.Write(CrewId);
+            if (Crew != null)
             {
-                writer.Write(Team.MarkId);
-                writer.WriteUnicodeStatic(Team.Name, 13);
-                writer.Write((short)TeamRank);
+                writer.Write(Crew.MarkId);
+                writer.WriteUnicodeStatic(Crew.Name, 13);
+                writer.Write((short)CrewRank);
             }
             else
             {

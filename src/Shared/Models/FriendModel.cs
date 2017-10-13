@@ -28,16 +28,16 @@ namespace Shared.Models
                     item.Level = Convert.ToUInt16(reader["Level"]);
                     item.State = Convert.ToChar(reader["FSTATE"]);
                     if (!reader.IsDBNull(reader.GetOrdinal("TeamId")))
-                        item.TeamId = Convert.ToInt64(reader["TeamId"]);
+                        item.CrewId = Convert.ToInt64(reader["TeamId"]);
                     else
-                        item.TeamId = -1;
+                        item.CrewId = -1;
                     if (!reader.IsDBNull(reader.GetOrdinal("UTEAMNAME")))
-                        item.TeamName = reader["UTEAMNAME"] as string;
+                        item.CrewName = reader["UTEAMNAME"] as string;
                     
                     if (!reader.IsDBNull(reader.GetOrdinal("TMARKID")))
-                        item.TeamMarkId = Convert.ToInt64(reader["TMARKID"]);
+                        item.CrewMarkId = Convert.ToInt64(reader["TMARKID"]);
                     else
-                        item.TeamMarkId = -1;
+                        item.CrewMarkId = -1;
                     
                     item.LocationId = Convert.ToUInt16(reader["City"]);
                     friends.Add(item);

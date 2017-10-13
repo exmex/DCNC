@@ -16,6 +16,9 @@ namespace Shared.Objects.GameDatas
             [XmlAttribute("id")] public string UniqueId;
             [XmlAttribute("item")] public string ItemName;
 
+            [XmlAttribute("category")] public string Category;
+            [XmlAttribute("categoryIdx")] public string CategoryIndex;
+
             [XmlAttribute("useMito")] public string UseMito;
             
             [XmlAttribute("mitoPrice")] public string MitoPrice;
@@ -30,7 +33,7 @@ namespace Shared.Objects.GameDatas
             [XmlAttribute("hancoin7dPrice")] public string Hancoin7dPrice;
             [XmlAttribute("hancoin30dPrice")] public string Hancoin30dPrice;
             [XmlAttribute("hancoin90dPrice")] public string Hancoin90dPrice;
-            [XmlAttribute("hancoin3650dPrice")] public string Hancoin365dPrice;
+            [XmlAttribute("hancoin3650dPrice")] public string Hancoin365dPrice; // TODO: I fucked the name up...
             [XmlAttribute("hancoin0dPrice")] public string Hancoin0dPrice;
             /*
             0 Index

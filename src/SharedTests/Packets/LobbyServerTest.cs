@@ -167,13 +167,13 @@ namespace SharedTests.Packets
                         Level = 10,
                         ActiveVehicleId = Utilities.Rand.NextUInt32(),
                         CreationDate = Utilities.Rand.Next(),
-                        TeamId = Utilities.Rand.NextUInt32(),
+                        CrewId = Utilities.Rand.NextUInt32(),
                         ActiveCar = new Vehicle() // Normally this points to an object in GarageVehicles.
                         {
                             CarType = Utilities.Rand.NextUInt32(),
                             BaseColor = Utilities.Rand.NextUInt32()
                         },
-                        Team = new Team
+                        Crew = new Crew
                         {
                             Name = "TestTeam",
                             MarkId = Utilities.Rand.NextInt64()
@@ -238,13 +238,13 @@ namespace SharedTests.Packets
                         Assert.AreEqual(packet.Characters[i].CreationDate, creationDate);
 
                         var tid = bs.ReadInt64(); // TeamId!!!
-                        Assert.AreEqual(packet.Characters[i].TeamId, tid);
+                        Assert.AreEqual(packet.Characters[i].CrewId, tid);
 
                         var teamMarkId = bs.ReadInt64();
-                        Assert.AreEqual(packet.Characters[i].Team.MarkId, teamMarkId);
+                        Assert.AreEqual(packet.Characters[i].Crew.MarkId, teamMarkId);
 
                         var teamName = bs.ReadUnicodeStatic(13);
-                        var expectedName = packet.Characters[i].Team.Name;
+                        var expectedName = packet.Characters[i].Crew.Name;
                         if (expectedName.Length > 13)
                             expectedName = expectedName.Substring(0, 13);
                         StringAssert.AreEqualIgnoringCase(expectedName, teamName);

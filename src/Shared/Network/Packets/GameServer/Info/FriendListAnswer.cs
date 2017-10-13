@@ -50,10 +50,10 @@ namespace Shared.Network.GameServer
                             foreach (var friend in FriendList)
                             {
                                 bs.WriteUnicodeStatic(friend.CharacterName, 21);
-                                bs.WriteUnicodeStatic(friend.TeamName, 13);
+                                bs.WriteUnicodeStatic(friend.CrewName, 13);
                                 bs.Write(friend.CharacterId);
-                                bs.Write(friend.TeamId);
-                                bs.Write(friend.TeamMarkId);
+                                bs.Write(friend.CrewId);
+                                bs.Write(friend.CrewMarkId);
                                 bs.Write(friend.State);
 
                                 bs.Write(friend.Serial);
@@ -74,10 +74,10 @@ namespace Shared.Network.GameServer
                         foreach (var friend in FriendList)
                         {
                             bs.WriteUnicodeStatic(friend.CharacterName, 21);
-                            bs.WriteUnicodeStatic(friend.TeamName, 13);
+                            bs.WriteUnicodeStatic(friend.CrewName, 13);
                             bs.Write(friend.CharacterId);
-                            bs.Write(friend.TeamId);
-                            bs.Write(friend.TeamMarkId);
+                            bs.Write(friend.CrewId);
+                            bs.Write(friend.CrewMarkId);
                             bs.Write(friend.State);
 
                             bs.Write(friend.Serial);
@@ -131,8 +131,8 @@ namespace Shared.Network.GameServer
 
         public uint Serial; // SessionId
         public int State; // FriendState (0 = Blocked?)
-        public long TeamId;
-        public long TeamMarkId;
-        public string TeamName;
+        public long CrewId;
+        public long CrewMarkId;
+        public string CrewName;
     }
 }

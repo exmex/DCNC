@@ -34,8 +34,8 @@ namespace Shared.Models
             character.ActiveVehicleId = Convert.ToUInt32(reader["CurrentCarID"]);
             character.InventoryLevel = Convert.ToInt32(reader["InventoryLevel"]);
             character.GarageLevel = Convert.ToInt32(reader["GarageLevel"]);
-            character.TeamId = Convert.ToInt64(reader["TeamId"]);
-            character.TeamRank = Convert.ToInt32(reader["TeamRank"]);
+            character.CrewId = Convert.ToInt64(reader["TeamId"]);
+            character.CrewRank = Convert.ToInt32(reader["TeamRank"]);
             character.Position = new Vector4(Convert.ToSingle(reader["posX"]), Convert.ToSingle(reader["posY"]), Convert.ToSingle(reader["posZ"]), Convert.ToSingle(reader["posW"]));
             character.LastChannel = Convert.ToInt32(reader["channelId"]);
             character.PosState = Convert.ToInt32(reader["posState"]);
@@ -61,8 +61,8 @@ namespace Shared.Models
             cmd.Set("CurrentCarID", character.ActiveVehicleId);
             cmd.Set("InventoryLevel", character.InventoryLevel);
             cmd.Set("GarageLevel", character.GarageLevel);
-            cmd.Set("TeamId", character.TeamId);
-            cmd.Set("TeamRank", character.TeamRank);
+            cmd.Set("TeamId", character.CrewId);
+            cmd.Set("TeamRank", character.CrewRank);
             cmd.Set("posX", character.Position.X);
             cmd.Set("posY", character.Position.Y);
             cmd.Set("posZ", character.Position.Z);
@@ -88,7 +88,7 @@ namespace Shared.Models
             }
             character.GarageVehicles = VehicleModel.Retrieve(dbconn, character.Id);
             character.ActiveCar = character.GarageVehicles.Find(vehicle => vehicle.CarId == character.ActiveVehicleId);
-            character.Team = TeamModel.Retrieve(dbconn, character.TeamId);
+            character.Crew = CrewModel.Retrieve(dbconn, character.CrewId);
             return character;
         }
 
@@ -108,7 +108,7 @@ namespace Shared.Models
             }
             character.GarageVehicles = VehicleModel.Retrieve(dbconn, character.Id);
             character.ActiveCar = character.GarageVehicles.Find(vehicle => vehicle.CarId == character.ActiveVehicleId);
-            character.Team = TeamModel.Retrieve(dbconn, character.TeamId);
+            character.Crew = CrewModel.Retrieve(dbconn, character.CrewId);
             return character;
         }
         

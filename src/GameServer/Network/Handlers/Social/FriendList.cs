@@ -30,10 +30,10 @@ namespace GameServer.Network.Handlers.Social
                     foreach (var friend in friends)
                     {
                         ack.Writer.WriteUnicodeStatic(friend.CharacterName, 21, true);
-                        ack.Writer.WriteUnicodeStatic(friend.TeamName, 13, true);
+                        ack.Writer.WriteUnicodeStatic(friend.CrewName, 13, true);
                         ack.Writer.Write(friend.CharacterId);
-                        ack.Writer.Write(friend.TeamId);
-                        ack.Writer.Write(friend.TeamMarkId);
+                        ack.Writer.Write(friend.CrewId);
+                        ack.Writer.Write(friend.CrewMarkId);
                         ack.Writer.Write(friend.State);
                     
                         ack.Writer.Write(friend.LocationType);
@@ -55,10 +55,10 @@ namespace GameServer.Network.Handlers.Social
                 foreach (var friend in friends)
                 {
                     ack.Writer.WriteUnicodeStatic(friend.CharacterName, 21, true);
-                    ack.Writer.WriteUnicodeStatic(friend.TeamName, 13, true);
+                    ack.Writer.WriteUnicodeStatic(friend.CrewName, 13, true);
                     ack.Writer.Write(friend.CharacterId);
-                    ack.Writer.Write(friend.TeamId);
-                    ack.Writer.Write(friend.TeamMarkId);
+                    ack.Writer.Write(friend.CrewId);
+                    ack.Writer.Write(friend.CrewMarkId);
                     ack.Writer.Write(friend.State);
                     
                     ack.Writer.Write(friend.LocationType);

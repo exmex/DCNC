@@ -65,11 +65,11 @@ namespace Shared.Objects
             writer.Write(Character.ExperienceInfo.BaseExp); // 4
             
             //writer.Write(Character.TeamId); // 8
-            if (Character.Team == null)
-                new Team().SerializeShort(writer);
+            if (Character.Crew == null)
+                new Crew().SerializeShort(writer);
             else
             {
-                Character.Team.SerializeShort(writer);
+                Character.Crew.SerializeShort(writer);
                 /*
                 writer.Write(Character.Team.MarkId); // 8
                 writer.WriteUnicodeStatic(Character.Team.Name, 14, true);

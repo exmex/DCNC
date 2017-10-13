@@ -12,7 +12,7 @@ namespace GameServer.Network.Handlers
         {
             var checkTeamNamePacket = new CheckTeamNamePacket(packet);
                 
-            var nameTaken = TeamModel.CheckNameExists(GameServer.Instance.Database.Connection,
+            var nameTaken = CrewModel.CheckNameExists(GameServer.Instance.Database.Connection,
                 checkTeamNamePacket.TeamName);
             
             packet.Sender.Send(new CheckTeamNameAnswer()

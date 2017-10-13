@@ -42,7 +42,7 @@ namespace GameServer.Network.Handlers
                 Character = character,
                 Vehicle = character.ActiveCar,
                 StatisticInfo = new XiStrStatInfo(),
-                Team = character.Team,
+                Crew = character.Crew,
                 Serial = user.VehicleSerial,
                 //LocType = 'A',
                 ChId = (char)character.LastChannel, //'A',

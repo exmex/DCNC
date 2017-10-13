@@ -16,7 +16,7 @@ namespace Shared.Network.GameServer
         public ulong CharacterId;
         public int Rank;
 
-        public Team Team;
+        public Crew Crew;
 
         // It is not clear if this is the age.
         public ushort Age = 0;
@@ -54,10 +54,10 @@ namespace Shared.Network.GameServer
                     bs.Write(CharacterId);
                     bs.Write(Rank);
 
-                    if (Team == null)
-                        bs.Write(new Team());
+                    if (Crew == null)
+                        bs.Write(new Crew());
                     else
-                        Team.Serialize(bs);
+                        Crew.Serialize(bs);
 
                     bs.Write(Age);
                     bs.Write(0); // field_4
