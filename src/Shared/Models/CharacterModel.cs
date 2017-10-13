@@ -34,6 +34,7 @@ namespace Shared.Models
             character.InventoryLevel = Convert.ToInt32(reader["InventoryLevel"]);
             character.GarageLevel = Convert.ToInt32(reader["GarageLevel"]);
             character.TeamId = Convert.ToInt64(reader["TeamId"]);
+            character.TeamRank = Convert.ToInt32(reader["TeamRank"]);
             character.Position = new Vector4(Convert.ToSingle(reader["posX"]), Convert.ToSingle(reader["posY"]), Convert.ToSingle(reader["posZ"]), Convert.ToSingle(reader["posW"]));
             character.LastChannel = Convert.ToInt32(reader["channelId"]);
             character.PosState = Convert.ToInt32(reader["posState"]);
@@ -59,6 +60,7 @@ namespace Shared.Models
             cmd.Set("InventoryLevel", character.InventoryLevel);
             cmd.Set("GarageLevel", character.GarageLevel);
             cmd.Set("TeamId", character.TeamId);
+            cmd.Set("TeamRank", character.TeamRank);
             cmd.Set("posX", character.Position.X);
             cmd.Set("posY", character.Position.Y);
             cmd.Set("posZ", character.Position.Z);
@@ -211,14 +213,14 @@ namespace Shared.Models
             }
         }
 
-        public static void Update(MySqlConnection dbconn, Character character)
+        public static bool Update(MySqlConnection dbconn, Character character)
         {
             using (var cmd = new UpdateCommand("UPDATE `Characters` SET {0} WHERE `CID` = @charId", dbconn))
             {
                 cmd.AddParameter("@charId", character.Id);
                 
                 //var updateCommand = cmd;
-                WriteCharacter(character, cmd);
+                return WriteCharacter(character, cmd) == 1;
                 //character.WriteToDb(ref updateCommand);
                 //cmd.Execute();
             }

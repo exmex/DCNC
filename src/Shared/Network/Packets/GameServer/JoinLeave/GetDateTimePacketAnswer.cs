@@ -56,6 +56,7 @@ namespace Shared.Network.GameServer
                     bs.Write(Hour);
                     bs.Write(Minute);
                     bs.Write(Second);
+                    bs.Write((byte)0);
                 }
                 return ms.ToArray();
             }

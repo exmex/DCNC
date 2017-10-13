@@ -68,10 +68,12 @@
     <Compile Include="Network\Packet.cs" />
     <Compile Include="Network\Packets.cs" />
     <Compile Include="Network\Packets\AreaServer\Incoming\EnterAreaPacket.cs" />
+    <Compile Include="Network\Packets\AreaServer\Incoming\MoveVehiclePacket.cs" />
     <Compile Include="Network\Packets\AreaServer\Incoming\TimeSyncPacket.cs" />
     <Compile Include="Network\Packets\AreaServer\Incoming\UdpCastTcsSignalPacket.cs" />
     <Compile Include="Network\Packets\AreaServer\Outgoing\AreaStatusAnswerPacket.cs" />
     <Compile Include="Network\Packets\AreaServer\Outgoing\EnterAreaAnswer.cs" />
+    <Compile Include="Network\Packets\AreaServer\Outgoing\MoveVehicleAnswer.cs" />
     <Compile Include="Network\Packets\AreaServer\Outgoing\TimeSyncAnswerPacket.cs" />
     <Compile Include="Network\Packets\AreaServer\Outgoing\UdpCastTcsSignalAnswerPacket.cs" />
     <Compile Include="Network\Packets\AuthServer\UserAuthAnswerPacket.cs" />
@@ -87,6 +89,8 @@
     <Compile Include="Network\Packets\GameServer\Buy\SellItemPacket.cs" />
     <Compile Include="Network\Packets\GameServer\Chase\ChaseRequestAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Chase\ChaseRequestPacket.cs" />
+    <Compile Include="Network\Packets\GameServer\CrewCenter\CheckTeamNameAnswer.cs" />
+    <Compile Include="Network\Packets\GameServer\CrewCenter\CheckTeamNamePacket.cs" />
     <Compile Include="Network\Packets\GameServer\Generic\CheckStatAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Generic\FuelChargeReqAnswer.cs" />
     <Compile Include="Network\Packets\GameServer\Generic\FuelChargeReqPacket.cs" />

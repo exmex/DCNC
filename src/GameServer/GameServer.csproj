@@ -69,6 +69,8 @@
     <Compile Include="Network\Handlers\Chat\PrivateChatMsg.cs" />
     <Compile Include="Network\Handlers\CheckStat.cs" />
     <Compile Include="Network\Handlers\CityLeaveCheck.cs" />
+    <Compile Include="Network\Handlers\CrewCenter\CheckTeamName.cs" />
+    <Compile Include="Network\Handlers\CrewCenter\CreateTeam.cs" />
     <Compile Include="Network\Handlers\Dealership\BuyCar.cs" />
     <Compile Include="Network\Handlers\Dealership\SellCar.cs" />
     <Compile Include="Network\Handlers\DriftShop\BuyVisualItemThread.cs" />
@@ -133,6 +135,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(SolutionDir)server_icon.ico" />
+    <Content Include="..\..\system\conf\game.conf">
+      <Link>Config\game.conf</Link>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

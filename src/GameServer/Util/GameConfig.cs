@@ -28,11 +28,19 @@ namespace GameServer.Util
     {
         public int Port { get; protected set; }
 
+        public int CrewCreationCost { get; protected set; }
+
+        public int CrewCreationMinLevel { get; protected set; }
+
         public void Load()
         {
             Require("system/conf/game.conf");
 
             Port = GetInt("port", 11021);
+
+            CrewCreationCost = GetInt("crewCreationCost", 10000);
+            
+            CrewCreationMinLevel = GetInt("crewCreationMinLevel", 20);
         }
     }
 }

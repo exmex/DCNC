@@ -1,0 +1,34 @@
+//--------------------------------------
+//--- 010 Editor v6.0.2 Binary Template
+//
+// File:
+// Author:
+// Revision:
+// Purpose:
+//--------------------------------------
+typedef struct XiStrTeamInfo
+{
+  __int64 TeamId;
+  __int64 TeamMarkId;
+  wchar_t TeamName[13];
+  wchar_t TeamDesc[61];
+  char TeamUrl[33];
+  unsigned int CreateDate;
+  unsigned int CloseDate;
+  unsigned int BanishDate;
+  char OwnChannel[24];
+  char TeamState[2];
+  unsigned int TeamRanking;
+  unsigned int TeamPoint;
+  unsigned int ChannelWinCnt;
+  unsigned int MemberCnt;
+  __int64 TeamTotalExp;
+  __int64 TeamTotalMoney;
+  unsigned int Version;
+  __int64 OwnerId;
+  __int64 LeaderId;
+  wchar_t OwnerName[21];
+  wchar_t LeaderName[21];
+};
+
+XiStrTeamInfo team;

@@ -70,6 +70,8 @@ namespace Shared.Network
         public const ushort GateListAck = 789; // GateListAck
         public const ushort PlayerInfoOldAck = 802;
         public const ushort MyTeamInfoAck = 841;
+        public const ushort CreateTeamAck = 843;
+        public const ushort CheckTeamNameAck = 852;
         public const ushort InstantStartAck = 993;
         public const ushort InstantGiveUpAck = 1000;
         public const ushort InstantGoalPlaceAck = 1002;

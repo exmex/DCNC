@@ -37,6 +37,7 @@ namespace Shared.Objects
     {
         /// <summary>
         /// The DB Id of the team the user is in
+        /// TODO: Rename to Id
         /// </summary>
         public long TeamId;
         
@@ -115,7 +116,8 @@ namespace Shared.Objects
         public uint ChannelWinCnt;
         
         /// <summary>
-        /// 
+        /// How many members this crew has
+        /// Includes leader.
         /// </summary>
         public uint MemberCnt;
         
@@ -203,6 +205,31 @@ namespace Shared.Objects
             writer.Write(MarkId);
             writer.WriteUnicodeStatic(Name, 14);
             writer.Write((ushort)0); // NLevel?
+        }
+
+        public void Unserialize(BinaryReaderExt reader)
+        {
+            TeamId = reader.ReadInt64();
+            MarkId = reader.ReadInt64();
+            Name = reader.ReadUnicodeStatic(13);
+            Description = reader.ReadUnicodeStatic(61);
+            Url = reader.ReadAsciiStatic(33);
+            CreateDate = reader.ReadUInt32();
+            CloseDate = reader.ReadUInt32();
+            BanishDate = reader.ReadUInt32();
+            OwnChannel = reader.ReadAsciiStatic(24);
+            State = reader.ReadAsciiStatic(2);
+            Ranking = reader.ReadUInt32();
+            Point = reader.ReadUInt32();
+            ChannelWinCnt = reader.ReadUInt32();
+            MemberCnt = reader.ReadUInt32();
+            TotalExp = reader.ReadInt64();
+            TotalMoney = reader.ReadInt64();
+            Version = reader.ReadUInt32();
+            OwnerId = reader.ReadInt64();
+            LeaderId = reader.ReadInt64();
+            OwnerName = reader.ReadUnicodeStatic(21);
+            LeaderName = reader.ReadUnicodeStatic(21);
         }
     }
 }

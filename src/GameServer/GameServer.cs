@@ -39,7 +39,7 @@ namespace GameServer
         /// <summary>
         ///     Configuration
         /// </summary>
-        private GameConf Config { get; set; }
+        public GameConf Config { get; set; }
 
         /// <summary>
         ///     Loads all necessary components and starts the server.
