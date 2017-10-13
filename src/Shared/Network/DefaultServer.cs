@@ -312,7 +312,7 @@ namespace Shared.Network
         {
             foreach (var client in GetClients())
             {
-                if(client.User?.ActiveCharacter?.TeamId == team.TeamId)
+                if(client.User?.ActiveCharacter?.TeamId == team.Id)
                     client.Send(packet);
             }
         }

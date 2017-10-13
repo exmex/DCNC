@@ -76,7 +76,7 @@ namespace GameServer.Network.Handlers
                 return;
             }
             
-            packet.Sender.User.ActiveCharacter.TeamId = team.TeamId;
+            packet.Sender.User.ActiveCharacter.TeamId = team.Id;
             packet.Sender.User.ActiveCharacter.TeamRank = 1;
             packet.Sender.User.ActiveCharacter.Team = team;
             packet.Sender.User.ActiveCharacter.MitoMoney -= cost;

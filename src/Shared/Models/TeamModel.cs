@@ -6,13 +6,13 @@ using Shared.Objects;
 
 namespace Shared.Models
 {
-    public class TeamModel
+    public static class TeamModel
     {
         public static Team GetTeam(DbDataReader reader)
         {
             var team = new Team();
             
-            team.TeamId = Convert.ToInt64(reader["TID"]);
+            team.Id = Convert.ToInt64(reader["TID"]);
             team.MarkId = Convert.ToInt64(reader["TMARKID"]);
             team.Name = reader["TEAMNAME"] as string;
             team.Description = reader["TEAMDESC"] as string;
@@ -83,7 +83,7 @@ namespace Shared.Models
                 cmd.Set("CREATEDATE", DateTimeOffset.Now.ToUnixTimeSeconds());
 
                 result = cmd.Execute() == 1;
-                team.TeamId = cmd.LastId;
+                team.Id = cmd.LastId;
             }
             return result;
         }

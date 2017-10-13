@@ -39,7 +39,7 @@ namespace Shared.Objects
         /// The DB Id of the team the user is in
         /// TODO: Rename to Id
         /// </summary>
-        public long TeamId;
+        public long Id;
         
         /// <summary>
         /// The Image Id of the team 
@@ -161,7 +161,7 @@ namespace Shared.Objects
 
         public Team()
         {
-            TeamId = -1L;
+            Id = -1L;
             MarkId = -1L;
             OwnerId = -1L;
             LeaderId = -1L;
@@ -175,7 +175,7 @@ namespace Shared.Objects
         /// <param name="writer"></param>
         public void Serialize(BinaryWriterExt writer)
         {
-            writer.Write(TeamId);
+            writer.Write(Id);
             writer.Write(MarkId);
             writer.WriteUnicodeStatic(Name, 13);
             writer.WriteUnicodeStatic(Description, 61);
@@ -201,7 +201,7 @@ namespace Shared.Objects
 
         public void SerializeShort(BinaryWriterExt writer)
         {
-            writer.Write(TeamId);
+            writer.Write(Id);
             writer.Write(MarkId);
             writer.WriteUnicodeStatic(Name, 14);
             writer.Write((ushort)0); // NLevel?
@@ -209,7 +209,7 @@ namespace Shared.Objects
 
         public void Unserialize(BinaryReaderExt reader)
         {
-            TeamId = reader.ReadInt64();
+            Id = reader.ReadInt64();
             MarkId = reader.ReadInt64();
             Name = reader.ReadUnicodeStatic(13);
             Description = reader.ReadUnicodeStatic(61);

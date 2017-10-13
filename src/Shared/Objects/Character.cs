@@ -340,7 +340,7 @@ namespace Shared.Objects
             }
             else
             {
-                writer.Write(TeamId);
+                writer.Write(Team.Id);
                 writer.Write(Team.MarkId);
                 writer.WriteUnicodeStatic(Team.Name, 13);
                 writer.Write(TeamRank);
@@ -401,80 +401,6 @@ namespace Shared.Objects
                 writer.Write((short)0); // Crew rank 
             }
             writer.Write(Guild);
-        }
-
-        public void ReadFromDb(IDataReader reader)
-        {
-            Id = Convert.ToUInt64(reader["CID"]);
-            Uid = Convert.ToUInt64(reader["UID"]);
-            Name = reader["Name"] as string;
-            /*if (!reader.IsDBNull(reader.GetOrdinal("TEAMNAME")))
-                TeamName = reader["TEAMNAME"] as string;
-            else
-                TeamName = "";*/
-            CreationDate = Convert.ToInt32(reader["CreationDate"]);
-            MitoMoney = Convert.ToInt64(reader["Mito"]);
-            Avatar = Convert.ToUInt16(reader["Avatar"]);
-            Level = Convert.ToUInt16(reader["Level"]);
-            
-            ExperienceInfo.BaseExp = Convert.ToInt32(reader["BaseExp"]);
-            ExperienceInfo.CurExp = Convert.ToInt32(reader["CurExp"]);
-            ExperienceInfo.NextExp = Convert.ToInt32(reader["NextExp"]);
-            City = Convert.ToInt32(reader["City"]);
-            ActiveVehicleId = Convert.ToUInt32(reader["CurrentCarID"]);
-            InventoryLevel = Convert.ToInt32(reader["InventoryLevel"]);
-            
-            //InventoryItems = new InventoryItem[(InventoryLevel+1)*20];
-            
-            GarageLevel = Convert.ToInt32(reader["GarageLevel"]);
-            TeamId = Convert.ToInt64(reader["TeamId"]);
-            Position = new Vector4(Convert.ToSingle(reader["posX"]), Convert.ToSingle(reader["posY"]), Convert.ToSingle(reader["posZ"]), Convert.ToSingle(reader["posW"]));
-            LastChannel = Convert.ToInt32(reader["channelId"]);
-            PosState = Convert.ToInt32(reader["posState"]);
-
-            /*ActiveCar = new Vehicle();
-            if (!reader.IsDBNull(reader.GetOrdinal("baseColor")))
-                ActiveCar.BaseColor = Convert.ToUInt32(reader["baseColor"]);
-            if(!reader.IsDBNull(reader.GetOrdinal("carType")))
-                ActiveCar.CarType = Convert.ToUInt32(reader["carType"]);*/
-
-            /*if(!reader.IsDBNull(reader.GetOrdinal("TMARKID")))
-                TeamMarkId = Convert.ToInt64(reader["TMARKID"]);
-            if(!reader.IsDBNull(reader.GetOrdinal("CLOSEDATE")))
-                TeamCloseDate = Convert.ToInt32(reader["CLOSEDATE"]);
-            if(!reader.IsDBNull(reader.GetOrdinal("TEAMRANKING")))
-                TeamRank = Convert.ToInt32(reader["TEAMRANKING"]);*/
-        }
-
-        public void WriteToDb(ref UpdateCommand cmd)
-        {
-            //cmd.Set("CID", Cid);
-            //cmd.Set("UID", Uid);
-            cmd.Set("Name", Name);
-            //cmd.Set("TEAMNAME",  TeamName );
-            cmd.Set("CreationDate", CreationDate);
-            cmd.Set("Mito", MitoMoney);
-            cmd.Set("Avatar", Avatar);
-            cmd.Set("Level", Level);
-            cmd.Set("BaseExp", ExperienceInfo.BaseExp);
-            cmd.Set("CurExp", ExperienceInfo.CurExp);
-            cmd.Set("NextExp", ExperienceInfo.NextExp);
-            cmd.Set("City", City);
-            cmd.Set("CurrentCarID", ActiveVehicleId);
-            cmd.Set("InventoryLevel", InventoryLevel);
-            cmd.Set("GarageLevel", GarageLevel);
-            cmd.Set("TeamId", TeamId);
-            cmd.Set("posX", Position.X);
-            cmd.Set("posY", Position.Y);
-            cmd.Set("posZ", Position.Z);
-            cmd.Set("posW", Position.W);
-            cmd.Set("channelId", LastChannel);
-            cmd.Set("posState", PosState);
-            /*ActiveCar = new Vehicle
-            {
-            BaseColor = Convert.ToUInt32(cmd.Set("baseColor", ),
-            CarType = Convert.ToUInt32(cmd.Set("carType", )
-            };*/
         }
 
         /// <summary>
