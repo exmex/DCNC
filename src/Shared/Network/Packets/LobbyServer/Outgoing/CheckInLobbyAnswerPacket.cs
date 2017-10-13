@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Shared.Objects;
 using Shared.Util;
 
 namespace Shared.Network.LobbyServer
@@ -17,7 +18,7 @@ namespace Shared.Network.LobbyServer
         ///     0x1000 => Developer
         ///     0x0 => User
         /// </summary>
-        public int Permission = 0;
+        public int Permission = (int)UserPermission.User;
 
         /// <summary>
         ///     The result of the operation

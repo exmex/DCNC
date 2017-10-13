@@ -44,7 +44,7 @@ namespace AuthServer.Util
                 return CommandResult.InvalidArgument;
             }
             
-            user.Permission = (int)perm;
+            user.Permission = perm;
             AccountModel.Update(AuthServer.Instance.Database.Connection, user);
             Log.Info("User {0} has now permission {1}!", user.Username, Enum.GetName(typeof(UserPermission), user.Permission));
             return CommandResult.Okay;

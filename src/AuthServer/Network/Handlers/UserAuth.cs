@@ -65,7 +65,7 @@ namespace AuthServer.Network.Handlers
             }
             
             // Create session ticket.
-            user.Ticket = user.CreateSessionTicket();
+            user.Ticket = User.CreateSessionTicket();
             if (!AccountModel.SetSessionTicket(AuthServer.Instance.Database.Connection, user))
             {
                 packet.Sender.SendError("There was an error logging you in.");

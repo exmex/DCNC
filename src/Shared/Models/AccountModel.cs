@@ -22,7 +22,7 @@ namespace Shared.Models
             user.Username = reader["Username"] as string;
             user.Password = reader["Password"] as string;
             user.Salt = reader["Salt"] as string;
-            user.Permission = Convert.ToInt32(reader["Permission"]);
+            user.Permission = (UserPermission)Convert.ToInt32(reader["Permission"]);
             user.Ticket = Convert.ToUInt32(reader["Ticket"]);
             user.Status = (UserStatus) Convert.ToByte(reader["Status"]);
             user.CreateIp = reader["CreateIP"] as string;
@@ -305,7 +305,7 @@ namespace Shared.Models
             {
                 character.GarageVehicles = VehicleModel.Retrieve(dbconn, character.Id);
                 character.ActiveCar =
-                    character.GarageVehicles.Find(vehicle => vehicle.CarID == character.ActiveVehicleId);
+                    character.GarageVehicles.Find(vehicle => vehicle.CarId == character.ActiveVehicleId);
                 character.Team = TeamModel.Retrieve(dbconn, character.TeamId);
             }
 

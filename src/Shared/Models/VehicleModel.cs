@@ -18,7 +18,7 @@ namespace Shared.Models
         {
             using (var cmd = new UpdateCommand("UPDATE vehicles SET {0} WHERE CID=@vehId", dbconn))
             {
-                cmd.AddParameter("@vehId", vehicle.CarID);
+                cmd.AddParameter("@vehId", vehicle.CarId);
                 var updateCommand = cmd;
                 vehicle.WriteToDb(ref updateCommand);
             }

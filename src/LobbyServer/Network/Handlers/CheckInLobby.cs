@@ -4,6 +4,7 @@ using Shared;
 using Shared.Models;
 using Shared.Network;
 using Shared.Network.LobbyServer;
+using Shared.Objects;
 using Shared.Util;
 
 namespace LobbyServer.Network.Handlers
@@ -59,7 +60,7 @@ namespace LobbyServer.Network.Handlers
 
             // Send check in lobby answer.
             checkInLobbyAnswerPacket.Result = 0;
-            checkInLobbyAnswerPacket.Permission = user.Permission;
+            checkInLobbyAnswerPacket.Permission = (int)user.Permission;
             packet.Sender.Send(checkInLobbyAnswerPacket.CreatePacket());
 
             // Send current lobby time.

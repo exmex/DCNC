@@ -14,7 +14,7 @@ namespace GameServer.Network.Handlers
             var character = packet.Sender.User.ActiveCharacter;
             
             var vehId = packet.Reader.ReadUInt32();
-            var vehicle = character.GarageVehicles.FirstOrDefault(veh => veh.CarID == vehId);
+            var vehicle = character.GarageVehicles.FirstOrDefault(veh => veh.CarId == vehId);
             if (vehicle == null)
             {
                 Log.Error("User tried to enter car he doesn't own!");

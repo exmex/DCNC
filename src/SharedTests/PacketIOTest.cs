@@ -7,6 +7,7 @@ using NUnit.Framework;
 using Shared.Network;
 using Shared.Network.AreaServer;
 using Shared.Network.GameServer;
+using Shared.Network.LobbyServer;
 using Shared.Objects;
 using Shared.Util;
 
@@ -25,12 +26,27 @@ namespace SharedTests
                 select type;
             foreach (var subclass in subclasses)
             {
+                /*if (subclass.Name != "MoveVehicleAnswer")
+                {
+                    Assert.Warn("Skipped checking MoveVehicleAnswer");
+                    continue;
+                }
                 if (subclass.Name == "UserInfoAnswerPacket")
-                    continue; // 194 vs 74?!
+                {
+                    Assert.Warn("Skipped checking UserInfoAnswerPacket");
+                    continue; // TODO: 194 vs 74?!
+                }
                 if (subclass.Name == "RoomNotifyChangeAnswer")
-                    continue; // 240 vs 194?!
-                /*if (subclass.Name == "AreaListAnswer")
-                    continue; // 142 vs 6?!*/
+                {
+                    Assert.Warn("Skipped checking RoomNotifyChangeAnswer");
+                    continue; // TODO: 240 vs 194?!
+                }
+                if (subclass.Name == "AreaListAnswer")
+                {
+                    Assert.Warn("Skipped checking AreaListAnswer");
+                    continue; // TODO: 142 vs 6?!
+                }*/
+                
                 
                 var instance = (OutPacket)Activator.CreateInstance(subclass);
                 var dataBytes = instance.GetBytes();
@@ -51,11 +67,6 @@ namespace SharedTests
                 select type;
             foreach (var subclass in subclasses)
             {
-                if (subclass.Name == "UserInfoAnswerPacket")
-                    continue; // TODO: 194 vs 74?!
-                if (subclass.Name == "ChatMessageAnswer")
-                    continue; // TODO: 76 vs 74?!
-                
                 var instance = (OutPacket)Activator.CreateInstance(subclass);
                 var dataBytes = instance.GetBytes();
                 var packetBytes = new byte[dataBytes.Length + 2];
@@ -69,6 +80,16 @@ namespace SharedTests
         [Test]
         public void TestTest()
         {
+            var playerInfo = new XiPlayerInfo();
+            using (var ms = new MemoryStream())
+            {
+                using (var bs = new BinaryWriterExt(ms))
+                {
+                    playerInfo.Serialize(bs);
+                }
+                Assert.AreEqual(216, ms.ToArray().Length);
+            }
+            
             var team = new Team();
             using (var ms = new MemoryStream())
             {

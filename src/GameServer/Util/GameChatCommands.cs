@@ -88,7 +88,7 @@ namespace GameServer.Util
             if(helpCmd == null)
                 return CommandResult.Fail;
             
-            if (helpCmd.RequiredPermission > sender.User.Permission)
+            if ((UserPermission)helpCmd.RequiredPermission > sender.User.Permission)
                 return CommandResult.Fail;
 
             sender.SendChatMessage(helpCmd.Usage + " - " + helpCmd.Description);

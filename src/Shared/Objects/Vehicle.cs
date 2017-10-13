@@ -13,7 +13,7 @@ namespace Shared.Objects
         public uint AuctionCnt;
         public bool AuctionOn;
         public uint BaseColor;
-        public uint CarID;
+        public uint CarId;
         public uint CarType;
         public uint Color;
 
@@ -31,7 +31,7 @@ namespace Shared.Objects
 
         public void Serialize(BinaryWriterExt writer)
         {
-            writer.Write(CarID);
+            writer.Write(CarId);
             writer.Write(CarType);
             writer.Write(BaseColor);
             writer.Write(Grade);
@@ -52,7 +52,7 @@ namespace Shared.Objects
             AuctionCnt = Convert.ToUInt32(reader["auctionCount"]);
             AuctionOn = false;
             BaseColor = Convert.ToUInt32(reader["baseColor"]);
-            CarID = Convert.ToUInt32(reader["CID"]);
+            CarId = Convert.ToUInt32(reader["CID"]);
             CharacterId = Convert.ToUInt64(reader["CharID"]);
             CarType = Convert.ToUInt32(reader["carType"]);
             Color = Convert.ToUInt32(reader["color"]);

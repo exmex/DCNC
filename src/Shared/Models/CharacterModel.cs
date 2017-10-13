@@ -83,7 +83,7 @@ namespace Shared.Models
                 character = GetCharacter(dbconn, reader);
             }
             character.GarageVehicles = VehicleModel.Retrieve(dbconn, character.Id);
-            character.ActiveCar = character.GarageVehicles.Find(vehicle => vehicle.CarID == character.ActiveVehicleId);
+            character.ActiveCar = character.GarageVehicles.Find(vehicle => vehicle.CarId == character.ActiveVehicleId);
             character.Team = TeamModel.Retrieve(dbconn, character.TeamId);
             return character;
         }
@@ -103,7 +103,7 @@ namespace Shared.Models
                 character = GetCharacter(dbconn, reader);
             }
             character.GarageVehicles = VehicleModel.Retrieve(dbconn, character.Id);
-            character.ActiveCar = character.GarageVehicles.Find(vehicle => vehicle.CarID == character.ActiveVehicleId);
+            character.ActiveCar = character.GarageVehicles.Find(vehicle => vehicle.CarId == character.ActiveVehicleId);
             character.Team = TeamModel.Retrieve(dbconn, character.TeamId);
             return character;
         }

@@ -157,7 +157,6 @@ namespace SharedTests.Packets
             var packet = new UserInfoAnswerPacket()
             {
                 Permissions = Utilities.Rand.Next(),
-                CharacterCount = 1,
                 Characters = new []
                 {
                     new Character()
@@ -184,6 +183,8 @@ namespace SharedTests.Packets
                 Username = "Test"
             };
             var bytes = packet.GetBytes();
+            // +2 here since packet id is 2 bytes aka short.
+            Assert.IsTrue(bytes.Length+2 == packet.ExpectedSize(), $"Packet Size mismatch {bytes.Length+2} vs expected {packet.ExpectedSize()}");
 
             using (var ms = new MemoryStream(bytes))
             {
@@ -193,7 +194,7 @@ namespace SharedTests.Packets
                     Assert.AreEqual(packet.Permissions, permissions);
                     
                     var characterCount = bs.ReadInt32();
-                    Assert.AreEqual(packet.CharacterCount, characterCount);
+                    Assert.AreEqual(packet.Characters.Length, characterCount);
                     
                     var username = bs.ReadUnicodeStatic(18);
                     Assert.AreEqual(packet.Username, username);

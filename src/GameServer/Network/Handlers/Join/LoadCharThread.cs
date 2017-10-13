@@ -48,14 +48,17 @@ namespace GameServer.Network.Handlers.Join
             packet.Sender.User = user;
             packet.Sender.User.ActiveCharacterId = character.Id;
             packet.Sender.User.ActiveCharacter = character;
-            packet.Sender.User.ActiveCharacter.ActiveCar.CarID = character.ActiveVehicleId;
+            packet.Sender.User.ActiveCharacter.ActiveCar.CarId = character.ActiveVehicleId;
             //packet.Sender.User.ActiveCharacter.Team = team;
             packet.Sender.User.Characters = AccountModel.RetrieveCharacters(GameServer.Instance.Database.Connection, user.Id);
             //packet.Sender.User.Characters = CharacterModel.RetrieveUser(GameServer.Instance.Database.Connection, user.Id);
 
             var vehicles = VehicleModel.Retrieve(GameServer.Instance.Database.Connection, character.Id);
 
-            packet.Sender.User.ActiveCharacter.ActiveCar = vehicles.Find(vehicle => vehicle.CarID == character.ActiveVehicleId);
+            if (packet.Sender.User.Permission >= UserPermission.Administrator)
+                character.PartyType = 65;
+
+            packet.Sender.User.ActiveCharacter.ActiveCar = vehicles.Find(vehicle => vehicle.CarId == character.ActiveVehicleId);
             var ack = new LoadCharThreadAnswer()
             {
                 ServerId = 0,

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Shared.Objects;
 using Shared.Util;
@@ -15,13 +16,13 @@ namespace Shared.Network.GameServer
         public Vehicle[] Vehicles = new Vehicle[0];
 
         public int CurrentCarId;
-        
+
         public override Packet CreatePacket()
         {
             return base.CreatePacket(Packets.LoadCharThreadAck);
         }
-        
-        public override int ExpectedSize() => (50 * Vehicles.Length-1) + 385;
+
+        public override int ExpectedSize() => (50 * Vehicles.Length - 1) + 385;
 
         public override byte[] GetBytes()
         {
@@ -35,9 +36,7 @@ namespace Shared.Network.GameServer
                     bs.Write(Vehicles.Length);
                     foreach (var vehicle in Vehicles)
                     {
-                        /*if (vehicle.CarID == CurrentCarId) // Moved to Joining.cs
-                            packet.Sender.User.ActiveCar = vehicle;*/
-                        bs.Write(vehicle.CarID);
+                        bs.Write(vehicle.CarId);
                         bs.Write(vehicle.CarType);
                         bs.Write(vehicle.BaseColor);
                         bs.Write(vehicle.Grade);
@@ -56,37 +55,6 @@ namespace Shared.Network.GameServer
                 }
                 return ms.ToArray();
             }
-            
-            /*
-            ack.Writer.Write((uint) 0); // ServerId
-            ack.Writer.Write((uint) 0); // ServerStartTime
-
-            // Character
-            character.Serialize(ack.Writer);
-
-            ack.Writer.Write((uint) vehicles.Count);
-
-            foreach (var vehicle in vehicles)
-            {
-                if (vehicle.CarID == character.CurrentCarId)
-                    packet.Sender.User.ActiveCar = vehicle;
-                ack.Writer.Write(vehicle.CarID);
-                ack.Writer.Write(vehicle.CarType);
-                ack.Writer.Write(vehicle.BaseColor);
-                ack.Writer.Write(vehicle.Grade);
-                ack.Writer.Write(vehicle.SlotType);
-                ack.Writer.Write(vehicle.AuctionCnt);
-                ack.Writer.Write(vehicle.Mitron);
-                ack.Writer.Write(vehicle.Kmh);
-
-                ack.Writer.Write(vehicle.Color);
-                ack.Writer.Write(vehicle.Color2);
-                ack.Writer.Write(vehicle.MitronCapacity);
-                ack.Writer.Write(vehicle.MitronEfficiency);
-                ack.Writer.Write(vehicle.AuctionOn);
-                ack.Writer.Write(vehicle.SBBOn);
-            }
-            */
         }
     }
 }

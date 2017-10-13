@@ -22,7 +22,7 @@ namespace GameServer.Network.Handlers
 
             if (command == null) return;
 
-            if (packet.Sender.User.Permission < command.RequiredPermission)
+            if ((int)packet.Sender.User.Permission < command.RequiredPermission)
             {
                 Log.Warning("User tried to use admin command: " + command.Name);
                 return;

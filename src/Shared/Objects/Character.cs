@@ -345,9 +345,7 @@ namespace Shared.Objects
                 writer.WriteUnicodeStatic(Team.Name, 13);
                 writer.Write(TeamRank);
             }
-            //writer.Write(TeamMarkId);
-            //writer.WriteUnicodeStatic(TeamName, 13);
-            //writer.Write(TeamRank);
+            
             writer.Write(PartyType); // possibly 65 when admin or cheatable
             writer.Write(PvpCount);
             writer.Write(PvpWinCount);
@@ -377,6 +375,32 @@ namespace Shared.Objects
             writer.Write((int)Guild);
             //writer.Write(new byte[38]); // filler
             //writer.Write(GPTeam); // DCGP team
+        }
+
+        public void SerializeShort(BinaryWriterExt writer)
+        {
+            writer.WriteUnicodeStatic(Name, 21);
+            writer.Write(Id);
+            writer.Write((int)Avatar);
+            writer.Write((int)Level);
+            writer.Write(ActiveVehicleId);
+            writer.Write(ActiveCar.CarType);
+            writer.Write(ActiveCar.BaseColor);
+            writer.Write(CreationDate);
+            writer.Write(TeamId);
+            if (Team != null)
+            {
+                writer.Write(Team.MarkId);
+                writer.WriteUnicodeStatic(Team.Name, 13);
+                writer.Write((short)TeamRank);
+            }
+            else
+            {
+                writer.Write(0L); // Is there a reason we send 0L here and not -1L?
+                writer.WriteUnicodeStatic("", 13);
+                writer.Write((short)0); // Crew rank 
+            }
+            writer.Write(Guild);
         }
 
         public void ReadFromDb(IDataReader reader)

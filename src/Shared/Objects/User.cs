@@ -27,20 +27,6 @@ namespace Shared.Objects
     public class User
     {
         /// <summary>
-        /// The Vehicle the user is currently using
-        /// TOOD: Move to Character
-        /// </summary>
-        /*[Obsolete("Use Character.Vehicle")]
-        //public Vehicle ActiveCar;*/
-
-        /// <summary>
-        /// The Db Vehicle Id the user is currently using
-        /// TODO: Move to Character.
-        /// </summary>
-        /*[Obsolete("Use Character.Vehicle.Id")]
-        public uint ActiveCarId;*/
-
-        /// <summary>
         /// The Character the user is currently using
         /// </summary>
         public Character ActiveCharacter;
@@ -51,13 +37,6 @@ namespace Shared.Objects
         public ulong ActiveCharacterId;
 
         /// <summary>
-        /// The active team the user is in
-        /// TODO: Move to Character
-        /// </summary>
-        /*[Obsolete("Use Character.Team")]
-        public Team ActiveTeam;*/
-
-        /// <summary>
         ///     The permission flags
         ///     Valid values:
         ///     0x8000 => Administrator
@@ -66,10 +45,10 @@ namespace Shared.Objects
         ///     0x1000 => Developer
         ///     0x0 => User
         /// </summary>
-        public int Permission;
+        public UserPermission Permission = UserPermission.User;
 
         /// <summary>
-        /// Used for GM commands
+        /// [INTERNAL] Used for GM commands
         /// </summary>
         public bool GmFlag;
 
@@ -119,7 +98,11 @@ namespace Shared.Objects
         /// </summary>
         public long BanValidUntil;
 
-        public static User Empty => new User {Status = UserStatus.Invalid};
+        public static User Empty => new User
+        {
+            Status = UserStatus.Invalid,
+            Permission = UserPermission.User
+        };
 
         public ushort VehicleSerial;
 
@@ -127,10 +110,7 @@ namespace Shared.Objects
         /// 
         /// </summary>
         /// <returns></returns>
-        public uint CreateSessionTicket()
-        {
-            return RandomProvider.Get().NextUInt32();
-        }
+        public static uint CreateSessionTicket() => RandomProvider.Get().NextUInt32();
 
         /// <summary>
         /// Hashed and then checks the specified password with the value from DB

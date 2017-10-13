@@ -10,12 +10,6 @@ namespace Shared.Network.LobbyServer
     public class UserInfoAnswerPacket : OutPacket
     {
         /// <summary>
-        ///     The character count
-        /// </summary>
-        /// <remarks>Could use Characters.Length</remarks>
-        public int CharacterCount;
-
-        /// <summary>
         ///     The characters the user has
         /// </summary>
         public Character[] Characters;
@@ -34,7 +28,6 @@ namespace Shared.Network.LobbyServer
         public UserInfoAnswerPacket()
         {
             Permissions = 0;
-            CharacterCount = 0;
             Username = "";
             Characters = new Character[0];
         }
@@ -44,7 +37,7 @@ namespace Shared.Network.LobbyServer
             return base.CreatePacket(Packets.UserInfoAck);
         }
 
-        public override int ExpectedSize() => (120*CharacterCount) + 194; 
+        public override int ExpectedSize() => (120*(Characters.Length-1)) + 194; // 194 => 74 + 120!! 
         
         public override byte[] GetBytes()
         {
@@ -53,38 +46,18 @@ namespace Shared.Network.LobbyServer
                 using (var bs = new BinaryWriterExt(ms))
                 {
                     bs.Write(Permissions);
-                    bs.Write(CharacterCount);
+                    //bs.Write(CharacterCount);
+                    bs.Write(Characters.Length);
                     bs.WriteUnicodeStatic(Username, 18);
                     bs.Write((long) 0);
                     bs.Write((long) 0);
                     bs.Write((long) 0);
                     bs.Write(0);
+                    // --- 74 --- //
 
                     foreach (var character in Characters)
                     {
-                        bs.WriteUnicodeStatic(character.Name, 21);
-                        bs.Write(character.Id);
-                        bs.Write((int) character.Avatar);
-                        bs.Write((int) character.Level);
-                        bs.Write(character.ActiveVehicleId);
-                        bs.Write(character.ActiveCar.CarType);
-                        bs.Write(character.ActiveCar.BaseColor);
-                        bs.Write(character.CreationDate);
-                        bs.Write(character.TeamId);
-                        if (character.Team != null)
-                        {
-                            bs.Write(character.Team.MarkId);
-                            bs.WriteUnicodeStatic(character.Team.Name, 13);
-                            bs.Write((short)character.TeamRank);
-                        }
-                        else
-                        {
-                            bs.Write(0L);
-                            bs.WriteUnicodeStatic("", 13);
-                            bs.Write((short)0); // Crew rank 
-                        }
-                        bs.Write((short)character.Guild); // GuildType? (unsigned int nGuild;)
-                        
+                        character.SerializeShort(bs);
                     }
                 }
                 return ms.ToArray();

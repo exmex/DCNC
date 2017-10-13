@@ -36,8 +36,8 @@ namespace LobbyServer.Network.Handlers
 
             packet.Sender.Send(new UserInfoAnswerPacket
             {
-                CharacterCount = packet.Sender.User.Characters.Count,
                 Username = packet.Sender.User.Username,
+                Permissions = (int)packet.Sender.User.Permission,
                 Characters = packet.Sender.User.Characters.ToArray()
             }.CreatePacket());
         }

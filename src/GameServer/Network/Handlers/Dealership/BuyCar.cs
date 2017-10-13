@@ -98,7 +98,7 @@ namespace GameServer.Network.Handlers.Dealership
             // Save newly bought vehicle
             var carId = VehicleModel.Create(GameServer.Instance.Database.Connection, character.ActiveCar,
                 character.Id);
-            character.ActiveCar.CarID = (uint) carId;
+            character.ActiveCar.CarId = (uint) carId;
             CharacterModel.Update(GameServer.Instance.Database.Connection, character);
 
             // TODO: Send actual data.
@@ -159,7 +159,7 @@ namespace GameServer.Network.Handlers.Dealership
 
             var carInfo = new XiStrCarInfo()
             {
-                CarID = character.ActiveCar.CarID,
+                CarID = character.ActiveCar.CarId,
                 CarType = buyCarPacket.CarType,
                 BaseColor = character.ActiveCar.BaseColor,
                 Grade = character.ActiveCar.Grade,
@@ -177,7 +177,7 @@ namespace GameServer.Network.Handlers.Dealership
             {
                 Serial = packet.Sender.User.VehicleSerial,
                 Age = 0,
-                CarId = character.ActiveCar.CarID,
+                CarId = character.ActiveCar.CarId,
                 CarInfo = carInfo
             }.CreatePacket());
 

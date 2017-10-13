@@ -31,7 +31,7 @@ namespace GameServer.Network.Handlers.Dealership
                 return;
             }
             
-            var vehicle = character.GarageVehicles.FirstOrDefault(veh => veh.CarID == vehicleId);
+            var vehicle = character.GarageVehicles.FirstOrDefault(veh => veh.CarId == vehicleId);
             if (vehicle == null)
             {
                 Log.Error("User tried to sell a vehicle he doesn't own!");
