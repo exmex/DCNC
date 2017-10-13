@@ -139,7 +139,7 @@ namespace Shared.Objects
         /// The current position state
         /// 0 = Moon Palace Introduction
         /// 2 = Fresh spawn
-        /// 3 = ??
+        /// 3 = ?? (Driver Dome?)
         /// </summary>
         public int PosState;
         
@@ -271,7 +271,7 @@ namespace Shared.Objects
             CreationDate = (int)DateTimeOffset.Now.ToUnixTimeSeconds();
             LastDate = (int)DateTimeOffset.Now.ToUnixTimeSeconds();
             
-            City = 0; // 0 in SKID_CHARATER db
+            City = 1; // 0 in SKID_CHARATER db
             Level = 1;
             PosState = 0; // 0 in SKID_CHARATER db
             LastChannel = -1; // This could cause the Issue #26
