@@ -21,6 +21,7 @@ namespace Shared.Models
             character.Name = reader["Name"] as string;
             character.CreationDate = Convert.ToInt32(reader["CreationDate"]);
             character.MitoMoney = Convert.ToInt64(reader["Mito"]);
+            character.Hancoin = Convert.ToInt32(reader["Hancoin"]);
             character.Avatar = Convert.ToUInt16(reader["Avatar"]);
             character.Guild = Convert.ToInt16(reader["Guild"]);
             character.Level = Convert.ToUInt16(reader["Level"]);
@@ -49,6 +50,7 @@ namespace Shared.Models
             //cmd.Set("TEAMNAME", character. TeamName );
             cmd.Set("CreationDate", character.CreationDate);
             cmd.Set("Mito", character.MitoMoney);
+            cmd.Set("Hancoin", character.Hancoin);
             cmd.Set("Avatar", character.Avatar);
             cmd.Set("Level", character.Level);
             cmd.Set("BaseExp", character.ExperienceInfo.BaseExp);
@@ -207,6 +209,7 @@ namespace Shared.Models
                 cmd.Set("posState", character.PosState);
                 cmd.Set("channelId", character.LastChannel);
                 cmd.Set("Mito", character.MitoMoney);
+                cmd.Set("Hancoin", character.Hancoin);
 
                 cmd.Execute();
                 character.Id = (ulong)cmd.LastId;
