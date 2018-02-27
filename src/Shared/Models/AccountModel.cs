@@ -1,4 +1,4 @@
-﻿using System;
+﻿eheusing System;
 using System.Collections.Generic;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
@@ -141,7 +141,7 @@ namespace Shared.Models
                 cmd.Set("Salt", salt);
                 cmd.Set("Status", 1);
                 cmd.Set("CreateIP", ip);
-                cmd.Set("CreateDate", DateTime.Now);
+                cmd.Set("CreateDate", DateTimeOffset.Now.ToUnixTimeSeconds());
                 cmd.Set("Ticket", 0);
 
                 cmd.Execute();

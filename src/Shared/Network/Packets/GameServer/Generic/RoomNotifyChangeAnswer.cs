@@ -22,6 +22,7 @@ namespace Shared.Network.GameServer
             return base.CreatePacket(Packets.RoomNotifyChangeAck);
         }
         
+        // Client requires 240 bytes sent, but uses only 54?
         public override int ExpectedSize() => 240;
 
         public override byte[] GetBytes()
